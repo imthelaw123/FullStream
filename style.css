@@ -1,0 +1,493 @@
+*{
+	margin: 0;
+	padding: 0;
+	-webkit-font-smoothing: antialiased;
+}
+*:not(input.field) {    
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+body{
+	font-family: 'Lato', Helvetica, sans-serif;
+	overflow: hidden;
+}
+li{
+	list-style: none;
+}
+iframe{
+	border: 0;
+}
+h4{
+	text-transform: uppercase;
+}
+input[type=button], input[type=submit],select,input[type=text]{
+	padding: 2px;
+	font-size: 11px;
+	cursor: pointer;
+	height: 22px;
+	font-weight: bold;
+	font-size: 10px;
+	text-transform:uppercase;
+}
+input[type=text], select, textarea{
+	text-transform:lowercase;
+}
+input[type=text]{
+	width: 130px;
+	cursor: text;
+	height: 14px;
+}
+input[type=button], input[type=submit]{
+	padding-left: 10px;
+	padding-right: 10px;
+}
+select{
+	height: 22px;
+	width: 80px;
+}
+#wrapper{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+#sidebar{
+	position: absolute;
+	right: 0;
+	width: 319px;
+	height: 100%;
+	font-size: 12px;
+}
+#media{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 320px;
+	bottom: 0px;
+}
+#video{
+	border: 0px;
+	overflow: hidden;
+	height: calc(100% - 52px);
+}
+/* Tabs styles */
+.tabs{
+	display: flex;
+	display: -webkit-flex;
+}
+.tabs > li{
+	-webkit-flex: 1;
+	flex: 1;
+	padding: 0px;
+}
+.tabs > li > input{
+	display: none;
+}
+.tabs > li > label{
+	display: block;
+	cursor: pointer;
+	text-align: center;
+	line-height: 28px;
+	font-size: 20px;
+	color: #fff;
+	visibility: visible;
+	font-weight: normal;
+	cursor: pointer;
+}
+.tab-content{
+	display: none;
+	position: absolute;
+	top: 80px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+}
+.scrolled{
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+.padded{
+	padding: 5px;
+}
+.tab-content ul{
+	position: relative;
+}
+.tab-content h3{
+	margin-top: 20px;
+	margin-left: 8px;
+	text-shadow: 0px 1px #000, 1px 0px #000, -1px 0px #000, 0px -1px #000;
+}
+.tabs li > input:checked + label{
+	/**/
+}
+.tabs li > input:checked ~ .tab-content{
+	display: block;
+}
+h4{
+	font-weight: bold;
+	font-size: 14px;
+}
+.boxTitle{
+	padding: 5px;
+}
+.boxTitle p{
+	font-size: 12px;
+	margin-top: 5px;
+}
+#switcherSwitch{
+	position: absolute;
+	right: 5px;
+	top: 4px;
+}
+#switcherChannelsSelect{
+	width: 170px;
+}
+.channel, .switcherChannel{
+	font-size: 15px;
+	font-weight: 600;
+	width: 295px;
+	padding: 4px;
+	height: 32px;
+	min-height: 32px;
+	cursor: pointer;
+	overflow: hidden;
+	position: relative;
+}
+.switcherChannel span{
+	position: absolute;
+	top: 10px;
+	left: 6px;
+}
+.channelSplitter{
+	width: 295px;
+	padding: 10px;
+}
+.channelSplitter h4{
+	font-size: 12px;
+	font-weight: 600;
+	position: relative;
+	margin-right: 15px; 
+}
+.channelSplitter h4 i{
+	margin-right: 6px;
+	font-size: 15px;
+}
+.channelSplitter .fa-caret-up, .channelSplitter .fa-caret-down{
+	position: absolute;
+	right: 10px;
+	cursor: pointer;
+}
+.channel b{
+	position: absolute;
+	left: 34px;
+	top: 6px;
+}
+.channel .details{
+	visibility: hidden;
+	padding-top: 34px;
+	padding-right: 20px;
+	line-height: 16px;
+	font-weight: normal;
+	font-size: 14px;
+}
+.channel:hover .details, .channel:hover .controls{
+	visibility: visible;
+}
+.channel li{
+	margin-right: 0px;
+	margin-left: 2px;
+}
+.channel .controls{
+	position: absolute;
+	right: 26px;
+	margin-top: 6px;
+	z-index: 100;
+	visibility: hidden;
+}
+.vod{
+	position: relative;
+	font-size: 12px;
+	min-height: 100px;
+	height: auto;
+}
+.vod img{
+	position: absolute;
+	width: 100px;
+	height: 75px;
+	margin-top: 13px;
+}
+.vod .VodDetails{
+	margin: 5px 20px 5px 110px;
+}
+.vod .VodDetails li{
+	float: none;
+}
+
+.controls i{
+	margin-left: 10px;
+	font-size: 16px;
+}
+.controls i.notFavorite:hover{
+	color: pink;
+}
+.controls i.isFavorite{
+	color: pink;
+}
+.controls i.isFavorite:hover{
+	color: #fff;
+}
+.controls i.notSwitcher:hover{
+	color: #0094FF;
+}
+.controls i.isSwitcher{
+	color: #0094FF;
+}
+.controls i.isSwitcher:hover{
+	color: #fff;
+}
+.channels img{
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	top: 6px;
+	left: 4px;
+}
+.switcherChannel i{
+	float: right;
+	margin-top: 11px;
+	margin-right: 26px;
+	font-size: 16px;
+}
+.switcherChannel i.fa-trash-o{
+	color: #FF0000;
+}
+.switcherChannel:hover i.fa-trash-o{
+	visibility: visible;
+}
+.settings{
+	font-weight: bold;
+	font-size: 12px;
+}
+.settings form{
+	margin: 5px;
+}
+.settings input{
+	margin-top: 5px;
+}
+#generalSettings{
+	margin: 5px;
+}
+#generalSettings h4{
+	padding-bottom: 10px;
+}
+#generalSettings li, #generalSettingsLabels li{
+	height: 24px;
+}
+#generalSettingsLabels{
+	position: absolute;
+	top: 29px;
+	left: 63px;
+}
+.about{
+	padding-left: 6px;
+}
+.about li{
+	margin-top: 6px;
+}
+.about i.fa{
+	margin-right: 6px;
+	font-size: 20px;
+}
+.about li{
+	font-size: 12px;
+	font-weight: bold;
+}
+#notificationBox{
+	position: absolute;
+	width: 240px;
+	height: 50px;
+	left: 15px;
+	bottom: -65px;
+	padding: 5px;
+}
+#notificationBox h3{
+	font-size: 17px;
+	height: 20px;
+	width: 100%;
+}
+#notificationBox p{
+	font-size: 11px;
+}
+#statusbar{
+	padding: 6px 0 0 6px;
+	height: 46px;
+}
+#statusbar span{
+	font-size: 15px;
+	position: absolute;
+	left: 52px;
+	right: 90px;
+	white-space: nowrap;
+	overflow: hidden;
+	font-weight: 600;
+	cursor: pointer;
+}
+#statusbar .statItem{
+	position: relative;
+	margin-right: 10px;
+	left: -18px;
+}
+#statusbar img{
+	width: 40px;
+}
+#statusbar a{
+	text-decoration: none;
+	font-size: 15px;
+}
+#statusbar a:hover{
+	text-decoration: underline;
+}
+#streamStatus{
+	top: 4px;
+	left: 52px;
+	overflow: hidden;
+}
+#streamStats{
+	top: 26px;
+}
+#statusbar .toggle{
+	position: absolute;
+	right: 10px;
+	cursor: pointer;
+	font-size: 40px;
+	border: none;
+	-moz-transition: 0.3s; 
+	-webkit-transition: 0.3s;
+    -o-transition: 0.3s; 
+	transition: 0.3s;
+}
+#statusbar .smallToggle{
+	font-size: 26px;
+	position: absolute;
+	top: 0px;
+	right: 10px;
+	cursor: pointer;
+}
+#statusbar #topbarToggle{
+	right: 56px;
+}
+.loading{
+	position: absolute;
+	left: 115px;
+	top: 50%;
+	margin-bottom: 300px;
+	visibility: hidden;
+	z-index: 10000;
+}
+/* Settings switch*/
+.onoffswitch {
+    position: relative;
+	width: 50px;
+    -webkit-user-select:none; 
+	-moz-user-select:none; 
+	-ms-user-select: none;
+}
+.onoffswitch-checkbox {
+    display: none;
+}
+.onoffswitch-label {
+    display: block; 
+	overflow: hidden; 
+	cursor: pointer;
+}
+.onoffswitch-inner {
+    width: 200%; 
+	margin-left: -100%;
+    -moz-transition: margin 0.3s ease-in 0s; 
+	-webkit-transition: margin 0.3s ease-in 0s;
+    -o-transition: margin 0.3s ease-in 0s; 
+	transition: margin 0.3s ease-in 0s;
+}
+.onoffswitch-inner:before, .onoffswitch-inner:after {
+    float: left; 
+	width: 50%; 
+	height: 16px; 
+	padding: 0; 
+	line-height: 16px;
+    font-size: 10px; 
+	color: white;
+	font-weight: 800;
+	font-family: 'Open Sans';
+    -moz-box-sizing: border-box; 
+	-webkit-box-sizing: border-box; 
+	box-sizing: border-box;
+}
+.onoffswitch-inner:before {
+    content: "ON";
+    padding-left: 5px;
+}
+.onoffswitch-inner:after {
+    content: "OFF";
+    padding-right: 5px;
+    text-align: right;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+    margin-left: 0;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+    right: 0px; 
+}
+.buttonDesctiptions li{
+	padding-bottom: 6px;
+}
+.ad{
+	position: absolute;
+	width: 300px;
+	height: 50px;
+	position: fixed;
+	top: 29px;
+	background-color: #000;
+	background-image: url('images/adbkg.jpg');
+}
+#opt0, #opt1, #opt2, #opt5, #opt6{
+	display: none;
+	opacity: 0;
+}
+#gameList .fa-heart, #gameList .fa-th-list{
+	display: none;
+}
+#pipbox{
+	display: none;
+	padding: 14px 0px 0px 0px;
+	position: absolute;
+	z-index: 50000;
+}
+#pipbox i{
+	position: absolute;
+	top: 1px;
+	right: 3px;
+	font-size: 10px;
+	cursor: pointer;
+}
+.piptopleft{
+	top: 58px;
+	left: 6px;
+}
+.piptopright{
+	top: 58px;
+	right: 6px;
+}
+.pipbottomleft{
+	bottom: 34px;
+	left: 6px;
+}
+.pipbottomright{
+	bottom: 34px;
+	right: 6px;
+}
+#pipvideo{
+	margin-bottom: -5px;
+}

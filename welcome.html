@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title id="title">Welcome to FullStream</title>
+        <link rel="stylesheet" type="text/css" href="iframed.css" />
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+    </head>
+    <body>
+        <div id="videoDiv">
+            <iframe name="video" id="video" width="100%" height="100%" src="//www.youtube.com/embed/uNuA0PCKEdI" frameborder="none"></iframe>
+        </div>
+        <div class="social">
+            <h4>Keep yourself updated on KniffTech projects like FullStream</h4>
+            <ul>
+                <li>
+                    <a href="http://knifftech.net" target="_blank">
+                        <img src="images/knifftech_social.jpg"/>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://github.com/knifftech" target="_blank">
+                        <img src="images/github.jpg"/>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://twitter.com/knifftech" target="_blank">
+                        <img src="images/twitter.jpg"/>
+                    </a>
+                </li>
+                <li>
+                    <a href="http://www.reddit.com/r/knifftech/" target="_blank">
+                        <img src="images/reddit.jpg"/>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="madeby">
+            <a href="http://knifftech.net" target="_blank">
+                <img src="images/knifftech.png" width="300"/>
+            </a>
+        </div>
+        <script type="text/javascript">
+            var video = document.getElementById('videoDiv');
+            function videoSize(){
+                vidHeight = window.innerHeight - 140;
+                video.style.height = vidHeight+'px';
+                video.style.maxWidth = (vidHeight / 9)*16+'px';
+            }
+            videoSize();
+            window.onresize = function(){
+                videoSize();
+            }
+        </script>
+    </body>
+</html

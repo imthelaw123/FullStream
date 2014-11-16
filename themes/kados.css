@@ -1,0 +1,140 @@
+body{
+	background-color: #57007F;
+}
+a{
+	color: #E8E8E8;
+}
+input[type=button], input[type=submit],select,input[type=text]{
+	border: 2px solid #000;
+	background-color: orange;
+	color: #000;
+}
+input[type=button]:hover, input[type=submit]:hover{
+	background-color: orange;
+	color: #000;
+}
+input[type=text], select, textarea{
+	background-color: orange;
+	color: #000;
+}
+#sidebar{
+	background-color: #000;
+	color: #999;
+	border-left: 1px solid orange;
+}
+#media{
+	background-color: #57007F;
+}
+.tabs > li > label{
+	background-color: orange;
+	color: #000;
+	border-right: 1px solid #57007F;
+}
+.tabs > li > input:checked + label{
+	background-color: #57007F;
+	color: #E8E8E8;
+}
+.tab-content{
+	background-color: #57007F;
+	color: #E8E8E8;
+}
+.tab-content h3{
+	color: orange;
+}
+.channelSplitter{
+	background-color: orange;
+	color: black;
+	box-shadow: 0px 0px 2px 1px #000 inset;
+}
+.channel, .switcherChannel{
+	color: #E8E8E8;
+	background-color: #57007F;
+	box-shadow: 0px 1px 1px 1px #000;
+}
+.channel:nth-child(even), .vod:nth-child(even), .switcherChannel{
+	background-color: #430063;
+}
+.selectedChannel{
+	box-shadow: 0px 0px 2px 1px #000 inset;
+	background-color: #8700C6; 
+}
+.channel:hover, .switcherChannel:hover{
+	background-color: #8700C6;
+}
+.controls i.fa-play:hover, .about i.fa-play{
+	color: #00FF21;
+}
+.controls i.fa-external-link-square:hover, .about  i.fa-external-link-square{
+	color: #FFEA23;
+}
+.controls i.fa-gamepad:hover, .about i.fa-gamepad{
+	color: #AE00FF;
+}
+.controls i.fa-th-list:hover, .about i.fa-th-list{
+	color: #0094FF;
+}
+.switcherChannel i.fa-trash-o, .about i.fa-trash-o,.controls i.fa-trash-o:hover{
+	color: #FF0000;
+}
+.about i.fa-heart{
+	color: pink;
+}
+.channels b{
+	color: #E8E8E8;
+}
+#notificationBox{
+	color: #000;
+	background-color: orange;
+	border: 2px solid orange;
+}
+#notificationBox h3{
+	border-bottom: 1px solid black;
+}
+#statusbar{
+	background-color: #57007F;
+	border-bottom: 1px solid orange;
+	box-shadow: 0px 0px 1px 1px #000 inset;
+}
+#statusbar span{
+	color: #E8E8E8;
+}
+#statusbar .toggle{
+	color: #8700C6;
+}
+#statusbar .smallToggle{
+	color: #8700C6;
+	width: 15px;
+	height: 15px;
+}
+#statusbar .toggle:hover{
+	color: #fff;
+}
+#statusbar .smallToggle:hover{
+	color: #fff;
+}
+.onoffswitch-label {
+    border: 2px solid #000; 
+}
+.onoffswitch-inner:before {
+    background-color: orange;
+    color: #000;
+}
+.onoffswitch-inner:after {
+    background-color: #BABABA; 
+    color: #000;
+}
+::-webkit-scrollbar{
+	background-color: #57007F;
+	border-left: 1px solid black;
+}
+::-webkit-scrollbar-thumb{
+	background-color: orange;
+	border-left: 1px solid black;
+}
+#pipbox{
+	background-color: #57007F;
+	border: 1px solid #000;
+}
+#pipbox i{
+	color: #fff;
+}

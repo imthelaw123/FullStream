@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title id="title">FullStream</title>
+	<meta charset="utf-8">
+
+	<link rel="icon" type="image/png" href="images/favico.png" />
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<link id="colorStyle" rel="stylesheet" type="text/css" href="themes/default.css" />
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+	
+	<link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,900' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css'>
+
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script type="text/javascript" src="fullstream.js"></script>
+	<script type="text/javascript" src="fullstream.defer.js" defer="defer"></script>
+</head>
+<body>
+	<div id="wrapper">
+		<div id="sidebar">
+			<div class="ad">
+				<!-- placeholder google adsense-->
+			</div>
+			<ul class="tabs">
+				<li id="opt0">
+					<input type="radio" name="tabs" id="tab0">
+					<label for="tab0"><i class="fa fa-comment"></i></label>
+					<div class="tab-content">
+						<iframe frameborder="0" scrolling="no" id="chat_embed" src="chatPlaceholder.html"  height="100%" width="100%"></iframe>
+					</div>
+				</li>
+				<li id="opt1">
+					<input type="radio" name="tabs" id="tab1">
+					<label for="tab1"><i class="fa fa-list-alt"></i></label>
+					<div class="tab-content scrolled channels">
+						<ul id="channelList"></ul>
+					</div>
+				</li>
+				<li id="opt5">
+					<input type="radio" name="tabs" id="tab5">
+					<label for="tab5"><i class="fa fa-gamepad"></i></label>
+					<div class="tab-content channels scrolled">
+						<ul id="gameList"></ul>
+					</div>
+				</li>
+				<li id="opt6">
+					<input type="radio" name="tabs" id="tab6">
+					<label for="tab6"><i class="fa fa-film"></i></label>
+					<div class="tab-content scrolled">
+						<ul id="vodList"></ul>
+					</div>
+				</li>
+				<li id="opt2">
+					<input type="radio" name="tabs" id="tab2">
+					<label for="tab2"><i class="fa fa-th-list"></i></label>
+					<div class="tab-content scrolled padded">
+						<h4>Switcher</h4>
+						<div id="localSwitcherSwitch" class="onoffswitch">
+							<input type="checkbox" name="switcherSetting" class="onoffswitch-checkbox" id="localSwitcherSetting" checked>
+							<label class="onoffswitch-label" for="localSwitcherSetting">
+								<div class="onoffswitch-inner"></div>
+							</label>
+						</div>
+						<p>Channels are sorted by priority, drag and drop to change the order.</p>
+						<p><b>Note that the Switcher must be turned on in the settings menu.</b></p>
+						<br>
+						<h4>Add a channel to the Switcher</h4>
+						<select id="switcherChannelsSelect"></select>
+						<input id="switcherChannelsSelectButton" type="button" value="Add"/>
+						<br>
+						<div id="switcherChannels"></div>
+					</div>
+				</li>
+				<li id="opt3">
+					<input type="radio" name="tabs" id="tab3">
+					<label for="tab3"><i class="fa fa-wrench"></i></label>
+					<div class="tab-content scrolled padded settings">
+						<h4>Settings</h4>
+						<ul id="generalSettings">
+							<li>
+								<div class="onoffswitch">
+									<input type="checkbox" name="offlineChannels" class="onoffswitch-checkbox" id="offlineChannels" checked>
+									<label class="onoffswitch-label" for="offlineChannels">
+										<div class="onoffswitch-inner"></div>
+									</label>
+								</div>
+							</li>
+							<li>
+								<div class="onoffswitch">
+									<input type="checkbox" name="sidebarOnLoad" class="onoffswitch-checkbox" id="sidebarOnLoad" checked>
+									<label class="onoffswitch-label" for="sidebarOnLoad">
+										<div class="onoffswitch-inner"></div>
+										</label>
+								</div>
+							</li>
+						<li>
+							<div class="onoffswitch">
+								<input type="checkbox" name="switcherSetting" class="onoffswitch-checkbox" id="switcherSetting" checked>
+								<label class="onoffswitch-label" for="switcherSetting">
+									<div class="onoffswitch-inner"></div>
+								</label>
+							</div>
+						</li>
+						<li>
+							<div class="onoffswitch">
+								<input type="checkbox" name="notificationSetting" class="onoffswitch-checkbox" id="notificationSetting" checked>
+								<label class="onoffswitch-label" for="notificationSetting">
+									<div class="onoffswitch-inner"></div>
+								</label>
+							</div>
+						</li>
+						<li>
+							<div class="onoffswitch">
+								<input type="checkbox" name="chatSetting" class="onoffswitch-checkbox" id="chatSetting">
+								<label class="onoffswitch-label" for="chatSetting">
+									<div class="onoffswitch-inner"></div>
+								</label>
+							</div>
+						</li>
+						<li>
+							<select id="defaultChannelSelect"></select>
+							Default Channel
+						</li>
+						<li>
+							<select id="defaultTabOptions">
+								<option value="0">Chat</option>
+								<option value="1">Channels</option>
+								<option value="2">Switcher</option>
+								<option value="3">Settings</option>
+								<option value="4">About</option>
+							</select>
+							Default tab
+						</li>
+						<li>
+							<select id="colorThemeOptions">
+								<option value="0">default</option>
+								<option value="1">army</option>
+								<option value="2">piggy</option>
+								<option value="3">kados</option>
+								<option value="4">fire</option>
+								<option value="5">bright</option>
+								<option value="6">night</option>
+								<option value="7">annoying</option>
+								<option value="8">twitchy</option>
+								<option value="9">tube</option>
+								<option value="10">endless</option>
+								<option value="11">broncos</option>
+								<option value="12">terminal</option>
+							</select>
+							Color theme
+						</li>
+						<li>
+							<select id="pipOptions">
+								<option value="0">topright</option>
+								<option value="1">topleft</option>
+								<option value="2">bottomright</option>
+								<option value="3">bottomleft</option>
+							</select>
+							PiP position
+						</li>
+						
+					</ul>
+					<ul id="generalSettingsLabels">
+						<li>Hide offline channels</li>
+						<li>Hide sidebar on load</li>
+						<li>Switcher</li>
+						<li>Notifications</li>
+						<li>Load chat on channel switch</li>
+					</ul>
+					<form>
+						<h5>Twitch Username</h5>
+						<input type="text" id="twitchUser" value="twitch.tv username"/>
+						<input type="button" id="saveTwitchUser" value="save"/>
+						
+						<br>
+						<br>
+						
+						<h5>Add a single non Twitch channel</h5>
+						<input type="text" id="addSingleChannel" value="channel name"/>
+						<select id="addChanSite">
+							<option>Hitbox.tv</option>
+							<option>Streamup.com</option>
+							<option>Vaughnlive.tv</option>
+						</select>
+						<input type="button" id="addChannel" value="add"/>
+						
+						<br>
+						<br>
+						
+						<input type="button" id="restoreDefaults" value="Restore Defaults"/>
+					</form>
+					</div>
+				</li>
+				<li id="opt4">
+					<input type="radio" name="tabs" id="tab4" checked>
+					<label for="tab4"><i class="fa fa-info"></i></label>
+					<div class="tab-content scrolled padded about">
+						<img src="images/logo.png" width="280px"/>
+						<h4>Current Version: 0.1.13</h4>
+						<P>Welcome to FullStream, an alternative way to watch Twitch.tv streams on the web.</P>
+						<br>
+						<h4><i class="fa fa-info"></i>About</h4>
+						<p>FullStream was initially made to make it easy to watch twitch.tv streams in fullscreen while still having the ability to chat, in addition there has been added some cool features like a channels list, a status bar, an automatic channel switcher, support for twitch VODs and more.</p>
+						<br>
+						<h4><i class="fa fa-list-alt"></i>The channel list</h4>
+						<p>The channels list displays channels you are following on Twitch, if you hover over a channel you you get more info about it and a few options.</p>
+						<ul class="buttonDesctiptions">
+							<li>
+								<i class="fa fa-play"></i>
+								<br>
+								The play button let's you tune into the channel by switching the video and chat embed source.
+							</li>
+							<li>
+								<i class="fa fa-external-link-square"></i>
+								<br>
+								Picture in Picture, let's you watch a second stream in a chosen corner.
+							</li>
+							<li>
+								<i class="fa fa-heart"></i>
+								<br>
+								Adds the selected channel to the favorites list. *
+							</li>
+							<li>
+								<i class="fa fa-gamepad"></i>
+								<br>
+								Creates a list of channels streaming the same game. *
+							</li>
+							<li>
+								<i class="fa fa-th-list"></i>
+								<br>
+								Let's you add the channel to the switcher. *
+							</li>
+							<li>
+								<i class="fa fa-trash-o"></i>
+								<br>
+								Removes the channel from the channels list. **
+							</li>
+							<li>* Only Twitch channels.<br>
+							** Only non-Twitch channels and Switcher channels.</li>
+						</ul>
+						<br>
+						<h4><i class="fa fa-th-list" style="color: #fff;"></i>The Switcher</h4>
+						<p>The switcher will automatically switch the video and chat embeds to the top channel on the list that is currently live, the list can be sorted by dragging and dropping the channels</p>
+						<br>
+						<h4>Browser Support</h4>
+						<p>FullStream is tested and confirmed working using the following browsers</p>
+						<ul>
+							<li>Google Chrome 38<br>
+							Mozilla Firefox 33<br>
+							Opera 25<br>
+							Safari 8</li>
+						</ul>
+						<br>
+						<h4>Made By</h4>
+						<img src="images/knifftech.png" width="250"/>
+						<p>FullStream was made by Kniffen and is part of the KniffTech library, for more information about Kniffen and KniffTech check out the following links.</p>
+						<ul>
+							<li><a href="http://knifftech.net" target="_blank">Website</a></li>
+							<li><a href="http://github.com/knifftech" target="_blank">KniffTech on GitHub</a></li>
+							<li><a href="http://www.reddit.com/r/knifftech" target="_blank">KniffTech Subreddit</a></li>
+							<li><a href="https://twitter.com/knifftech" target="_blank">@knifftech on twitter</a></li>
+							<li><a href="https://twitter.com/kniffen" target="_blank">@kniffen on twitter</a></li>
+						</ul>
+					</div>
+				</li>
+			</ul>
+			<div id="notificationBox">
+				<h3>Notice!</h3>
+				<p></p>
+			</div>
+			<img class="loading" src="images/loading.gif"/>
+		</div>
+		<div id="media">
+			<div id="statusbar">
+				<img id="streamLogo" src="images/offline.png" />
+				<span id="streamStatus">Welcome to FullStream</span>
+				<span id="streamStats">Please select or configure your setup on the sidebar to the right</span>
+				<i id="topbarToggle" class="fa fa-angle-up toggle"></i>
+				<i id="sidebarToggle" class="fa fa-angle-right toggle"></i>
+			</div>
+			
+			<div id="pipbox" class="piptopright"><i id="pipclose" class="fa fa-times"></i><iframe name="pipvideo" id="pipvideo" width="360" height="240" src=""></iframe></div>
+
+			<iframe name="video" id="video" width="100%" height="100%" src="welcome.html"></iframe>
+		</div>
+	</div>
+</body>
+</html>

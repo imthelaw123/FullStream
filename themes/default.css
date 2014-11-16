@@ -1,0 +1,145 @@
+body{
+	font-family: 'Lato', Helvetica, sans-serif;
+	background-color: #202020;
+	color: #fff;
+}
+a{
+	color: #fff;
+}
+input[type=button], input[type=submit],select,input[type=text]{
+	border: 2px solid #000;
+	background-color: #237196;
+	color: #fff;
+}
+input[type=button]:hover, input[type=submit]:hover{
+	background-color: #707070;
+	color: #fff;
+}
+input[type=text], select, textarea{
+	background-color: #BABABA;
+	color: #202020;
+}
+#sidebar{
+	font-family: Helvetica, sans-serif;
+	background-color: #000;
+	border-left: 1px solid #000;
+}
+#media{
+	background-color: #202020;
+}
+.tabs > li > label{
+	background-color: #404040;
+	color: #E8E8E8;
+	border-right: 1px solid #000;
+}
+.tabs > li:last-child > label{
+	border-right-width: 0px;
+}
+.tabs > li > input:checked + label{
+	background-color: #202020;
+	color: #E8E8E8;
+}
+.tab-content{
+	background-color: #202020;
+}
+.tab-content h3{
+	color: #2A78B0;
+}
+.channelSplitter{
+	font-family: 'Lato', Helvetica, sans-serif;
+	background-color: #237196;
+	color: white;
+	box-shadow: 0px 0px 2px 1px #000 inset;
+}
+.channel, .switcherChannel{
+	font-family: 'Lato', Helvetica, sans-serif;
+	color: #fff;
+	background-color: #252525;
+	box-shadow: 0px 1px 1px 1px #000;
+}
+.channel:nth-child(even), .vod:nth-child(even){
+	background-color: #202020;
+}
+.channel:hover, .switcherChannel:hover, .channel .controls{
+	background-color: #101010;
+}
+.selectedChannel{
+	box-shadow: 0px 0px 2px 1px #000 inset; 
+	background-color: #101010 !important;
+}
+.controls i.fa-play:hover, .about i.fa-play{
+	color: #00FF21;
+}
+.controls i.fa-external-link-square:hover, .about  i.fa-external-link-square{
+	color: #FFEA23;
+}
+.controls i.fa-gamepad:hover, .about i.fa-gamepad{
+	color: #AE00FF;
+}
+.controls i.fa-th-list:hover, .about i.fa-th-list{
+	color: #0094FF;
+}
+.switcherChannel i.fa-trash-o, .about i.fa-trash-o,.controls i.fa-trash-o:hover{
+	color: #FF0000;
+}
+.about i.fa-heart{
+	color: pink;
+}
+.channels b{
+	color: #fff;
+}
+#notificationBox{
+	color: #fff;
+	background-color: #237196;
+	border: 2px solid #000;
+	box-shadow: 0px 0px 2px 1px #000 inset;
+}
+#notificationBox h3{
+	border-bottom: 1px solid #000;
+}
+#statusbar{
+	background-color: #202020;
+	border-bottom: 1px solid #000;
+	box-shadow: 0px 0px 1px 1px #000 inset;
+}
+#statusbar span{
+	color: #fff;
+}
+#statusbar a{
+	color: #fff;
+}
+#statusbar .toggle{
+	color: #404040;
+}
+#statusbar .smallToggle{
+	color: #404040;
+	width: 15px;
+	height: 15px;
+}
+#statusbar .toggle:hover, #statusbar .smallToggle:hover{
+	color: #E8E8E8;
+}
+.onoffswitch-label {
+    border: 2px solid #000; 
+}
+.onoffswitch-inner:before {
+    background-color: #237196;
+    color: #FFFFFF;
+}
+.onoffswitch-inner:after {
+    background-color: #BABABA; 
+    color: #000;
+}
+::-webkit-scrollbar{
+	background-color: #101010;
+}
+::-webkit-scrollbar-thumb{
+	background-color: #303030;
+}
+#pipbox{
+	background-color: #202020;
+	border: 1px solid #000;
+}
+#pipbox i{
+	color: #fff;
+}
