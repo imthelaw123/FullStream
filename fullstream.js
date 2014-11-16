@@ -719,7 +719,7 @@ fullstream.changeChannel = function(videoEmbed, chatEmbed, id, service){
 
 	if(fullstream.settings['chatSetting'] && service != 'streamup' && service != 'vod'){
 		setTimeout(function(){
-			switchTab('#opt0');
+			$('#tab0')[0].checked = true;
 		}, 2000);
 	}
 
