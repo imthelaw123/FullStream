@@ -313,58 +313,60 @@ if(fullstream.settings['defaultChannel'] != 'none'){
 $(window).keydown(function(e){
 	var next = false;
 	var switched = false;
-	if(e.keyCode == 66 || e.keyCode == 78){	
-		if(fullstream.currentChannel.name == undefined){
-			switchToLiveChannel(e.keyCode);
-		}else{
-			for(site in fullstream.channelsData){
-				var tempArray = [];
-				for(chan in fullstream.channelsData[site]){
-					tempArray[tempArray.length] = chan;
-				}
-				if(e.keyCode == 66){
-					tempArray.reverse();
-				}
-				for(chan in tempArray){
-					if(switched == false){
-						if(next == false && fullstream.currentChannel.name == tempArray[chan] && fullstream.currentChannel.service == site){
-							next = true;
-						}else if(next && fullstream.channelsData[site][tempArray[chan]].live){
-							fullstream.changeChannel(fullstream.channelsData[site][tempArray[chan]].videoEmbed, fullstream.channelsData[site][tempArray[chan]].chatEmbed, tempArray[chan], site);
-							switched = true;
+	if($("input[type=text]").is(':focus') == false){
+		if(e.keyCode == 66 || e.keyCode == 78){	
+			if(fullstream.currentChannel.name == undefined){
+				switchToLiveChannel(e.keyCode);
+			}else{
+				for(site in fullstream.channelsData){
+					var tempArray = [];
+					for(chan in fullstream.channelsData[site]){
+						tempArray[tempArray.length] = chan;
+					}
+					if(e.keyCode == 66){
+						tempArray.reverse();
+					}
+					for(chan in tempArray){
+						if(switched == false){
+							if(next == false && fullstream.currentChannel.name == tempArray[chan] && fullstream.currentChannel.service == site){
+								next = true;
+							}else if(next && fullstream.channelsData[site][tempArray[chan]].live){
+								fullstream.changeChannel(fullstream.channelsData[site][tempArray[chan]].videoEmbed, fullstream.channelsData[site][tempArray[chan]].chatEmbed, tempArray[chan], site);
+								switched = true;
+							}
 						}
 					}
 				}
-			}
-			if(switched == false){
-				switchToLiveChannel(e.keyCode);
-			}
-		}
-	}else if(e.keyCode == 67 || e.keyCode == 86){
-		var tabArray = [];
-		for(num in $('.tabs > li > input')){
-			if($('.tabs > li > input')[num].id != undefined){
-				tabArray[tabArray.length] = $('.tabs > li > input')[num].id;
-			}
-		}
-		if(e.keyCode == 67){
-			tabArray.reverse();
-		}
-
-		for(tab in tabArray){
-			if(switched == false){
-				if($('#'+tabArray[tab])[0].checked){
-					next = true;
-				}else if(next && $($('#'+tabArray[tab])[0].parentElement).css('display') != 'none'){
-					$('#'+tabArray[tab])[0].checked = true;
-					switched = true;
+				if(switched == false){
+					switchToLiveChannel(e.keyCode);
 				}
 			}
+		}else if(e.keyCode == 67 || e.keyCode == 86){
+			var tabArray = [];
+			for(num in $('.tabs > li > input')){
+				if($('.tabs > li > input')[num].id != undefined){
+					tabArray[tabArray.length] = $('.tabs > li > input')[num].id;
+				}
+			}
+			if(e.keyCode == 67){
+				tabArray.reverse();
+			}
+
+			for(tab in tabArray){
+				if(switched == false){
+					if($('#'+tabArray[tab])[0].checked){
+						next = true;
+					}else if(next && $($('#'+tabArray[tab])[0].parentElement).css('display') != 'none'){
+						$('#'+tabArray[tab])[0].checked = true;
+						switched = true;
+					}
+				}
+			}
+		}else if(e.keyCode == 83){//sidebar
+			$('#sidebarToggle').click();
+		}else if(e.keyCode == 84){//topbar
+			$('#topbarToggle').click();
 		}
-	}else if(e.keyCode == 83){//sidebar
-		$('#sidebarToggle').click();
-	}else if(e.keyCode == 84){//topbar
-		$('#topbarToggle').click();
 	}
 });
 
