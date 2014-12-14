@@ -153,6 +153,26 @@ function addOtherChannel(newChan, service){
 	}
 }
 
+// Helpter function to switch to the first or last live channel in the channelsData array
+function switchToLiveChannel(ecode){
+	var foundIt = false;
+	for(site in fullstream.channelsData){
+		var tempArray = [];
+		for(chan in fullstream.channelsData[site]){
+			tempArray[tempArray.length] = chan;
+		}
+		if(ecode == 66){
+			tempArray.reverse();
+		}
+		for(chan in tempArray){
+			if(foundIt == false && fullstream.channelsData[site][tempArray[chan]].live){
+				fullstream.changeChannel(fullstream.channelsData[site][tempArray[chan]].videoEmbed, fullstream.channelsData[site][tempArray[chan]].chatEmbed, tempArray[chan], site);
+				foundIt = true;
+			}
+		}
+	}
+}
+
 // Helper functions to handle menu item visibility
 function hideMenuItem(id){
 	$(id).animate({'opacity': '0'});
