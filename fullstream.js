@@ -587,7 +587,7 @@ fullstream.populateChannels = function(){
 		if(!settings.collapsed[tab]){
 			for(var x=0; x<2; x++){
 				for(channel in sortedChannels[tab]){
-					if( (x==0 && channelData.twitch[sortedChannels[tab][channel]].live) || (x==1 && !channelData.twitch[sortedChannels[tab][channel]].live) ){
+					if( (x==0 && channelData.twitch[sortedChannels[tab][channel]].live) || (x==1 && !channelData.twitch[sortedChannels[tab][channel]].live) && !(tab == 'offline' && settings.general['offline-channels']) ){
 						var chan = channelData.twitch[sortedChannels[tab][channel]];
 						var li = new aChannel(chan.service, chan.id, chan.live, chan.videoEmbed, chan.chatEmbed, chan.name, false, chan.status, chan.genre, chan.viewers, chan.logo);
 						$(channelList).append(li.asListItem());
@@ -595,30 +595,6 @@ fullstream.populateChannels = function(){
 				}
 			}
 		}
-		
-
-
-
-		/*
-			if(!settings.collapsed[tab]){
-				for(channel in sortedChannels[tab]){
-					var chan = channelData.twitch[sortedChannels[tab][channel]];
-					if(chan && chan.live){
-						var li = new aChannel(chan.service, chan.id, chan.live, chan.videoEmbed, chan.chatEmbed, chan.name, false, chan.status, chan.genre, chan.viewers, chan.logo);
-						$(channelList).append(li.asListItem());
-					}
-				}
-				if(!(tab != 'favorites' && settings.general['offline-channels'])){
-					for(channel in sortedChannels[tab]){
-						var chan = channelData.twitch[sortedChannels[tab][channel]];
-						if(chan && !chan.live){
-							var li = new aChannel(chan.service, chan.id, chan.live, chan.videoEmbed, chan.chatEmbed, chan.name, false, chan.status, chan.genre, chan.viewers, chan.logo);
-							$(channelList).append(li.asListItem());
-						}
-					}
-				}
-			}
-		}*/
 	}
 	for(chan in settings.switcherChannels){
 		for(channel in channelData.twitch){
@@ -771,7 +747,7 @@ function aChannel(service, id, live, videoEmbed, chatEmbed, name, favorite, stat
 		}
 
 		$(play).click(function(){
-			if(settings.general.switcherSetting){
+			if(settings.general['switcher-setting']){
 				notify('The Switcher is currently on and might change the channel!')
 			}
 			fullstream.changeChannel(videoEmbed, chatEmbed, id, service);
