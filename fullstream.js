@@ -6,7 +6,8 @@ fullstream.intel = {
 	},
 	"sortedChannels":{
 		"favorites":[],
-		"twitch":[]
+		"online":[],
+		"offline":[]
 	},
 	"currentChannel":{
 		"name":"",
@@ -37,7 +38,8 @@ fullstream.intel = {
 		},
 		"collapsed":{
 			"favorites":false,
-			"twitch":false
+			"online":false,
+			"offline":false
 		},
 		"favorites":[],
 		"switcherChannels":[],
@@ -455,7 +457,6 @@ fullstream.getChannels = function(offset){
 			if(a.follows.length >= 100){
 				fullstream.getChannels(offset+100);
 			}else{
-				fullstream.sortChannels();
 				fullstream.channelOptions();
 				fullstream.updateData();
 				fullstream.log('Fetched '+fullstream.channelCount(channelData.twitch)+' channels from Twitch.tv with username: '+settings.general['twitch-user']);
@@ -466,18 +467,23 @@ fullstream.getChannels = function(offset){
 // Generates an alphabetical array of all channels
 fullstream.sortChannels = function(){
 	sortedChannels.favorites = [];
+	sortedChannels.online = [];
+	sortedChannels.offline = [];
 	for(service in channelData){
 		sortedChannels[service] = [];
 		for(channel in channelData[service]){
 			if(channelData[service][channel].favorite){
-				sortedChannels.favorites[sortedChannels[service].length] = channel;
+				sortedChannels.favorites[sortedChannels.favorites.length] = channel;
+			}else if(channelData[service][channel].live){
+				sortedChannels.online[sortedChannels.online.length] = channel;
 			}else{
-				sortedChannels[service][sortedChannels[service].length] = channel;
+				sortedChannels.offline[sortedChannels.offline.length] = channel;
 			}
 		}
-		sortedChannels[service].sort();
 	}
 	sortedChannels.favorites.sort();
+	sortedChannels.online.sort();
+	sortedChannels.offline.sort();
 }
 // Method to get channels via specific game
 fullstream.getGameChannels = function(game, offset){
@@ -574,9 +580,26 @@ fullstream.populateChannels = function(){
 	$(channelList).html('');
 	$('#switcher-channels').html('');
 	for(tab in sortedChannels){
-		if(fullstream.channelCount(sortedChannels[tab])){
+		if(fullstream.channelCount(sortedChannels[tab]) && !(tab == 'offline' && settings.general['offline-channels'])){
 			var split = new channelSplitter(tab);
 			$(channelList).append(split.listItem());
+		}
+		if(!settings.collapsed[tab]){
+			for(var x=0; x<2; x++){
+				for(channel in sortedChannels[tab]){
+					if( (x==0 && channelData.twitch[sortedChannels[tab][channel]].live) || (x==1 && !channelData.twitch[sortedChannels[tab][channel]].live) ){
+						var chan = channelData.twitch[sortedChannels[tab][channel]];
+						var li = new aChannel(chan.service, chan.id, chan.live, chan.videoEmbed, chan.chatEmbed, chan.name, false, chan.status, chan.genre, chan.viewers, chan.logo);
+						$(channelList).append(li.asListItem());
+					}
+				}
+			}
+		}
+		
+
+
+
+		/*
 			if(!settings.collapsed[tab]){
 				for(channel in sortedChannels[tab]){
 					var chan = channelData.twitch[sortedChannels[tab][channel]];
@@ -595,7 +618,7 @@ fullstream.populateChannels = function(){
 					}
 				}
 			}
-		}
+		}*/
 	}
 	for(chan in settings.switcherChannels){
 		for(channel in channelData.twitch){
@@ -647,8 +670,8 @@ fullstream.updateData = function(){
 		})
 		.success(function() {
 			fullstream.log('Updated '+fullstream.channelsOnline(channelData.twitch)+'/'+fullstream.channelCount(channelData.twitch)+' channels from Twitch.tv');
+			fullstream.sortChannels();
 			fullstream.populateChannels();
-			//fullstream.currentChannel.update();
 			if(settings.general['switcher-setting']){
 				fullstream.switcher();
 			}
@@ -765,13 +788,10 @@ function aChannel(service, id, live, videoEmbed, chatEmbed, name, favorite, stat
 			}
 			if(hit == null){
 				settings.favorites[settings.favorites.length] = id;
-				notify(id+' was added to favorites.');
 				channelData.twitch[id].favorite = true;
 			}else{
 				settings.favorites.splice(hit, 1);
 				channelData.twitch[id].favorite = false;
-				notify(id+' was removed from favorites.');
-
 			}
 			settings.favorites.sort();
 			fullstream.save();
@@ -789,10 +809,10 @@ function aChannel(service, id, live, videoEmbed, chatEmbed, name, favorite, stat
 		
 		$(li).click(function(){
 			if(chanSwitch == true){
+				fullstream.changeChannel(videoEmbed, chatEmbed, id, service);
 				if(settings.switcherSetting){
 					notify('The Switcher is currently on and might change the channel!')
 				}
-				fullstream.changeChannel(videoEmbed, chatEmbed, id, service);
 			}
 		});
 		$(addToSwitcher).click(function(){
@@ -882,10 +902,8 @@ function channelSplitter(name, logo, alt){
 		if(logo == undefined){
 			if(name == 'favorites'){
 				logo = 'fa-heart';
-			}else if(name == 'twitch'){
-				logo = 'fa-twitch';
 			}else{
-				logo = 'fa-video-camera';
+				logo = 'fa-twitch';
 			}
 		}
 		li.setAttribute('class', 'channel-splitter');
