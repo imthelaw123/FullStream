@@ -2,69 +2,102 @@
 setInterval(function(){
 	if(loading == true){
 		$('.loading').css('visibility', 'visible');
-	}
-	else{
+	}else{
 		$('.loading').css('visibility', 'hidden');
 	}
 },500);
 
 // Load in data from LocalStorage
-fullstream.load('channels');
-fullstream.load('settings');
-fullstream.load('switcher');
+fullstream.load();
 
-// Global variables set after elements load
+// Global variables for elements
 var videoTarget = $('#video');
-var pipTarget = $('#pipvideo');
-var chatTarget = $('#chat_embed');
-var channelList = $('#channelList');
-var gameList = $('#gameList');
+var pipTarget = $('#pip-video');
+var chatTarget = $('#chat-embed');
+var channelList = $('#channel-list');
+var gameList = $('#game-list');
 
-/* Tabs handler*/
+/* Load defaults and settings*/
+// Populating settings
+for(setting in settings.general){
+	$('#'+setting).prop('checked', settings.general[setting]);
+	switch(setting){
+		case 'sidebar-on-load':
+			if(settings.general[setting]){
+				$('#sidebar-toggle').addClass('fa-angle-left').removeClass('fa-angle-right');
+				$('#media').animate({
+					right: '0px'
+				});
+			}
+			break;
+		case 'switcher-setting':
+			$('#local-switcher-setting').prop('checked', settings.general[setting]);
+			if(settings.switcherChannels.length || settings.general[setting]){
+				toggleMenuItem('#opt-4',false);
+			}
+			break;
+		case 'default-tab':
+			$('#tab-'+settings.general[setting])[0].checked = true;
+			toggleMenuItem('#opt-'+settings.general[setting],false);
+			if(settings.general[setting] == 6){
+				document.getElementById('default-tab-options').options[2].defaultSelected = true
+			}else{
+				document.getElementById('default-tab-options').options[settings.general[setting]].defaultSelected = true
+			}
+			break;
+		case 'default-channel':
+			if(settings.general[setting]){
+				toggleMenuItem('#opt-0',false);
+				$(videoTarget).attr('src', '');
+			}else{
+				$(videoTarget).attr('src', 'welcome.html');
+			}
+			break;
+		case 'twitch-user':
+			if(settings.general[setting]){
+				$('#twitch-user').val(settings.general[setting]);
+				toggleMenuItem('#opt-1',false);
+			}
+			break;
+		case 'color-theme':
+			document.getElementById('color-theme-options').options[settings.general[setting]].defaultSelected = true;
+			$("#color-style").attr('href', 'themes/'+$('#color-theme-options')[0][settings.general[setting]].text+'.css');
+			break;
+		case 'pip-position':
+			$("#pip-box").attr('class', 'pip-'+$('#pip-options')[0][settings.general[setting]].text);
+			document.getElementById('pip-options').options[settings.general[setting]].defaultSelected = true;
+			break;
+	}
+}
+
+/* Click and change events */
+// Prevent form defaults
+$('#get-twitch-user').on('submit', function(e){
+	e.preventDefault();
+});
+// Clears value of text box when clicked
+$('input[type=text]').click(function(){
+	$(this).val('');
+});
+// Handle menu clicks
 $('.tabs > li > input').click(function(){
 	var num = $(this)[0].id.substr($(this)[0].id.length - 1);
-	if(num != 5){// hides games tab if another tab is clicked
-		hideMenuItem('#opt5');
+	if(num != 2){// hides games tab if another tab is clicked
+		toggleMenuItem('#opt-2',true);
 	}
 });
-// loading default tab
-var defaultTab = '#opt'+fullstream.settings['defaultTab'];
-$('#tab'+defaultTab.substr(defaultTab.length-1))[0].checked = true;
-showMenuItem(defaultTab);
-
-// Check for menu buttons to be visible on load
-if(fullstream.settings['defaultChannel'] != 'none'){
-	showMenuItem('#opt0');
-}
-// Checks if channels list's menu item is worth showing on load
-if(fullstream.anyChannels() || fullstream.settings.twitchUser != ''){
-	showMenuItem('#opt1');
-}
-// Checks if Switcher list's menu item is worth showing on load
-if(fullstream.switcherChannels.length > 0 || fullstream.settings['switcherSetting']){
-	showMenuItem('#opt2');
-}
-
-// Sidebar Toggle
-if(fullstream.settings['sidebarOnLoad']){
-	$('#sidebarToggle').addClass('fa-angle-left').removeClass('fa-angle-right');
-	$('#media').animate({
-		right: '0px'
-	});
-}
-$('#sidebarToggle').click(function(){
+// Show or hide sidebar
+$('#sidebar-toggle').click(function(){
 	if($(this).hasClass('fa-angle-right')){
 		$(this).addClass('fa-angle-left').removeClass('fa-angle-right');
 		$('#media').animate({
 			right: '0px'
 		});
-	}
-	else{
+	}else{
 		$(this).addClass('fa-angle-right').removeClass('fa-angle-left');
 		$('#media').animate({
 			right: '320px'
 		});
-
 		// refreshes video iframe to prevent weird bug in chrome on OSX
 		if (navigator.appVersion.indexOf("Mac")!=-1){
 			setTimeout(function(){
@@ -73,15 +106,14 @@ $('#sidebarToggle').click(function(){
 		}
 	}
 });
-
 // Topbar toggle
-$('#topbarToggle').click(function(){
+$('#topbar-toggle').click(function(){
 	if($(this).hasClass('fa-angle-up')){
 		$(this).addClass('fa-angle-down').removeClass('fa-angle-up');
-		$('#statusbar img, #streamStats').css({
+		$('#statusbar img, #stream-stats').css({
 			'visibility': 'hidden'
 		});
-		$('#statusbar .toggle').removeClass('toggle').addClass('smallToggle');
+		$('#statusbar .toggle').removeClass('toggle').addClass('small-toggle');
 		$('#statusbar').animate({
 			height: '20px'
 		});
@@ -94,8 +126,7 @@ $('#topbarToggle').click(function(){
 		},function(){
 			$('#video').css({height: 'calc(100% - 26px)'});
 		});
-	}
-	else{
+	}else{
 		$(this).addClass('fa-angle-up').removeClass('fa-angle-down');
 		$('#statusbar').animate({
 			height: '46px'
@@ -103,10 +134,10 @@ $('#topbarToggle').click(function(){
 		$('#statusbar > span').animate({
 			left: '52px'
 		},function(){
-			$('#statusbar img, #streamStats').css({
+			$('#statusbar img, #stream-stats').css({
 				'visibility': 'visible'
 			});
-			$('#statusbar .smallToggle').removeClass('smallToggle').addClass('toggle');
+			$('#statusbar .small-toggle').removeClass('small-toggle').addClass('toggle');
 		});
 		$('#video').animate({
 			height: ($('#video').height()-26)+'px'
@@ -115,121 +146,66 @@ $('#topbarToggle').click(function(){
 		});
 	}
 });
-
-// Pipbox close
-$('#pipclose').click(function(){
+// Pip-box close
+$('#pip-close').click(function(){
 	$(pipTarget).attr('src', '');
-	$('#pipbox').css('display', 'none');
+	$('#pip-box').css('display', 'none');
 });
-
-// Switcher drop-down option
-$('#switcherChannelsSelectButton').click(function(){
-	fullstream.addSwitcherChannel($('#switcherChannelsSelect').val());
-	fullstream.populateSwitcher();
+// Switcher channel selection
+$('#switcher-channels-select-button').click(function(){
+	fullstream.addSwitcherChannel($('#switcher-channels-select').val());
+	fullstream.populateChannels();
 });
-
-// Populating settings
-for(setting in fullstream.settings){
-	$('#'+setting).prop('checked', fullstream.settings[setting]);
-	if(setting == 'switcherSetting'){
-		$('#localSwitcherSetting').prop('checked', fullstream.settings[setting]);
-	}
-	if(fullstream.settings.twitchUser != ''){
-		$('#twitchUser').val(fullstream.settings.twitchUser);
-	}
-}
-$('#generalSettings input[type=checkbox]').click(function(){
-	fullstream.settings[this.id] = this.checked;
-	fullstream.save('settings');
-	if(this.id == 'offlineChannels'){
-		fullstream.populate();
-	}
-	else if(this.id == 'switcherSetting'){
-		$('#localSwitcherSetting').prop('checked', this.checked);
+// Handle settings changes
+$('#general-settings input[type=checkbox]').click(function(){
+	settings.general[this.id] = this.checked;
+	fullstream.save();
+	if(this.id == 'switcher-setting'){
+		$('#local-switcher-setting').prop('checked', this.checked);
 		if(this.checked){
-			showMenuItem('#opt2');
+			toggleMenuItem('#opt-4',false);
+			$('#tab-4')[0].checked = true;
 			fullstream.switcher();
-		}else if( this.checked == false && fullstream.switcherChannels.length == 0){
-			hideMenuItem('#opt2');
+		}else if(!this.checked && !settings.switcherChannels.length){
+			toggleMenuItem('#opt-4',true);
 		}
 	}
+	fullstream.populateChannels();
 });
-$('#localSwitcherSwitch input[type=checkbox]').click(function(event) {
-	fullstream.settings['switcherSetting'] = this.checked;
-	$('#switcherSetting').prop('checked', this.checked);
+// Handle local switcher toggle
+$('#local-switcher-switch input[type=checkbox]').click(function(event) {
+	settings.general['switcher-setting'] = this.checked;
+	$('#switcher-setting').prop('checked', this.checked);
 	if(this.checked){
-		showMenuItem('#opt2');
+		toggleMenuItem('#opt-4',false);
 		fullstream.switcher();
-	}else if( this.checked == false && fullstream.switcherChannels.length == 0){
-		hideMenuItem('#opt2');
+	}else if(!this.checked && !settings.switcherChannels.length){
+		toggleMenuItem('#opt-4',true);
+		$('#tab-5')[0].checked = true;
 	}
-	fullstream.save('settings');
+	fullstream.save();
 });
-
-// default tab
-$('#defaultTabOptions').change(function(){
-	fullstream.settings['defaultTab'] = $('#defaultTabOptions').val();
-	fullstream.save('settings');
-});
-document.getElementById('defaultTabOptions').options[fullstream.settings['defaultTab']].defaultSelected = true;
-
-// color themes
-$('#colorThemeOptions').change(function(){
-	fullstream.settings['colorTheme'] = $('#colorThemeOptions').val();
-	fullstream.save('settings');
-	$("#colorStyle").attr('href', 'themes/'+$('#colorThemeOptions')[0][fullstream.settings['colorTheme']].text+'.css');
-});
-document.getElementById('colorThemeOptions').options[fullstream.settings['colorTheme']].defaultSelected = true;
-$("#colorStyle").attr('href', 'themes/'+$('#colorThemeOptions')[0][fullstream.settings['colorTheme']].text+'.css');
-
-$('#pipOptions').change(function(){
-	$("#pipbox").attr('class', 'pip'+$('#pipOptions')[0][$('#pipOptions').val()].text);
-	fullstream.settings['pipPosition'] = $('#pipOptions').val();
-	fullstream.save('settings');
-});
-$("#pipbox").attr('class', 'pip'+$('#pipOptions')[0][fullstream.settings['pipPosition']].text);
-document.getElementById('pipOptions').options[fullstream.settings['pipPosition']].defaultSelected = true;
-
-// Clears value of text box when clicked
-$('input[type=text]').click(function(){
-	$(this).val('');
-});
-
-// Set default channel
-$('#defaultChannelSelect').change(function(){
-	var defChan = $('#defaultChannelSelect').val();
-	if(defChan != fullstream.settings['defaultChannel']){
-		fullstream.settings['defaultChannel'] = defChan;
-		fullstream.save('settings');
-		fullstream.channelOptions();
-		fullstream.log('Default channel set to '+defChan);
-	}
-});
-
-// Save twitch username
-$('#saveTwitchUser').click(function(){
+// Handle twitch username setting change
+$('#save-twitch-user').click(function(){
 	loading = true;
-	var chan = cleanString($('#twitchUser').val());
-	if(chan == fullstream.settings.twitchUser){
+	var chan = cleanString($('#twitch-user').val());
+	if(chan == settings.general['twitch-user']){
 		alert(chan+" is already set as Twitch username.")
 		loading = false;
 	}
 	else{
-		showMenuItem('#opt1');
+		toggleMenuItem('#opt-1',false);
 		$.getJSON('https://api.twitch.tv/kraken/channels/'+chan+'?callback=?', function(a){
 			if(a.status != 422 && a.status != 404){
-				fullstream.settings.twitchUser = chan;
-				fullstream.channels = [];
-				fullstream.channelsData['twitch'] = [];
-				fullstream.favorites = [];
-				fullstream.switcherChannels = [];
-				fullstream.save('settings');
-				fullstream.save('channels');
-				$('#twitchUser').val(fullstream.settings.twitchUser);
+				settings.general['twitch-user'] = chan;
+				channelData.twitch = [];
+				settings.favorites = [];
+				settings.switcherChannels = [];
+				fullstream.save();
+				$('#twitch-user').val(settings.general['twitch-user']);
 				fullstream.log('Twitch.tv user set to '+chan);
-				fullstream.updateChannels();
+				fullstream.getChannels(0);
 				setTimeout(function(){
-					fullstream.channelsToData();
 					fullstream.updateData();
 				},2000);
 				setTimeout(function(){
@@ -245,159 +221,148 @@ $('#saveTwitchUser').click(function(){
 		});
 	}
 });
-
-// Add non twitch channel
-$('#addChannel').click(function(){
-	loading = true;
-	var service = $('#addChanSite').val();
-	var chan = cleanString($('#addSingleChannel').val());
-	showMenuItem('#opt1');
-	if(service == 'Hitbox.tv'){
-		$.getJSON('http://api.hitbox.tv/media/live/'+chan+'.json', function(a){
-			addOtherChannel(chan, 'hitbox')
-			notify('added '+chan+' to the channels list under Hitbox.tv')
-			loading = false;
-		})
-		.error(function(){
-			alert(chan+' is not a valid Hitbox.tv channel.')
-			loading = false;
-		});
-	}
-	else if(service == 'Streamup.com'){
-		addOtherChannel(chan, 'streamup')
-		notify('added '+chan+' to the channels list under Streamup.com')
-		loading = false;
-	}
-	else if(service == 'Vaughnlive.tv'){
-		addOtherChannel(chan, 'vaughnlive')
-		notify('added '+chan+' to the channels list under VaughnLive.tv')
-		loading = false;
-	}
-});
-
-// Removed all channels
-$('#restoreDefaults').click(function(){
-	fullstream.channels = [];
-	fullstream.favorites = [];
-	fullstream.otherChannels = {
-		"hitbox":[],
-		"streamup":[],
-		"vaughnlive":[]
-	};
-	fullstream.switcherChannels = [];
-	fullstream.settings = { // JSON array for storing settings
-		"offlineChannels": false,
-		"sidebarOnLoad": false,
-		"switcherSetting": false,
-		"notificationSetting": true,
-		"chatSetting": false,
-		"defaultTab": "4",
-		"defaultChannel": "none",
-		"colorTheme": "0",
-		"twitchUser": "",
-		"pipPosition": "0"
-	};
-	fullstream.save('channels');
-	fullstream.save('switcher');
-	fullstream.save('settings');
+// Restore all default settings
+$('#restore-defaults').click(function(){
+	settings = defaults;
+	fullstream.save();
 	location.reload();
 });
+// Handle default tab setting change
+$('#default-tab-options').change(function(){
+	settings.general['default-tab'] = $('#default-tab-options').val();
+	fullstream.save();
+});
+// Handle color theme setting change
+$('#color-theme-options').change(function(){
+	settings.general['color-theme'] = $('#color-theme-options').val();
+	fullstream.save();
+	$("#color-style").attr('href', 'themes/'+$('#color-theme-options')[0][settings.general['color-theme']].text+'.css');
+});
+// Handle pip-box setting change
+$('#pip-options').change(function(){
+	$("#pip-box").attr('class', 'pip-'+$('#pip-options')[0][$('#pip-options').val()].text);
+	settings.general['pip-position'] = $('#pip-options').val();
+	fullstream.save();
+});
+// Handle default channel setting change
+$('#default-channel-select').change(function(){
+	var defChan = $('#default-channel-select').val();
+	if(defChan != settings.general['default-channel']){
+		settings.general['default-channel'] = defChan;
+		fullstream.save();
+		fullstream.channelOptions();
+		fullstream.log('Default channel set to '+defChan);
+	}
+});
 
-// Clear video frame on load if default channel is set to prepare for channel switch
-if(fullstream.settings['defaultChannel'] != 'none'){
-	$(videoTarget).attr('src', '');
-}else{
-	$(videoTarget).attr('src', 'welcome.html');
-}
-
+/* Handle keydown events */
 $(window).keydown(function(e){
-	var next = false;
-	var switched = false;
-	if($("input[type=text]").is(':focus') == false){
-		if(e.keyCode == 66 || e.keyCode == 78){	
-			if(fullstream.currentChannel.name == undefined){
-				switchToLiveChannel(e.keyCode);
-			}else{
-				for(site in fullstream.channelsData){
-					var tempArray = [];
-					for(chan in fullstream.channelsData[site]){
-						tempArray[tempArray.length] = chan;
+	if(settings.general['hotkeys']){
+		var next = false;
+		var switched = false;
+		if($("input[type=text]").is(':focus') == false){
+			if( e.keyCode == 66 || 
+				e.keyCode == 78 ||
+				e.keyCode == 71 ||
+				e.keyCode == 72
+			){	
+				var tempArray = [];
+				for(x in sortedChannels){
+					for(y in sortedChannels[x]){
+						tempArray[tempArray.length] = sortedChannels[x][y];
 					}
-					if(e.keyCode == 66){
+				}
+				if(!currentChannel.id){
+					var hit = false;
+					for(x in tempArray){
+						if(channelData.twitch[tempArray[x]].live && !hit){
+							var _this = channelData.twitch[tempArray[x]];
+							fullstream.changeChannel(channelData[_this.service][_this.id].videoEmbed, channelData[_this.service][_this.id].chatEmbed, _this.id, _this.service);
+							hit = true
+						}
+					}
+					if(!hit){
+						var _this = channelData.twitch[tempArray[0]];
+						fullstream.changeChannel(channelData[_this.service][_this.id].videoEmbed, channelData[_this.service][_this.id].chatEmbed, _this.id, _this.service);
+					}
+				}else{
+					if(e.keyCode == 66 || e.keyCode == 71){
 						tempArray.reverse();
 					}
 					for(chan in tempArray){
-						if(switched == false){
-							if(next == false && fullstream.currentChannel.name == tempArray[chan] && fullstream.currentChannel.service == site){
+						var _this = channelData.twitch[tempArray[chan]];
+						if(!switched){
+							if(!next && currentChannel.id == _this.id && currentChannel.service == _this.service){
 								next = true;
-							}else if(next && fullstream.channelsData[site][tempArray[chan]].live){
-								fullstream.changeChannel(fullstream.channelsData[site][tempArray[chan]].videoEmbed, fullstream.channelsData[site][tempArray[chan]].chatEmbed, tempArray[chan], site);
+							}else if(next && _this.live && (e.keyCode == 66 || e.keyCode == 78)){
+								fullstream.changeChannel(_this.videoEmbed, _this.chatEmbed, _this.id, _this.service);
+								switched = true;
+							}else if(next && (e.keyCode == 71 || e.keyCode == 72)){
+								fullstream.changeChannel(_this.videoEmbed, _this.chatEmbed, _this.id, _this.service);
 								switched = true;
 							}
 						}
 					}
-				}
-				if(switched == false){
-					switchToLiveChannel(e.keyCode);
-				}
-			}
-		}else if(e.keyCode == 67 || e.keyCode == 86){
-			var tabArray = [];
-			for(num in $('.tabs > li > input')){
-				if($('.tabs > li > input')[num].id != undefined){
-					tabArray[tabArray.length] = $('.tabs > li > input')[num].id;
-				}
-			}
-			if(e.keyCode == 67){
-				tabArray.reverse();
-			}
-
-			for(tab in tabArray){
-				if(switched == false){
-					if($('#'+tabArray[tab])[0].checked){
-						next = true;
-					}else if(next && $($('#'+tabArray[tab])[0].parentElement).css('display') != 'none'){
-						$('#'+tabArray[tab])[0].checked = true;
-						switched = true;
+					if(!switched){
+						var hit = false;
+						for(x in tempArray){
+							if(channelData.twitch[tempArray[x]].live && !hit){
+								var _this = channelData.twitch[tempArray[x]];
+								fullstream.changeChannel(channelData[_this.service][_this.id].videoEmbed, channelData[_this.service][_this.id].chatEmbed, _this.id, _this.service);
+								hit = true
+							}
+						}
+						if(!hit){
+							var _this = channelData.twitch[tempArray[0]];
+							fullstream.changeChannel(channelData[_this.service][_this.id].videoEmbed, channelData[_this.service][_this.id].chatEmbed, _this.id, _this.service);
+						}
 					}
 				}
+			}else if(e.keyCode == 67 || e.keyCode == 86){
+				var tabArray = [];
+				for(num in $('.tabs > li > input')){
+					if($('.tabs > li > input')[num].id != undefined){
+						tabArray[tabArray.length] = $('.tabs > li > input')[num].id;
+					}
+				}
+				if(e.keyCode == 67){
+					tabArray.reverse();
+				}
+
+				for(tab in tabArray){
+					if(switched == false){
+						if($('#'+tabArray[tab])[0].checked){
+							next = true;
+						}else if(next && $($('#'+tabArray[tab])[0].parentElement).css('display') != 'none'){
+							$('#'+tabArray[tab])[0].checked = true;
+							switched = true;
+						}
+					}
+				}
+			}else if(e.keyCode == 83){//sidebar
+				$('#sidebar-toggle').click();
+			}else if(e.keyCode == 84){//topbar
+				$('#topbar-toggle').click();
 			}
-		}else if(e.keyCode == 83){//sidebar
-			$('#sidebarToggle').click();
-		}else if(e.keyCode == 84){//topbar
-			$('#topbarToggle').click();
 		}
 	}
 });
 
 // Get initial data
-fullstream.updateChannels();
+fullstream.getChannels(0);
 setTimeout(function(){
-	fullstream.channelsToData();
-	fullstream.updateData();
-	fullstream.channelOptions();
-	
-	/* Load default channel if any*/
-	if(fullstream.settings['defaultChannel'] != 'none'){
-		var defChan = fullstream.settings['defaultChannel'];
-		for(site in fullstream.channelsData){
-			for(chan in fullstream.channelsData[site]){
-				if(chan == defChan){
-					fullstream.changeChannel(fullstream.channelsData[site][chan].videoEmbed, fullstream.channelsData[site][chan].chatEmbed, chan, 'twitch');
-				}
-			}
-		}
+	var defChan = settings.general['default-channel'];
+	if(channelData.twitch[defChan] && defChan){
+		var chan = channelData.twitch[defChan];
+		fullstream.changeChannel(chan.videoEmbed, chan.chatEmbed, defChan, 'twitch');
 	}
 	loading = false;
-},4000);
-
+},2000);
 // Update data every 60 seconds
 setInterval(function(){
-	fullstream.channelsToData();
 	fullstream.updateData();
 },60000);
-
 // Update twitch follower list every 5 min
 setInterval(function(){
-	fullstream.updateChannels();
+	fullstream.getChannels(0);
 },330000);

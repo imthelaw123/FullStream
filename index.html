@@ -3,16 +3,11 @@
 <head>
 	<title id="title">FullStream</title>
 	<meta charset="utf-8">
-
 	<link rel="icon" type="image/png" href="images/favico.png" />
 	<link rel="stylesheet" type="text/css" href="style.css" />
-	<link id="colorStyle" rel="stylesheet" type="text/css" href="themes/default.css" />
+	<link id="color-style" rel="stylesheet" type="text/css" href="themes/default.css" />
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
-	
-	<link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,900' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css'>
-
 	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script type="text/javascript" src="fullstream.js"></script>
 	<script type="text/javascript" src="fullstream.defer.js" defer="defer"></script>
@@ -24,135 +19,137 @@
 				<!-- placeholder google adsense-->
 			</div>
 			<ul class="tabs">
-				<li id="opt0">
-					<input type="radio" name="tabs" id="tab0">
-					<label for="tab0"><i class="fa fa-comment"></i></label>
+				<li id="opt-0">
+					<input type="radio" name="tabs" id="tab-0">
+					<label for="tab-0"><i class="fa fa-comment"></i></label>
 					<div class="tab-content">
-						<iframe frameborder="0" scrolling="no" id="chat_embed" src="chatPlaceholder.html"  height="100%" width="100%"></iframe>
+						<iframe frameborder="0" scrolling="no" id="chat-embed" src=""  height="100%" width="100%"></iframe>
 					</div>
 				</li>
-				<li id="opt1">
-					<input type="radio" name="tabs" id="tab1">
-					<label for="tab1"><i class="fa fa-list-alt"></i></label>
+				<li id="opt-1">
+					<input type="radio" name="tabs" id="tab-1">
+					<label for="tab-1"><i class="fa fa-list-alt"></i></label>
 					<div class="tab-content scrolled channels">
-						<ul id="channelList"></ul>
+						<ul id="channel-list"></ul>
 					</div>
 				</li>
-				<li id="opt5">
-					<input type="radio" name="tabs" id="tab5">
-					<label for="tab5"><i class="fa fa-gamepad"></i></label>
+				<li id="opt-2">
+					<input type="radio" name="tabs" id="tab-2">
+					<label for="tab-2"><i class="fa fa-gamepad"></i></label>
 					<div class="tab-content channels scrolled">
-						<ul id="gameList"></ul>
+						<ul id="game-list"></ul>
 					</div>
 				</li>
-				<li id="opt6">
-					<input type="radio" name="tabs" id="tab6">
-					<label for="tab6"><i class="fa fa-film"></i></label>
+				<li id="opt-3">
+					<input type="radio" name="tabs" id="tab-3">
+					<label for="tab-3"><i class="fa fa-film"></i></label>
 					<div class="tab-content scrolled">
-						<ul id="vodList"></ul>
+						<ul id="vod-list"></ul>
 					</div>
 				</li>
-				<li id="opt2">
-					<input type="radio" name="tabs" id="tab2">
-					<label for="tab2"><i class="fa fa-th-list"></i></label>
+				<li id="opt-4">
+					<input type="radio" name="tabs" id="tab-4">
+					<label for="tab-4"><i class="fa fa-th-list"></i></label>
 					<div class="tab-content scrolled padded">
 						<h4>Switcher</h4>
-						<div id="localSwitcherSwitch" class="onoffswitch">
-							<input type="checkbox" name="switcherSetting" class="onoffswitch-checkbox" id="localSwitcherSetting" checked>
-							<label class="onoffswitch-label" for="localSwitcherSetting">
+						<br>
+						<div id="local-switcher-switch" class="onoffswitch">
+							<input type="checkbox" name="switcher-setting" class="onoffswitch-checkbox" id="local-switcher-setting" checked>
+							<label class="onoffswitch-label" for="local-switcher-setting">
 								<div class="onoffswitch-inner"></div>
 							</label>
 						</div>
 						<p>Channels are sorted by priority, drag and drop to change the order.</p>
-						<p><b>Note that the Switcher must be turned on in the settings menu.</b></p>
 						<br>
 						<h4>Add a channel to the Switcher</h4>
-						<select id="switcherChannelsSelect"></select>
-						<input id="switcherChannelsSelectButton" type="button" value="Add"/>
+						<select id="switcher-channels-select"></select>
+						<input id="switcher-channels-select-button" type="button" value="Add"/>
 						<br>
-						<div id="switcherChannels"></div>
+						<br>
+						<div id="switcher-channels"></div>
 					</div>
 				</li>
-				<li id="opt3">
-					<input type="radio" name="tabs" id="tab3">
-					<label for="tab3"><i class="fa fa-wrench"></i></label>
+				<li id="opt-5">
+					<input type="radio" name="tabs" id="tab-5">
+					<label for="tab-5"><i class="fa fa-wrench"></i></label>
 					<div class="tab-content scrolled padded settings">
 						<h4>Settings</h4>
-						<ul id="generalSettings">
+						<br>
+						<ul id="general-settings">
 							<li>
 								<div class="onoffswitch">
-									<input type="checkbox" name="offlineChannels" class="onoffswitch-checkbox" id="offlineChannels" checked>
-									<label class="onoffswitch-label" for="offlineChannels">
+									<input type="checkbox" name="offline-channels" class="onoffswitch-checkbox" id="offline-channels" checked>
+									<label class="onoffswitch-label" for="offline-channels">
 										<div class="onoffswitch-inner"></div>
 									</label>
 								</div>
 							</li>
 							<li>
 								<div class="onoffswitch">
-									<input type="checkbox" name="sidebarOnLoad" class="onoffswitch-checkbox" id="sidebarOnLoad" checked>
-									<label class="onoffswitch-label" for="sidebarOnLoad">
+									<input type="checkbox" name="sidebar-on-load" class="onoffswitch-checkbox" id="sidebar-on-load" checked>
+									<label class="onoffswitch-label" for="sidebar-on-load">
 										<div class="onoffswitch-inner"></div>
 										</label>
 								</div>
 							</li>
 						<li>
 							<div class="onoffswitch">
-								<input type="checkbox" name="switcherSetting" class="onoffswitch-checkbox" id="switcherSetting" checked>
-								<label class="onoffswitch-label" for="switcherSetting">
+								<input type="checkbox" name="switcher-setting" class="onoffswitch-checkbox" id="switcher-setting" checked>
+								<label class="onoffswitch-label" for="switcher-setting">
 									<div class="onoffswitch-inner"></div>
 								</label>
 							</div>
 						</li>
 						<li>
 							<div class="onoffswitch">
-								<input type="checkbox" name="notificationSetting" class="onoffswitch-checkbox" id="notificationSetting" checked>
-								<label class="onoffswitch-label" for="notificationSetting">
+								<input type="checkbox" name="notification-setting" class="onoffswitch-checkbox" id="notification-setting" checked>
+								<label class="onoffswitch-label" for="notification-setting">
 									<div class="onoffswitch-inner"></div>
 								</label>
 							</div>
 						</li>
 						<li>
 							<div class="onoffswitch">
-								<input type="checkbox" name="chatSetting" class="onoffswitch-checkbox" id="chatSetting">
-								<label class="onoffswitch-label" for="chatSetting">
+								<input type="checkbox" name="chat-setting" class="onoffswitch-checkbox" id="chat-setting">
+								<label class="onoffswitch-label" for="chat-setting">
 									<div class="onoffswitch-inner"></div>
 								</label>
 							</div>
 						</li>
 						<li>
-							<select id="defaultChannelSelect"></select>
+							<div class="onoffswitch">
+								<input type="checkbox" name="hotkeys" class="onoffswitch-checkbox" id="hotkeys">
+								<label class="onoffswitch-label" for="hotkeys">
+									<div class="onoffswitch-inner"></div>
+								</label>
+							</div>
+						</li>
+						<br>
+						<li>
+							<select id="default-channel-select"></select>
 							Default Channel
 						</li>
 						<li>
-							<select id="defaultTabOptions">
+							<select id="default-tab-options">
 								<option value="0">Chat</option>
 								<option value="1">Channels</option>
-								<option value="2">Switcher</option>
-								<option value="3">Settings</option>
-								<option value="4">About</option>
+								<option value="6">About</option>
 							</select>
 							Default tab
 						</li>
 						<li>
-							<select id="colorThemeOptions">
+							<select id="color-theme-options">
 								<option value="0">default</option>
 								<option value="1">army</option>
-								<option value="2">piggy</option>
-								<option value="3">kados</option>
-								<option value="4">fire</option>
-								<option value="5">bright</option>
-								<option value="6">night</option>
-								<option value="7">annoying</option>
-								<option value="8">twitchy</option>
-								<option value="9">tube</option>
-								<option value="10">endless</option>
-								<option value="11">broncos</option>
-								<option value="12">terminal</option>
+								<option value="2">twitchy</option>
+								<option value="3">dark-twitchy</option>
+								<option value="4">tube</option>
+								<option value="5">terminal</option>
 							</select>
 							Color theme
 						</li>
 						<li>
-							<select id="pipOptions">
+							<select id="pip-options">
 								<option value="0">topright</option>
 								<option value="1">topleft</option>
 								<option value="2">bottomright</option>
@@ -162,122 +159,100 @@
 						</li>
 						
 					</ul>
-					<ul id="generalSettingsLabels">
+					<ul id="general-settings-labels">
 						<li>Hide offline channels</li>
 						<li>Hide sidebar on load</li>
 						<li>Switcher</li>
 						<li>Notifications</li>
 						<li>Load chat on channel switch</li>
+						<li>Hotkeys</li>
 					</ul>
-					<form>
+					<br>
+					<form id="get-twitch-user">
 						<h5>Twitch Username</h5>
-						<input type="text" id="twitchUser" value="twitch.tv username"/>
-						<input type="button" id="saveTwitchUser" value="save"/>
-						
+						<input type="text" id="twitch-user" value="twitch.tv username"/>
+						<input type="submit" id="save-twitch-user" value="save"/>
 						<br>
 						<br>
-						
-						<h5>Add a single non Twitch channel</h5>
-						<input type="text" id="addSingleChannel" value="channel name"/>
-						<select id="addChanSite">
-							<option>Hitbox.tv</option>
-							<option>Streamup.com</option>
-							<option>Vaughnlive.tv</option>
-						</select>
-						<input type="button" id="addChannel" value="add"/>
-						
-						<br>
-						<br>
-						
-						<input type="button" id="restoreDefaults" value="Restore Defaults"/>
+						<input type="button" id="restore-defaults" value="Restore Defaults"/>
 					</form>
 					</div>
 				</li>
-				<li id="opt4">
-					<input type="radio" name="tabs" id="tab4" checked>
-					<label for="tab4"><i class="fa fa-info"></i></label>
+				<li id="opt-6">
+					<input type="radio" name="tabs" id="tab-6" checked>
+					<label for="tab-6"><i class="fa fa-info"></i></label>
 					<div class="tab-content scrolled padded about">
 						<img src="images/logo.png" width="280px"/>
-						<h4>Current Version: 0.1.14</h4>
-						<P>Welcome to FullStream, an alternative way to watch Twitch.tv streams on the web.</P>
+						<h4>Version: 0.2.0</h4>
+						<P>Welcome to FullStream</P>
+						<P>A better way to watch Twitch</P>
 						<br>
 						<h4><i class="fa fa-info"></i>About</h4>
-						<p>FullStream was initially made to make it easy to watch twitch.tv streams in fullscreen while still having the ability to chat, in addition there has been added some cool features like a channels list, a status bar, an automatic channel switcher, support for twitch VODs and more.</p>
+						<p>FullStream is with the intention made to make it better to watch twitch.tv in a fullscreen interface while still having the ability to chat, view your following channels, having a status bar, Picture in Picture, an automatic channel switcher, support for VODs and more.</p>
 						<br>
-						<h4><i class="fa fa-list-alt"></i>The channel list</h4>
-						<p>The channels list displays channels you are following on Twitch, if you hover over a channel you you get more info about it and a few options.</p>
-						<ul class="buttonDesctiptions">
+						<h4><i class="fa fa-list-alt"></i>Channel list</h4>
+						<p>The channels list displays channels you are following on Twitch.</p>
+						<ul class="button-desctiptions">
 							<li>
-								<i class="fa fa-play"></i>
-								<br>
-								The play button let's you tune into the channel by switching the video and chat embed source.
+								<i class="fa fa-play"></i> Change channel.
 							</li>
 							<li>
-								<i class="fa fa-external-link-square"></i>
-								<br>
-								Picture in Picture, let's you watch a second stream in a chosen corner.
+								<i class="fa fa-external-link-square"></i> Activate Picture in Picture.
 							</li>
 							<li>
-								<i class="fa fa-heart"></i>
-								<br>
-								Adds the selected channel to the favorites list. *
+								<i class="fa fa-heart"></i> Favorite Channel.
 							</li>
 							<li>
-								<i class="fa fa-gamepad"></i>
-								<br>
-								Creates a list of channels streaming the same game. *
+								<i class="fa fa-gamepad"></i> Activate game list.
 							</li>
 							<li>
-								<i class="fa fa-th-list"></i>
-								<br>
-								Let's you add the channel to the switcher. *
+								<i class="fa fa-th-list"></i> Add channel to switcher.
 							</li>
 							<li>
-								<i class="fa fa-trash-o"></i>
-								<br>
-								Removes the channel from the channels list. **
+								<i class="fa fa-trash-o"></i> Remove the channel.
 							</li>
-							<li>* Only Twitch channels.<br>
-							** Only non-Twitch channels and Switcher channels.</li>
 						</ul>
 						<br>
-						<h4><i class="fa fa-th-list" style="color: #fff;"></i>The Switcher</h4>
+						<h4><i class="fa fa-th-list"></i>Switcher</h4>
 						<p>The switcher will automatically switch the video and chat embeds to the top channel on the list that is currently live, the list can be sorted by dragging and dropping the channels</p>
 						<br>
-						<h4><i class="fa fa-keyboard-o" style="color: #fff;"></i>Hotkeys</h4>
+						<h4><i class="fa fa-keyboard-o"></i>Hotkeys</h4>
 						<p>Various hotkeys to trigger events</p>
 						<ul>
-							<li>S = Toggle sidebar</li>
-							<li>T = Toggle topbar</li>
-							<li>C = Change menu item direction left</li>
-							<li>V = Change menu item direction right</li>
-							<li>B = Switch to previous live channel</li>
-							<li>N = Switch to next live channel</li>
+							<li><b>S</b> = Toggle sidebar</li>
+							<li><b>T</b> = Toggle topbar</li>
+							<li><b>C</b> = Change menu item direction left</li>
+							<li><b>V</b> = Change menu item direction right</li>
+							<li><b>B</b> = Switch to previous live channel</li>
+							<li><b>N</b> = Switch to next live channel</li>
 						</ul>
 						<br>
 						<h4>Browser Support</h4>
 						<p>FullStream is tested and confirmed working using the following browsers</p>
 						<ul>
-							<li>Google Chrome 38<br>
-							Mozilla Firefox 33<br>
-							Opera 25<br>
-							Safari 8</li>
+							<li>Google Chrome<br>
+							Mozilla Firefox<br>
+							Opera</li>
 						</ul>
 						<br>
 						<h4>Made By</h4>
 						<img src="images/knifftech.png" width="250"/>
 						<p>FullStream was made by Kniffen and is part of the KniffTech library, for more information about Kniffen and KniffTech check out the following links.</p>
+						<br>
+						<h4>Links</h4>
 						<ul>
 							<li><a href="http://knifftech.net" target="_blank">Website</a></li>
 							<li><a href="http://github.com/knifftech" target="_blank">KniffTech on GitHub</a></li>
 							<li><a href="http://www.reddit.com/r/knifftech" target="_blank">KniffTech Subreddit</a></li>
+							<li><a href="https://chrome.google.com/webstore/detail/fullstream/jkchcbdilffpbpkknniliidiflhbagkl" target="_blank">FullStream on the google chrome store</a></li>
 							<li><a href="https://twitter.com/knifftech" target="_blank">@knifftech on twitter</a></li>
 							<li><a href="https://twitter.com/kniffen" target="_blank">@kniffen on twitter</a></li>
 						</ul>
+						<br>
 					</div>
 				</li>
 			</ul>
-			<div id="notificationBox">
+			<div id="notification-box">
 				<h3>Notice!</h3>
 				<p></p>
 			</div>
@@ -285,14 +260,14 @@
 		</div>
 		<div id="media">
 			<div id="statusbar">
-				<img id="streamLogo" src="images/offline.png" />
-				<span id="streamStatus">Welcome to FullStream</span>
-				<span id="streamStats">Please select or configure your setup on the sidebar to the right</span>
-				<i id="topbarToggle" class="fa fa-angle-up toggle"></i>
-				<i id="sidebarToggle" class="fa fa-angle-right toggle"></i>
+				<img id="stream-logo" src="images/offline.png" />
+				<span id="stream-status">Welcome to FullStream</span>
+				<span id="stream-stats">A better way to watch Twitch</span>
+				<i id="topbar-toggle" class="fa fa-angle-up toggle"></i>
+				<i id="sidebar-toggle" class="fa fa-angle-right toggle"></i>
 			</div>
 			
-			<div id="pipbox" class="piptopright"><i id="pipclose" class="fa fa-times"></i><iframe name="pipvideo" id="pipvideo" width="360" height="240" src=""></iframe></div>
+			<div id="pip-box" class="pip-topright"><i id="pip-close" class="fa fa-times"></i><iframe name="pip-video" id="pip-video" width="360" height="240" src=""></iframe></div>
 
 			<iframe name="video" id="video" width="100%" height="100%" src="welcome.html"></iframe>
 		</div>

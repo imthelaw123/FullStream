@@ -6,20 +6,22 @@ li{
 	list-style: none;
 }
 body{
-	padding: 15px;
 	color: #FFF;
 	font-family: Helvetica, sans-serif;
 	background-color: #000;
-	background: url('images/bkg.jpg') no-repeat #000;
+	background-color: #101010;
 }
 iframe{
 	border: 0px;
 }
 #videoDiv{
-	margin: 0 auto;
-	min-height: 360px;
-	height: auto;
-	max-height: 720px;
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	bottom: 95px;
+	left: 0px;
+	overflow: hidden;
+	white-space: nowrap;
 }
 .madeby{
 	position: absolute;

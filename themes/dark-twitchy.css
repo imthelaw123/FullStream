@@ -1,22 +1,22 @@
 body{
-	background-color: #325320;
-	color: #ddd;
+	background-color: #19191F;
+	color: #999;
 }
 a{
-	color: #eee;
+	color: #ddd;
 }
 input[type=button],
 input[type=submit],
 input[type=text],
 select{
 	border: 1px solid #000;
-	background-color: #4C5320;
+	background-color: #6441A5;
 	color: #ddd;
 }
 input[type=button]:hover,
 input[type=submit]:hover{
-	background-color: #999;
-	color: #000;
+	background-color: #7D66B7;
+	color: #ddd;
 }
 input[type=text], 
 select, 
@@ -29,10 +29,10 @@ textarea{
 	border-left: 1px solid #000;
 }
 #media{
-	background-color: #325320;
+	background-color: #19191F;
 }
 .tabs > li > label{
-	background-color: #325320;
+	background-color: #19191F;
 	color: #ddd;
 	border-right: 1px solid #000;
 }
@@ -40,45 +40,45 @@ textarea{
 	border-right-width: 0px;
 }
 .tabs > li > input:checked + label{
-	background-color: #416B29;
+	background-color: #6441A5;
 	color: #ddd;
 }
 .tab-content{
-	background-color: #325320;
+	background-color: #19191F;
 }
 .tab-content h3{
 	color: #ddd;
 }
 .channel-splitter{
-	background-color: #4C5320;
+	background-color: #6441A5;
 	color: #eee;
-	border-top: 1px solid #223815;
-	border-bottom: 1px solid #223815;
+	border-top: 1px solid #000;
+	border-bottom: 1px solid #000;
 }
 .channel,
 .switcher-channel{
 	color: #fff;
-	background-color: #416B29;
+	background-color: #24242A;
 }
 .channel:nth-child(even),
 .vod:nth-child(even){
-	background-color: #325320;
+	background-color: #19191F;
 }
 .channel:hover, 
 .switcher-channel:hover, 
 .channel .controls{
-	background-color: #223815;
+	background-color: #101014;
 }
 .channel{
 	color: #ddd;
 }
 .channel .channel-genre,
 .channel .channel-stats{
-	color: #eee;
+	color: #999;
 }
 .selected-channel,
 .selected-channel .controls{
-	background-color: #223815 !important;
+	background-color: #101014 !important;
 }
 .controls i.fa-play:hover, 
 .about i.fa-play{
@@ -109,33 +109,34 @@ textarea{
 }
 #notification-box{
 	color: #fff;
-	background-color: #4C5320;
+	background-color: #19191F;
 	border: 2px solid #000;
 }
 #notification-box h3{
 	border-bottom: 1px solid #000;
 }
 #statusbar{
-	background-color: #325320;
+	color: #ddd;
+	background-color: #19191F;
 	border-bottom: 1px solid #000;
 }
 #statusbar .toggle{
-	color: #999;
+	color: #404040;
 }
 #statusbar .small-toggle{
-	color: #999;
+	color: #404040;
 	width: 15px;
 	height: 15px;
 }
 #statusbar .toggle:hover, 
 #statusbar .smallToggle:hover{
-	color: #eee;
+	color: #6441A5;
 }
 .onoffswitch-label {
     border: 1px solid #000; 
 }
 .onoffswitch-inner:before {
-    background-color: #4C5320;
+    background-color: #6441A5;
     color: #FFFFFF;
 }
 .onoffswitch-inner:after {
@@ -143,17 +144,17 @@ textarea{
     color: #000;
 }
 ::-webkit-scrollbar{
-	background-color: #223815;
+	background-color: #101010;
 	border-left: 1px solid #000;
 }
 ::-webkit-scrollbar-thumb{
-	background-color: #325320;
+	background-color: #303030;
 	border-left: 1px solid #000;
 }
 #pip-box{
-	background-color: #325320;
+	background-color: #19191F;
 	border: 1px solid #000;
 }
 #pip-box i{
-	color: #fff;
+	color: #6441A5;
 }

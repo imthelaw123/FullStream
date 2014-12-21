@@ -1,17 +1,16 @@
 *{
 	margin: 0;
 	padding: 0;
-	-webkit-font-smoothing: antialiased;
 }
-*:not(input.field) {    
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+*{    
+    -webkit-user-select: none !important;
+    -khtml-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
 }
 body{
-	font-family: 'Lato', Helvetica, sans-serif;
+	font-family: Helvetica, Arial, sans-serif;
 	overflow: hidden;
 }
 li{
@@ -23,24 +22,30 @@ iframe{
 h4{
 	text-transform: uppercase;
 }
-input[type=button], input[type=submit],select,input[type=text]{
+input[type=button], 
+input[type=submit],
+input[type=text],
+select{
 	padding: 2px;
 	font-size: 11px;
 	cursor: pointer;
 	height: 22px;
-	font-weight: bold;
 	font-size: 10px;
 	text-transform:uppercase;
 }
-input[type=text], select, textarea{
+input[type=text], 
+select, 
+textarea{
 	text-transform:lowercase;
+	font-weight: bold;
 }
 input[type=text]{
 	width: 130px;
 	cursor: text;
 	height: 14px;
 }
-input[type=button], input[type=submit]{
+input[type=button], 
+input[type=submit]{
 	padding-left: 10px;
 	padding-right: 10px;
 }
@@ -73,7 +78,7 @@ select{
 	overflow: hidden;
 	height: calc(100% - 52px);
 }
-/* Tabs styles */
+/* Tab styles */
 .tabs{
 	display: flex;
 	display: -webkit-flex;
@@ -120,9 +125,6 @@ select{
 	margin-left: 8px;
 	text-shadow: 0px 1px #000, 1px 0px #000, -1px 0px #000, 0px -1px #000;
 }
-.tabs li > input:checked + label{
-	/**/
-}
 .tabs li > input:checked ~ .tab-content{
 	display: block;
 }
@@ -130,62 +132,77 @@ h4{
 	font-weight: bold;
 	font-size: 14px;
 }
-.boxTitle{
+.box-title{
 	padding: 5px;
 }
-.boxTitle p{
+.box-title p{
 	font-size: 12px;
 	margin-top: 5px;
 }
-#switcherSwitch{
+#switcher-switch{
 	position: absolute;
 	right: 5px;
 	top: 4px;
 }
-#switcherChannelsSelect{
+#switcher-channels-select{
 	width: 170px;
 }
-.channel, .switcherChannel{
+.channel, 
+.switcher-channel{
 	font-size: 15px;
-	font-weight: 600;
 	width: 295px;
 	padding: 4px;
-	height: 32px;
+	height: 40px;
 	min-height: 32px;
 	cursor: pointer;
 	overflow: hidden;
 	position: relative;
 }
-.switcherChannel span{
+.switcher-channel{
+	margin-left: -6px;
+}
+.switcher-channel span{
 	position: absolute;
 	top: 10px;
 	left: 6px;
 }
-.channelSplitter{
+.channel-splitter{
+	font-family: Arial, Helvetica, sans-serif; 
 	width: 295px;
 	padding: 10px;
 }
-.channelSplitter h4{
+.channel-splitter h4{
 	font-size: 12px;
-	font-weight: 600;
 	position: relative;
 	margin-right: 15px; 
 }
-.channelSplitter h4 i{
+.channel-splitter h4 i{
 	margin-right: 6px;
 	font-size: 15px;
 }
-.channelSplitter .fa-caret-up, .channelSplitter .fa-caret-down{
+.channel-splitter .fa-caret-up, 
+.channel-splitter .fa-caret-down{
 	position: absolute;
-	right: 10px;
+	right: -7px;
 	cursor: pointer;
 }
-.channel b{
+.channel .channel-name{
 	position: absolute;
-	left: 34px;
-	top: 6px;
+	left: 50px;
+	top: 4px;
+	font-size: 12px;
+}
+.channel .channel-name .channel-genre{
+	padding-top: 5px;
+}
+.channel .channel-stats{
+	position: absolute;
+	right: 1px;
+	top: 23px;
+	font-size: 12px;
 }
 .channel .details{
+	font-family: Arial, Helvetica, sans-serif; 
 	visibility: hidden;
 	padding-top: 34px;
 	padding-right: 20px;
@@ -193,7 +210,8 @@ h4{
 	font-weight: normal;
 	font-size: 14px;
 }
-.channel:hover .details, .channel:hover .controls{
+.channel:hover .details, 
+.channel:hover .controls{
 	visibility: visible;
 }
 .channel li{
@@ -202,73 +220,77 @@ h4{
 }
 .channel .controls{
 	position: absolute;
-	right: 26px;
-	margin-top: 6px;
+	right: 6px;
+	margin-top: 0px;
 	z-index: 100;
 	visibility: hidden;
 }
 .vod{
 	position: relative;
 	font-size: 12px;
-	min-height: 100px;
+	min-height: 80px;
 	height: auto;
+}
+.vod .vod-title{
+	font-weight: bold;
 }
 .vod img{
 	position: absolute;
 	width: 100px;
 	height: 75px;
-	margin-top: 13px;
+	margin-top: 2px;
 }
-.vod .VodDetails{
-	margin: 5px 20px 5px 110px;
+.vod .vod-details{
+	margin: 2px 0px 5px 110px;
 }
-.vod .VodDetails li{
+.vod .vod-details li{
 	float: none;
 }
 
 .controls i{
 	margin-left: 10px;
-	font-size: 16px;
+	font-size: 14px;
 }
-.controls i.notFavorite:hover{
+.controls i.not-favorite:hover{
 	color: pink;
 }
-.controls i.isFavorite{
+.controls i.is-favorite{
 	color: pink;
 }
-.controls i.isFavorite:hover{
+.controls i.is-favorite:hover{
 	color: #fff;
 }
-.controls i.notSwitcher:hover{
+.controls i.not-switcher:hover{
 	color: #0094FF;
 }
-.controls i.isSwitcher{
+.controls i.is-switcher{
 	color: #0094FF;
 }
-.controls i.isSwitcher:hover{
+.controls i.is-switcher:hover{
 	color: #fff;
 }
 .channels img{
 	position: absolute;
-	width: 20px;
-	height: 20px;
-	top: 6px;
+	width: 36px;
+	height: 36px;
+	top: 1px;
 	left: 4px;
+	border: 1px solid #111;
 }
-.switcherChannel i{
+.switcher-channel i{
 	float: right;
 	margin-top: 11px;
 	margin-right: 26px;
 	font-size: 16px;
 }
-.switcherChannel i.fa-trash-o{
+.switcher-channel i.fa-trash-o{
 	color: #FF0000;
 }
-.switcherChannel:hover i.fa-trash-o{
+.switcher-channel:hover i.fa-trash-o{
 	visibility: visible;
 }
 .settings{
-	font-weight: bold;
+	font-weight: normal;
 	font-size: 12px;
 }
 .settings form{
@@ -277,18 +299,24 @@ h4{
 .settings input{
 	margin-top: 5px;
 }
-#generalSettings{
+#local-switcher-switch{
+	position: absolute;
+	top: 6px;
+	right: 4px;
+}
+#general-settings{
 	margin: 5px;
 }
-#generalSettings h4{
+#general-settings h4{
 	padding-bottom: 10px;
 }
-#generalSettings li, #generalSettingsLabels li{
+#general-settings li, 
+#general-settings-labels li{
 	height: 24px;
 }
-#generalSettingsLabels{
+#general-settings-labels{
 	position: absolute;
-	top: 29px;
+	top: 43px;
 	left: 63px;
 }
 .about{
@@ -296,29 +324,27 @@ h4{
 }
 .about li{
 	margin-top: 6px;
+	font-size: 12px;
 }
 .about i.fa{
 	margin-right: 6px;
 	font-size: 20px;
 }
-.about li{
-	font-size: 12px;
-	font-weight: bold;
-}
-#notificationBox{
+#notification-box{
 	position: absolute;
 	width: 240px;
 	height: 50px;
 	left: 15px;
-	bottom: -65px;
+	//bottom: -65px;
+	bottom: 0px;
 	padding: 5px;
 }
-#notificationBox h3{
+#notification-box h3{
 	font-size: 17px;
 	height: 20px;
 	width: 100%;
 }
-#notificationBox p{
+#notification-box p{
 	font-size: 11px;
 }
 #statusbar{
@@ -332,13 +358,12 @@ h4{
 	right: 90px;
 	white-space: nowrap;
 	overflow: hidden;
-	font-weight: 600;
-	cursor: pointer;
+	cursor: default;
 }
-#statusbar .statItem{
+#statusbar .stat-item{
 	position: relative;
 	margin-right: 10px;
-	left: -18px;
+	left: 1px;
 }
 #statusbar img{
 	width: 40px;
@@ -350,13 +375,13 @@ h4{
 #statusbar a:hover{
 	text-decoration: underline;
 }
-#streamStatus{
-	top: 4px;
+#stream-status{
+	top: 5px;
 	left: 52px;
 	overflow: hidden;
 }
-#streamStats{
-	top: 26px;
+#stream-stats{
+	top: 28px;
 }
 #statusbar .toggle{
 	position: absolute;
@@ -369,14 +394,14 @@ h4{
     -o-transition: 0.3s; 
 	transition: 0.3s;
 }
-#statusbar .smallToggle{
+#statusbar .small-toggle{
 	font-size: 26px;
 	position: absolute;
 	top: 0px;
 	right: 10px;
 	cursor: pointer;
 }
-#statusbar #topbarToggle{
+#statusbar #topbar-toggle{
 	right: 56px;
 }
 .loading{
@@ -388,7 +413,7 @@ h4{
 	z-index: 10000;
 }
 /* Settings switch*/
-.onoffswitch {
+.onoffswitch{
     position: relative;
 	width: 50px;
     -webkit-user-select:none; 
@@ -411,7 +436,8 @@ h4{
     -o-transition: margin 0.3s ease-in 0s; 
 	transition: margin 0.3s ease-in 0s;
 }
-.onoffswitch-inner:before, .onoffswitch-inner:after {
+.onoffswitch-inner:before, 
+.onoffswitch-inner:after {
     float: left; 
 	width: 50%; 
 	height: 16px; 
@@ -420,7 +446,6 @@ h4{
     font-size: 10px; 
 	color: white;
 	font-weight: 800;
-	font-family: 'Open Sans';
     -moz-box-sizing: border-box; 
 	-webkit-box-sizing: border-box; 
 	box-sizing: border-box;
@@ -440,7 +465,7 @@ h4{
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
     right: 0px; 
 }
-.buttonDesctiptions li{
+.button-desctiptions li{
 	padding-bottom: 6px;
 }
 .ad{
@@ -452,42 +477,47 @@ h4{
 	background-color: #000;
 	background-image: url('images/adbkg.jpg');
 }
-#opt0, #opt1, #opt2, #opt5, #opt6{
+#opt-0, 
+#opt-1, 
+#opt-2, 
+#opt-3, 
+#opt-4{
 	display: none;
 	opacity: 0;
 }
-#gameList .fa-heart, #gameList .fa-th-list{
+#game-list .fa-heart, 
+#game-list .fa-th-list{
 	display: none;
 }
-#pipbox{
+#pip-box{
 	display: none;
 	padding: 14px 0px 0px 0px;
 	position: absolute;
 	z-index: 50000;
 }
-#pipbox i{
+#pip-box i{
 	position: absolute;
 	top: 1px;
 	right: 3px;
 	font-size: 10px;
 	cursor: pointer;
 }
-.piptopleft{
+.pip-topleft{
 	top: 58px;
 	left: 6px;
 }
-.piptopright{
+.pip-topright{
 	top: 58px;
 	right: 6px;
 }
-.pipbottomleft{
+.pip-bottomleft{
 	bottom: 34px;
 	left: 6px;
 }
-.pipbottomright{
+.pip-bottomright{
 	bottom: 34px;
 	right: 6px;
 }
-#pipvideo{
+#pip-video{
 	margin-bottom: -5px;
 }

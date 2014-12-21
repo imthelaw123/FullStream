@@ -1,123 +1,138 @@
 body{
 	background-color: #fff;
+	color: #333;
 }
 a{
-	color: #1B7FCC;
+	color: #167AD0;
 }
-input[type=button], input[type=submit],select,input[type=text]{
-	border: 1px solid #CC181E;
+input[type=button],
+input[type=submit],
+input[type=text],
+select{
+	border: 1px solid #000;
 	background-color: #CC181E;
-	color: #fff;
+	color: #ddd;
 }
-input[type=button]:hover, input[type=submit]:hover{
-	background-color: #CC181E;
-	color: #fff;
+input[type=button]:hover,
+input[type=submit]:hover{
+	background-color: #7D66B7;
+	color: #ddd;
 }
-input[type=text], select, textarea{
-	background-color: #CC181E;
-	color: #fff;
+input[type=text], 
+select, 
+textarea{
+	background-color: #BABABA;
+	color: #202020;
 }
 #sidebar{
 	background-color: #000;
-	color: #000;
-	border-left: 1px solid #f1f1f1;
+	border-left: 1px solid #000;
 }
 #media{
 	background-color: #fff;
 }
 .tabs > li > label{
-	background-color: #CC181E;
-	color: #fff;
-	border-right: 1px solid #fff;
+	background-color: #fff;
+	color: #333;
+	border-right: 1px solid #333;
+}
+.tabs > li:last-child > label{
+	border-right-width: 0px;
 }
 .tabs > li > input:checked + label{
-	background-color: #fff;
-	color: #000;
+	background-color: #CC181E;
+	color: #ddd;
 }
 .tab-content{
 	background-color: #fff;
 }
 .tab-content h3{
-	color: #fff;
+	color: #ddd;
 }
-.channelSplitter{
+.channel-splitter{
 	background-color: #CC181E;
-	color: #fff;
-	border-top:1px solid #f1f1f1;
+	color: #eee;
+	border-top: 1px solid #000;
+	border-bottom: 1px solid #000;
 }
-.channel, .switcherChannel{
+.channel,
+.switcher-channel{
 	color: #000;
-	border-bottom: 1px solid #f1f1f1;
-	background-color: #fff;
+	background-color: #bbb;
 }
-.channel:nth-child(even), .vod:nth-child(even), .switcherChannel{
-	background-color: #F7F7F7;
+.channel:nth-child(even),
+.vod:nth-child(even){
+	background-color: #eee;
 }
-.selectedChannel{
-	background-color: #f1f1f1; 
+.channel:hover, 
+.switcher-channel:hover, 
+.channel .controls{
+	background-color: #CBCBCB;
 }
-.channel:hover,.channel:hover b, .switcherChannel:hover{
-	background-color: #f1f1f1;
-	color: #000;
+.channel{
+	color: #333;
 }
-.channel img{
-	padding: 2px;
+.channel .channel-genre,
+.channel .channel-stats{
+	color: #666;
+}
+.selected-channel,
+.selected-channel .controls{
+	background-color: #bbb !important;
+}
+.about img,
+.channel img,
+#stream-logo{
 	background-color: #000;
 }
-.controls i.fa-play:hover, .about i.fa-play{
+.controls i.fa-play:hover, 
+.about i.fa-play{
 	color: #00FF21;
 }
-.controls i.fa-external-link-square:hover, .about  i.fa-external-link-square{
+.controls i.fa-external-link-square:hover, 
+.about  i.fa-external-link-square{
 	color: #FFEA23;
 }
-.controls i.fa-gamepad:hover, .about i.fa-gamepad{
+.controls i.fa-gamepad:hover, 
+.about i.fa-gamepad{
 	color: #AE00FF;
 }
-.controls i.fa-th-list:hover, .about i.fa-th-list{
+.controls i.fa-th-list:hover, 
+.about i.fa-th-list{
 	color: #0094FF;
 }
-.switcherChannel i.fa-trash-o, .about i.fa-trash-o,.controls i.fa-trash-o:hover{
+.switcher-channel i.fa-trash-o, 
+.about i.fa-trash-o,
+.controls i.fa-trash-o:hover{
 	color: #FF0000;
 }
 .about i.fa-heart{
 	color: pink;
 }
 .channels b{
-	color: #000;
-}
-.about img{
-	background-color: rgba(0,0,0,0.7);
-}
-#notificationBox{
 	color: #fff;
-	background-color: #CC181E;
-	border: 2px solid #f1f1f1;
 }
-#notificationBox h3{
-	border-bottom: 1px solid #f1f1f1;
+#notification-box{
+	color: #CC181E;
+	background-color: #fff;
+	border: 2px solid #000;
+}
+#notification-box h3{
+	border-bottom: 1px solid #000;
 }
 #statusbar{
 	background-color: #fff;
-	border-bottom: 1px solid #fff;
-}
-#statusbar img{
-	background-color: rgba(0,0,0,1);
-	padding: 2px;
-}
-#statusbar span{
-	color: #000;
+	border-bottom: 1px solid #000;
 }
 #statusbar .toggle{
-	color: #f1f1f1;
+	color: #aaa;
 }
-#statusbar .smallToggle{
-	color: #f1f1f1;
+#statusbar .small-toggle{
+	color: #aaa;
 	width: 15px;
 	height: 15px;
 }
-#statusbar .toggle:hover{
-	color: #CC181E;
-}
+#statusbar .toggle:hover, 
 #statusbar .smallToggle:hover{
 	color: #CC181E;
 }
@@ -126,22 +141,24 @@ input[type=text], select, textarea{
 }
 .onoffswitch-inner:before {
     background-color: #CC181E;
-    color: #fff;
+    color: #FFFFFF;
 }
 .onoffswitch-inner:after {
-    background-color: #f1f1f1; 
+    background-color: #BABABA; 
     color: #000;
 }
 ::-webkit-scrollbar{
 	background-color: #fff;
+	border-left: 1px solid #000;
 }
 ::-webkit-scrollbar-thumb{
 	background-color: #CC181E;
+	border-left: 1px solid #000;
 }
-#pipbox{
+#pip-box{
 	background-color: #fff;
 	border: 1px solid #000;
 }
-#pipbox i{
-	color: #CC181E;
+#pip-box i{
+	color: #000;
 }
