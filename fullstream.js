@@ -748,7 +748,7 @@ function aChannel(service, id, live, videoEmbed, chatEmbed, name, favorite, stat
 		}
 
 		$(play).click(function(){
-			if(fullstream.settings.switcherSetting){
+			if(settings.general.switcherSetting){
 				notify('The Switcher is currently on and might change the channel!')
 			}
 			fullstream.changeChannel(videoEmbed, chatEmbed, id, service);
