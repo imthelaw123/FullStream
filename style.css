@@ -335,8 +335,7 @@ h4{
 	width: 240px;
 	height: 50px;
 	left: 15px;
-	//bottom: -65px;
-	bottom: 0px;
+	bottom: -65px;
 	padding: 5px;
 }
 #notification-box h3{
