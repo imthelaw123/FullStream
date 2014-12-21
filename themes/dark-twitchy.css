@@ -58,7 +58,7 @@ textarea{
 .channel,
 .switcher-channel{
 	color: #fff;
-	background-color: #24242A;
+	background-color: #1E1E26;
 }
 .channel:nth-child(even),
 .vod:nth-child(even){
