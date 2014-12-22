@@ -255,8 +255,6 @@ fullstream.populateStatusBar = function(){
 				case 'name':
 					if(currentChannel.service == 'vod'){
 						$(i).attr('class', 'fa fa-file-video-o');
-					}else if(channelData.twitch[currentChannel.id] && channelData.twitch[currentChannel.id].live){
-						$(i).attr('class', 'fa fa-play');
 					}else if(channelData.twitch[currentChannel.id] && !channelData.twitch[currentChannel.id].live){
 						$(i).attr('class', 'fa fa-stop');
 					}else{
