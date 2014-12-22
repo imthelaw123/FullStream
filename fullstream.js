@@ -255,10 +255,12 @@ fullstream.populateStatusBar = function(){
 				case 'name':
 					if(currentChannel.service == 'vod'){
 						$(i).attr('class', 'fa fa-file-video-o');
-					}else if(channelData[currentChannel.service][currentChannel.id].live){
+					}else if(channelData.twitch[currentChannel.id] && channelData.twitch[currentChannel.id].live){
 						$(i).attr('class', 'fa fa-play');
-					}else{
+					}else if(channelData.twitch[currentChannel.id] && !channelData.twitch[currentChannel.id].live){
 						$(i).attr('class', 'fa fa-stop');
+					}else{
+						$(i).attr('class', 'fa fa-play');
 					}
 					$(span).html($(i)[0].outerHTML+currentChannel.url);
 					$(span).attr('title', currentChannel.name);
@@ -317,8 +319,8 @@ fullstream.updateCurrentChannel = function(){
 		var url = 'https://api.twitch.tv/kraken/channels/'+currentChannel.id+'?callback=?';
 		var viewers = 0;
 		
-		if(currentChannel.service != 'vod' && channelData[currentChannel.service][currentChannel.id]){
-			viewers = channelData[currentChannel.service][currentChannel.id].viewers;
+		if(currentChannel.service != 'vod' && channelData.twitch[currentChannel.id]){
+			viewers = channelData.twitch[currentChannel.id].viewers;
 		}
 		
 		$.getJSON(url, function(a){
