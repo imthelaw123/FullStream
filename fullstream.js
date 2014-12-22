@@ -379,20 +379,19 @@ fullstream.load = function(){
 fullstream.channelOptions = function(){ 
 	$('#switcher-channels-select').html('');
 	$('#default-channel-select').html('');
-	if(settings.defaultChannel != 'none'){
+	if(settings.general['default-channel']){
 		$('#default-channel-select').append($('<option></option>').html(settings.general['default-channel']));
 	}
-	if(settings.general['default-channel']){
-		$('#default-channel-select').append($('<option></option>').html(''));
-	}
+	$('#default-channel-select').append($('<option></option>').html(''));
 	
-	for(x in sortedChannels){
-		for(y in sortedChannels[x]){
-			var channel = sortedChannels[x][y];
-			$('#switcher-channels-select').append($('<option></option>').html(channel));
-			if(channel != settings.general['default-channel']){
-				$('#default-channel-select').append($('<option></option>').html(channel));
-			}
+	var tempArray = [];
+	for(x in channelData.twitch){
+		tempArray[tempArray.length] = channelData.twitch[x].id;
+	}
+	for(y in tempArray.sort()){
+		$('#switcher-channels-select').append($('<option></option>').html(tempArray[y]));
+		if(tempArray[y] != settings.general['default-channel']){
+			$('#default-channel-select').append($('<option></option>').html(tempArray[y]));
 		}
 	}
 };
@@ -457,7 +456,6 @@ fullstream.getChannels = function(offset){
 			if(a.follows.length >= 100){
 				fullstream.getChannels(offset+100);
 			}else{
-				fullstream.channelOptions();
 				fullstream.updateData();
 				fullstream.log('Fetched '+fullstream.channelCount(channelData.twitch)+' channels from Twitch.tv with username: '+settings.general['twitch-user']);
 			}
@@ -647,6 +645,7 @@ fullstream.updateData = function(){
 		.success(function() {
 			fullstream.log('Updated '+fullstream.channelsOnline(channelData.twitch)+'/'+fullstream.channelCount(channelData.twitch)+' channels from Twitch.tv');
 			fullstream.sortChannels();
+			fullstream.channelOptions();
 			fullstream.populateChannels();
 			if(settings.general['switcher-setting']){
 				fullstream.switcher();
