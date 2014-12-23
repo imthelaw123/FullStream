@@ -52,7 +52,7 @@ var settings = fullstream.intel.settings;
 var defaults = JSON.parse(JSON.stringify(settings));
 var loading = true;
 var APIErrorCheck = 0;
-var version = '0.2.10';
+var version = '0.2.11';
 
 // Keeps strings clean from spaces and capitalization
 function cleanString(string){
@@ -69,11 +69,9 @@ function clearChars(string){
 	if(string){
 		var allowed = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ,.;:-+_|!"#<>%&/()=?@€£$`¬¦^{}[]~*\\\'';
 		var newString = '';
-		for (var i=0; i<string.length; i++){
-			for(var x=0; x<allowed.length; x++ ){
-				if(string[i] == allowed[x]){
-					newString += string[i];
-				}
+		for(var i=0; i<string.length; i++){
+			if(allowed.indexOf(string[i]) >= 0){
+				newString += string[i];
 			}
 		}
 		return newString;
