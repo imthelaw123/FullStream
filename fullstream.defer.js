@@ -1,5 +1,5 @@
 // Set version in info tab
-$('#version').html(version);
+$('#version').html('Version: '+version);
 
 // loading animation trigger
 setInterval(function(){

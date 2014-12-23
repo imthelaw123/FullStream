@@ -52,7 +52,7 @@ var settings = fullstream.intel.settings;
 var defaults = JSON.parse(JSON.stringify(settings));
 var loading = true;
 var APIErrorCheck = 0;
-var version = 'Version: 0.2.9';
+var version = '0.2.10';
 
 // Keeps strings clean from spaces and capitalization
 function cleanString(string){
@@ -67,7 +67,7 @@ function cleanString(string){
 // Clears strings of special characters
 function clearChars(string){
 	if(string){
-		var allowed = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ,.;:-+_|!"#<>%&/()=?@${}[]~*\\\'';
+		var allowed = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ,.;:-+_|!"#<>%&/()=?@€£$`¬¦^{}[]~*\\\'';
 		var newString = '';
 		for (var i=0; i<string.length; i++){
 			for(var x=0; x<allowed.length; x++ ){
@@ -786,7 +786,7 @@ function aChannel(service, id, live, videoEmbed, chatEmbed, name, favorite, stat
 		$(li).click(function(){
 			if(chanSwitch == true){
 				fullstream.changeChannel(videoEmbed, chatEmbed, id, service);
-				if(settings.switcherSetting){
+				if(settings.general['switcher-setting']){
 					notify('The Switcher is currently on and might change the channel!')
 				}
 			}
