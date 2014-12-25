@@ -52,7 +52,7 @@ var settings = fullstream.intel.settings;
 var defaults = JSON.parse(JSON.stringify(settings));
 var loading = true;
 var APIErrorCheck = 0;
-var version = '0.2.11';
+var version = '0.2.12';
 
 // Keeps strings clean from spaces and capitalization
 function cleanString(string){
@@ -395,22 +395,16 @@ fullstream.channelOptions = function(){
 	}
 };
 // Add a channel to the switcher array
-fullstream.addSwitcherChannel = function(string){
-	var alreadyAdded = false;
-	for(chan in settings.switcherChannels){
-		if(settings.switcherChannels[chan] == string){
-			alreadyAdded = true;
-		}
-	}
-	if(!alreadyAdded){
+fullstream.addSwitcherChannel = function(chan){
+	if(settings.switcherChannels.indexOf(chan) < 0){
 		if(!settings.switcherChannels.length){
 			toggleMenuItem('#opt-4',false);
 		}
-		settings.switcherChannels[settings.switcherChannels.length] = string;
+		settings.switcherChannels[settings.switcherChannels.length] = chan;
 		fullstream.save();
-		notify(string+' was added to the switcher.');
+		notify(chan+' was added to the switcher.');
 	}else{
-		notify(string+' is already in the Switcher list.');
+		notify(chan+' is already in the Switcher list.');
 	}
 }
 // Move a switcher channels around when being drag and dropped
@@ -427,15 +421,13 @@ fullstream.moveSwitcherChannel = function (old_index, new_index){
 fullstream.getChannels = function(offset){
 	url = 'https://api.twitch.tv/kraken/users/'+settings.general['twitch-user']+'/follows/channels?limit=100&offset='+offset+'&callback=?';
 	$.getJSON(url, function(a){
-		if(a && a.follows ){
+		if(a && a.follows){
 			for(x in a.follows){
 				var video = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='+a.follows[x].channel.name+'&start_volume=100';
 				var chat = 'http://twitch.tv/chat/embed?channel='+a.follows[x].channel.name+'&amp;popout_chat=true';
 				var fav = false;
-				for(chan in settings.favorites){
-					if(settings.favorites[chan] == a.follows[x].channel.name){
-						fav = true;
-					}
+				if(settings.favorites.indexOf(a.follows[x].channel.name) >= 0){
+					fav = true;
 				}
 				var arr = {
 					id:a.follows[x].channel.name,
@@ -478,9 +470,9 @@ fullstream.sortChannels = function(){
 			}
 		}
 	}
-	sortedChannels.favorites.sort();
-	sortedChannels.online.sort();
-	sortedChannels.offline.sort();
+	for(tab in sortedChannels){
+		sortedChannels[tab].sort();
+	}
 }
 // Method to get channels via specific game
 fullstream.getGameChannels = function(game, offset){
@@ -488,7 +480,7 @@ fullstream.getGameChannels = function(game, offset){
 	loading = true;
 	url = 'https://api.twitch.tv/kraken/search/streams?limit=100&offset='+offset+'&q='+game+'&callback=?';
 	$.getJSON(url, function(a){
-		if(a.streams != undefined){
+		if(a && a.streams){
 			if(offset == 0){
 				var gameHeader = new channelSplitter(game, 'fa-gamepad', 'herp');
 				$(gameList).append(gameHeader.listItem);
