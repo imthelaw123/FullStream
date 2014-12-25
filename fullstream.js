@@ -52,7 +52,7 @@ var settings = fullstream.intel.settings;
 var defaults = JSON.parse(JSON.stringify(settings));
 var loading = true;
 var APIErrorCheck = 0;
-var version = '0.2.12';
+var version = '0.2.13';
 
 // Keeps strings clean from spaces and capitalization
 function cleanString(string){
