@@ -34,7 +34,8 @@ fullstream.intel = {
 			"color-theme": "0",
 			"twitch-user": "",
 			"pip-position": "0",
-			"hotkeys": true
+			"hotkeys": true,
+			"volume-setting": 100
 		},
 		"collapsed":{
 			"favorites":false,
@@ -52,7 +53,7 @@ var settings = fullstream.intel.settings;
 var defaults = JSON.parse(JSON.stringify(settings));
 var loading = true;
 var APIErrorCheck = 0;
-var version = '0.2.13';
+var version = '0.2.14';
 
 // Keeps strings clean from spaces and capitalization
 function cleanString(string){
@@ -158,6 +159,23 @@ function formatTime(x){
 function formateDate(date){
 	var newDate = date.substring(8,10)+'.'+date.substring(5,7)+'.'+date.substring(0,4);
 	return newDate;
+}
+function moveVolumeSlider(e){
+	e.preventDefault();
+
+	var pos 	= $(e.currentTarget).offset()
+	var	posX	= e.pageX - pos.left
+	var	value	= posX*100/$(e.currentTarget).outerWidth();
+
+	if(posX >= 0 && posX <= $(e.currentTarget).outerWidth()){
+		$('.volume-setting > .volume-progress').css('width', posX+'px');
+		$('.volume-setting > .volume-slider').css('left', posX+'px');
+
+		var newVolume = Math.floor(value);
+		settings.general['volume-setting'] = newVolume;
+		$('.volume-label').html('Volume '+newVolume+'%');
+		fullstream.save();
+	}
 }
 
 // Custom console.log string
@@ -346,7 +364,15 @@ fullstream.save = function(){
 // Get settings array from LocalStorage
 fullstream.load = function(){
 	if(localStorage.fullstream){
-		settings = JSON.parse(localStorage.fullstream);
+		tempArray = JSON.parse(localStorage.fullstream);
+		for(array in tempArray){
+			if(array != "general"){
+				settings[array] = tempArray[array];
+			}
+		}
+		for(setting in tempArray.general){
+			settings.general[setting] = tempArray.general[setting];
+		}
 	}else{
 		fullstream.save();
 	}
@@ -423,7 +449,7 @@ fullstream.getChannels = function(offset){
 	$.getJSON(url, function(a){
 		if(a && a.follows){
 			for(x in a.follows){
-				var video = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='+a.follows[x].channel.name+'&start_volume=100';
+				var video = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='+a.follows[x].channel.name;
 				var chat = 'http://twitch.tv/chat/embed?channel='+a.follows[x].channel.name+'&amp;popout_chat=true';
 				var fav = false;
 				if(settings.favorites.indexOf(a.follows[x].channel.name) >= 0){
@@ -487,7 +513,7 @@ fullstream.getGameChannels = function(game, offset){
 			}
 			for(chan in a.streams){
 				if(a.streams[chan].game == game && a.streams[chan].game != 'null'){
-					var video = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='+a.streams[chan].channel.name+'&start_volume=100';
+					var video = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='+a.streams[chan].channel.name;
 					var chat = 'http://twitch.tv/chat/embed?channel='+a.streams[chan].channel.name+'&amp;popout_chat=true';
 					var li = new aChannel('twitch', a.streams[chan].channel.name, true, video, chat, a.streams[chan].channel.name, false, a.streams[chan].channel.status, game, a.streams[chan].viewers, a.streams[chan].channel.logo);
 					$(gameList).append(li.asListItem());
@@ -537,7 +563,7 @@ fullstream.changeChannel = function(videoEmbed, chatEmbed, id, service){
 	fullstream.updateCurrentChannel();
 	fullstream.populateChannels();
 
-	$(videoTarget).attr('src', videoEmbed);
+	$(videoTarget).attr('src', videoEmbed+'&start_volume='+settings.general["volume-setting"]);
 	if(service != 'vod'){
 		$(chatTarget).attr('src', chatEmbed);
 	}
@@ -562,7 +588,7 @@ fullstream.changePipChannel = function(videoEmbed){
 	if($('#pip-box').css('display') == 'none'){
 		$('#pip-box').css('display', 'block');
 	}
-	$(pipTarget).attr('src', videoEmbed);
+	$(pipTarget).attr('src', videoEmbed+'&start_volume=0');
 }
 // Populates the channel list with channels
 fullstream.populateChannels = function(){
@@ -918,7 +944,7 @@ function aVod(title, id, description, game, length, img, date, views, channel){
 		var details = $('<ul class="vod-details"></ul>');
 		var vodTitle = $('<span class="vod-title">'+title+'</div>');
 		var vodDescription = $('<p>'+description+'</p>')
-		var videoEmbed = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='+channel+'&start_volume=100&chapter_id='+id.substring(1, id.lenght);
+		var videoEmbed = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='+channel+'&chapter_id='+id.substring(1, id.lenght);
 		
 
 		details.append(vodTitle);

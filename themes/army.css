@@ -131,6 +131,14 @@ textarea{
 #statusbar .smallToggle:hover{
 	color: #eee;
 }
+.volume-empty-progress{
+	background-color: #BABABA;
+	border: 1px solid #000;
+}
+.volume-slider{
+	background-color: #4C5320;
+	border: 1px solid #000;
+}
 .onoffswitch-label {
     border: 1px solid #000; 
 }

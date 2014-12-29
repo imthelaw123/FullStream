@@ -70,6 +70,11 @@ for(setting in settings.general){
 			$("#pip-box").attr('class', 'pip-'+$('#pip-options')[0][settings.general[setting]].text);
 			document.getElementById('pip-options').options[settings.general[setting]].defaultSelected = true;
 			break;
+		case 'volume-setting':
+			$('.volume-slider').css('left', settings.general[setting]+'px');
+			$('.volume-progress').css('width', settings.general[setting]+'px');
+			$('.volume-label').html('Volume '+settings.general[setting]+'%')
+			break;
 	}
 }
 
@@ -256,6 +261,16 @@ $('#default-channel-select').change(function(){
 		fullstream.channelOptions();
 		fullstream.log('Default channel set to '+defChan);
 	}
+});
+
+// Handle volume setting change
+$('.volume-setting').on('mousedown', function(e){
+	moveVolumeSlider(e);
+	$(this).on('mousemove', function(e){
+		moveVolumeSlider(e);	
+	});
+}).on('mouseup', function(){
+	$(this).off('mousemove');
 });
 
 /* Handle keydown events */

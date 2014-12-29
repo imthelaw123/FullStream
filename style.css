@@ -319,6 +319,34 @@ h4{
 	top: 43px;
 	left: 63px;
 }
+.volume-setting{
+	height: 14px;
+	width: 100px;
+	position: relative;
+}
+.volume-empty-progress,
+.volume-progress,
+.volume-slider,
+.volume-label{
+	position: absolute;
+}
+.volume-empty-progress{
+	height: 100%;
+	width: 100%;
+}
+.volume-progress{
+	height: 14px;
+}
+.volume-slider{
+	cursor: pointer;
+	width: 8px;
+	height: 22px;
+	top: -4px;
+}
+.volume-label{
+	left: 112px;
+	width: 100px;
+}
 .about{
 	padding-left: 6px;
 }
