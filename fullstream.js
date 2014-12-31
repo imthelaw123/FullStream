@@ -53,7 +53,7 @@ var settings = fullstream.intel.settings;
 var defaults = JSON.parse(JSON.stringify(settings));
 var loading = true;
 var APIErrorCheck = 0;
-var version = '0.2.15';
+var version = '0.2.16';
 
 // Keeps strings clean from spaces and capitalization
 function cleanString(string){
@@ -448,7 +448,9 @@ fullstream.getChannels = function(offset){
 	url = 'https://api.twitch.tv/kraken/users/'+settings.general['twitch-user']+'/follows/channels?limit=100&offset='+offset+'&callback=?';
 	$.getJSON(url, function(a){
 		if(a && a.follows){
-			channelData.twitch = [];
+			if(offset == 0){
+				channelData.twitch = [];
+			}
 			for(x in a.follows){
 				var video = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='+a.follows[x].channel.name;
 				var chat = 'http://twitch.tv/chat/embed?channel='+a.follows[x].channel.name+'&amp;popout_chat=true';
