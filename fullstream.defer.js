@@ -39,6 +39,29 @@ for(setting in settings.general){
 				toggleMenuItem('#opt-4',false);
 			}
 			break;
+		case 'chat-enabled':
+			$('#chat-enabled').click(function(){
+				if($('#chat-enabled')[0].checked){
+					if(currentChannel.name){
+						toggleMenuItem('#opt-0',false);
+					}
+					$(chatTarget).attr('src', channelData.twitch[currentChannel.id].chatEmbed);
+				}else{
+					if($('#chat-setting')[0].checked){
+						$('#chat-setting').click();
+					}
+					toggleMenuItem('#opt-0',true);
+					$(chatTarget).attr('src', '');
+				}
+			});
+			break;
+		case 'chat-setting':
+			$('#chat-setting').click(function(){
+				if($('#chat-setting')[0].checked && !$('#chat-enabled')[0].checked){
+					$('#chat-enabled').click();
+				}
+			});
+			break;
 		case 'default-tab':
 			$('#tab-'+settings.general[setting])[0].checked = true;
 			toggleMenuItem('#opt-'+settings.general[setting],false);
@@ -73,7 +96,7 @@ for(setting in settings.general){
 		case 'volume-setting':
 			$('.volume-slider').css('left', settings.general[setting]+'px');
 			$('.volume-progress').css('width', settings.general[setting]+'px');
-			$('.volume-label').html('Volume '+settings.general[setting]+'%')
+			$('.volume-label').html('Default Volume '+settings.general[setting]+'%')
 			break;
 	}
 }

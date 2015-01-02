@@ -28,6 +28,7 @@ fullstream.intel = {
 			"sidebar-on-load": false,
 			"switcher-setting": false,
 			"notification-setting": true,
+			"chat-enabled": true,
 			"chat-setting": false,
 			"default-tab": "6",
 			"default-channel": "",
@@ -53,7 +54,7 @@ var settings = fullstream.intel.settings;
 var defaults = JSON.parse(JSON.stringify(settings));
 var loading = true;
 var APIErrorCheck = 0;
-var version = '0.2.16';
+var version = '0.2.17';
 
 // Keeps strings clean from spaces and capitalization
 function cleanString(string){
@@ -173,7 +174,7 @@ function moveVolumeSlider(e){
 
 		var newVolume = Math.floor(value);
 		settings.general['volume-setting'] = newVolume;
-		$('.volume-label').html('Volume '+newVolume+'%');
+		$('.volume-label').html('Default Volume '+newVolume+'%');
 		fullstream.save();
 	}
 }
@@ -567,17 +568,19 @@ fullstream.changeChannel = function(videoEmbed, chatEmbed, id, service){
 	fullstream.populateChannels();
 
 	$(videoTarget).attr('src', videoEmbed+'&start_volume='+settings.general["volume-setting"]);
-	if(service != 'vod'){
-		$(chatTarget).attr('src', chatEmbed);
-	}
+	if(settings.general['chat-enabled']){
+		if(service != 'vod'){
+			$(chatTarget).attr('src', chatEmbed);
+		}
 
-	if(settings.general['chat-setting'] && service != 'vod'){
-		setTimeout(function(){
-			$('#tab-0')[0].checked = true;
-		}, 1500);
+		if(settings.general['chat-setting'] && service != 'vod'){
+			setTimeout(function(){
+				$('#tab-0')[0].checked = true;
+			}, 1500);
+		}
+	
+		toggleMenuItem('#opt-0',false);
 	}
-	toggleMenuItem('#opt-0',false);
-
 	if(service == 'twitch'){
 		fullstream.getVods(id, 0);
 	}
