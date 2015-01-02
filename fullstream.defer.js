@@ -73,7 +73,9 @@ for(setting in settings.general){
 			break;
 		case 'default-channel':
 			if(settings.general[setting]){
-				toggleMenuItem('#opt-0',false);
+				if(settings.general['chat-enabled']){
+					toggleMenuItem('#opt-0',false);
+				}
 				$(videoTarget).attr('src', '');
 			}else{
 				$(videoTarget).attr('src', 'welcome.html');
