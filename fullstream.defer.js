@@ -239,9 +239,6 @@ $('#save-twitch-user').click(function(){
 				fullstream.log('Twitch.tv user set to '+chan);
 				fullstream.getChannels(0);
 				setTimeout(function(){
-					fullstream.updateData();
-				},2000);
-				setTimeout(function(){
 					fullstream.channelOptions();
 					loading = false;
 					notify('twitch user set to '+chan);

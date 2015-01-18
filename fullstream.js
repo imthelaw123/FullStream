@@ -54,7 +54,7 @@ var settings = fullstream.intel.settings;
 var defaults = JSON.parse(JSON.stringify(settings));
 var loading = true;
 var APIErrorCheck = 0;
-var version = '0.2.18';
+var version = '0.2.19';
 
 // Keeps strings clean from spaces and capitalization
 function cleanString(string){
@@ -319,7 +319,7 @@ fullstream.populateStatusBar = function(){
 					});
 					break;
 				case 'status':
-					var statusString = 'You\'re watching '+currentChannel.name+' on '+currentChannel.service;
+					var statusString = 'Untitled Broadcast';
 					$('#stream-status').html(statusString).attr('title', statusString);
 					break;
 			}
@@ -649,7 +649,9 @@ fullstream.updateData = function(){
 						channelData.twitch[string].live = true;
 						channelData.twitch[string].name = a.streams[account].channel.display_name;
 						channelData.twitch[string].status = a.streams[account].channel.status;
-						channelData.twitch[string].genre = a.streams[account].channel.game; 
+						if(a.streams[account].channel.game){
+							channelData.twitch[string].genre = a.streams[account].channel.game;
+						}
 						channelData.twitch[string].viewers = a.streams[account].viewers;
 					}else{
 						channelData.twitch[string].live = false;
@@ -722,9 +724,9 @@ function aChannel(service, id, live, videoEmbed, chatEmbed, name, favorite, stat
 				$(li).attr('class', 'channel live');
 			}
 			var channelName = $('<span class="channel-name">'+name+'</span>');
-			var channelDetails = $('<p class="channel-genre"></p>');
+			var channelDetails = $('<p class="channel-genre"><i class="fa fa-gamepad"></i> </p>');
 			if(genre){
-				channelDetails.append('<i class="fa fa-gamepad"></i> '+genre.substr(0,30));
+				channelDetails.append(genre.substr(0,30));
 			}else{
 				channelDetails.append('Online');
 			}
