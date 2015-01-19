@@ -54,7 +54,7 @@ var settings = fullstream.intel.settings;
 var defaults = JSON.parse(JSON.stringify(settings));
 var loading = true;
 var APIErrorCheck = 0;
-var version = '0.2.19';
+var version = '0.2.20';
 
 // Keeps strings clean from spaces and capitalization
 function cleanString(string){
@@ -282,7 +282,17 @@ fullstream.populateStatusBar = function(){
 					$(span).attr('title', currentChannel.name);
 					break;
 				case 'genre':
-					$(i).attr('class', 'fa fa-gamepad');
+					var icon = 'fa-gamepad'
+					if(currentChannel.genre == 'Gaming Talk Shows'){
+						icon = 'fa-microphone';
+					}else if(currentChannel.genre == 'Game Development'){
+						icon = 'fa fa-codepen';
+					}else if(currentChannel.genre == 'Programming'){
+						icon = 'fa fa-code';
+					}else if(currentChannel.genre == 'Music'){
+						icon = 'fa-music';
+					}
+					$(i).attr('class', 'fa '+icon);
 					$(span).html($(i)[0].outerHTML+currentChannel.genreUrl);
 					$(span).attr('title', currentChannel.genre);
 					break;
@@ -724,12 +734,24 @@ function aChannel(service, id, live, videoEmbed, chatEmbed, name, favorite, stat
 				$(li).attr('class', 'channel live');
 			}
 			var channelName = $('<span class="channel-name">'+name+'</span>');
-			var channelDetails = $('<p class="channel-genre"><i class="fa fa-gamepad"></i> </p>');
+			var channelDetails = $('<p class="channel-genre"></p>');
+			
+			var icon = 'fa-gamepad';
 			if(genre){
-				channelDetails.append(genre.substr(0,30));
+				if(genre == 'Music'){
+					icon = 'fa-music';
+				}else if(genre == 'Programming'){
+					icon = 'fa-code';
+				}else if(genre == 'Game Development'){
+					icon = 'fa-codepen';
+				}else if(genre == 'Gaming Talk Shows'){
+					icon = 'fa-microphone';
+				}
+				channelDetails.append('<i class="fa '+icon+'"></i> '+genre.substr(0,30));
 			}else{
-				channelDetails.append('Online');
+				channelDetails.append('<i class="fa '+icon+'"></i> Online');
 			}
+
 			var channelStats = $('<p class="channel-stats"><i class="fa fa-male"></i> '+formatnum(viewers)+'</p>');
 
 			$(channelName).append(channelDetails);

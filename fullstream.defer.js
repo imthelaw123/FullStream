@@ -65,7 +65,7 @@ for(setting in settings.general){
 		case 'default-tab':
 			$('#tab-'+settings.general[setting])[0].checked = true;
 			toggleMenuItem('#opt-'+settings.general[setting],false);
-			if(settings.general[setting] == 6){
+			if(settings.general[setting] > 1){
 				document.getElementById('default-tab-options').options[2].defaultSelected = true
 			}else{
 				document.getElementById('default-tab-options').options[settings.general[setting]].defaultSelected = true
