@@ -391,10 +391,13 @@ $(window).keydown(function(e){
 // Get initial data
 fullstream.getChannels(0);
 setTimeout(function(){
-	var defChan = settings.general['default-channel'];
-	if(channelData.twitch[defChan] && defChan){
-		var chan = channelData.twitch[defChan];
-		fullstream.changeChannel(chan.videoEmbed, chan.chatEmbed, defChan, 'twitch');
+	var onLoadChan = location.search.split('c=')[1];
+	if(!onLoadChan){
+		onLoadChan = settings.general['default-channel'];
+	}
+	if(channelData.twitch[onLoadChan] && onLoadChan){
+		var chan = channelData.twitch[onLoadChan];
+		fullstream.changeChannel(chan.videoEmbed, chan.chatEmbed, onLoadChan, 'twitch');
 	}
 	loading = false;
 },2000);

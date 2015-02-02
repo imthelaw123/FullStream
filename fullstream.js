@@ -54,7 +54,7 @@ var settings = fullstream.intel.settings;
 var defaults = JSON.parse(JSON.stringify(settings));
 var loading = true;
 var APIErrorCheck = 0;
-var version = '0.2.20';
+var version = '0.2.21';
 
 // Keeps strings clean from spaces and capitalization
 function cleanString(string){
@@ -573,6 +573,7 @@ fullstream.changeChannel = function(videoEmbed, chatEmbed, id, service){
 	fullstream.log('Switching to '+id+' ('+service+')');
 	loading = true;
 	currentChannel.id = id;
+	window.history.pushState('id', 'channel', '?c='+id);
 	currentChannel.service = service;
 	fullstream.updateCurrentChannel();
 	fullstream.populateChannels();
