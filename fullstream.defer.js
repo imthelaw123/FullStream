@@ -398,6 +398,10 @@ setTimeout(function(){
 	if(channelData.twitch[onLoadChan] && onLoadChan){
 		var chan = channelData.twitch[onLoadChan];
 		fullstream.changeChannel(chan.videoEmbed, chan.chatEmbed, onLoadChan, 'twitch');
+	}else if(onLoadChan){
+		var video = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='+onLoadChan;
+		var chat = 'http://twitch.tv/chat/embed?channel='+onLoadChan+'&amp;popout_chat=true';
+		fullstream.changeChannel(video, chat, onLoadChan, 'twitch');
 	}
 	loading = false;
 },2000);
