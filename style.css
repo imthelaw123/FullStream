@@ -181,7 +181,8 @@ h4{
 	font-size: 15px;
 }
 .channel-splitter .fa-caret-up, 
-.channel-splitter .fa-caret-down{
+.channel-splitter .fa-caret-down,
+.channel-splitter .fa-exchange{
 	position: absolute;
 	right: -7px;
 	cursor: pointer;

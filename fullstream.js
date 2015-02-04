@@ -54,7 +54,7 @@ var settings = fullstream.intel.settings;
 var defaults = JSON.parse(JSON.stringify(settings));
 var loading = true;
 var APIErrorCheck = 0;
-var version = '0.2.22';
+var version = '0.2.23';
 
 // Keeps strings clean from spaces and capitalization
 function cleanString(string){
@@ -546,8 +546,9 @@ fullstream.getGameChannels = function(game, offset){
 	});
 }
 // Method to get twitch VODs of current channel being watched
-fullstream.getVods = function(channel, offset){
-	url = 'https://api.twitch.tv/kraken/channels/'+channel+'/videos?limit=100&offset='+offset+'&callback=?';
+fullstream.getVods = function(channel, offset, broadcast){
+	url = 'https://api.twitch.tv/kraken/channels/'+channel+'/videos?limit=100&offset='+offset+'&callback=?&broadcasts='+broadcast;
+	loading = true;
 	$.getJSON(url, function(a){
 		if(offset == 0){
 			if(a.videos.length > 0){
@@ -556,15 +557,23 @@ fullstream.getVods = function(channel, offset){
 				toggleMenuItem('#opt-3',true);
 			}
 			$('#vod-list').html('');
-			var vodHeader = new channelSplitter(currentChannel.name, 'fa-file-video-o', 0);
-			$('#vod-list').append(vodHeader.listItem);
+			var pastHeader = new channelSplitter(currentChannel.name+' Past Broadcasts', broadcast, 'fa-file-video-o', 'past');
+			var vodHeader = new channelSplitter(currentChannel.name+' Highlights', !broadcast, 'fa-file-video-o', 'highlights');
+			
+			if(broadcast){
+				$('#vod-list').append(pastHeader.listItem);
+			}else{
+				$('#vod-list').append(vodHeader.listItem);
+			}
 		}
 		for(vod in a.videos){
-			var newVod = new aVod(a.videos[vod].title, a.videos[vod]._id, a.videos[vod].description, a.videos[vod].game, a.videos[vod].length, a.videos[vod].preview, a.videos[vod].recorded_at, a.videos[vod].views, channel);
+			var newVod = new aVod(a.videos[vod].title, a.videos[vod]._id, a.videos[vod].description, a.videos[vod].game, a.videos[vod].length, a.videos[vod].preview, a.videos[vod].recorded_at, a.videos[vod].views, channel, broadcast);
 			$('#vod-list').append(newVod.asListItem());
 		}
 		if(a.videos.length >= 100){
-			fullstream.getVods(channel, offset+100);
+			fullstream.getVods(channel, offset+100, broadcast);
+		}else{
+			loading = false;
 		}
 	});
 }
@@ -613,7 +622,7 @@ fullstream.populateChannels = function(){
 	$('#switcher-channels').html('');
 	for(tab in sortedChannels){
 		if(fullstream.channelCount(sortedChannels[tab]) && !(tab == 'offline' && settings.general['offline-channels'])){
-			var split = new channelSplitter(tab);
+			var split = new channelSplitter(tab, settings.collapsed[tab]);
 			$(channelList).append(split.listItem());
 		}
 		if(!settings.collapsed[tab]){
@@ -915,48 +924,52 @@ function aSwitcherChannel(num, name){
 	}
 }
 // channelSplitter constructor
-function channelSplitter(name, logo, alt){
+function channelSplitter(name, up, logo, vod){
 	this.listItem = function(){		
 		var li = document.createElement('li');
 		var h4 = document.createElement('h4');
 		var icon = document.createElement('i');
 		var collapser = document.createElement('i');
 
-		if(logo == undefined){
+		li.setAttribute('class', 'channel-splitter');
+		
+		if(!logo){
 			if(name == 'favorites'){
 				logo = 'fa-heart';
 			}else{
 				logo = 'fa-twitch';
 			}
 		}
-		li.setAttribute('class', 'channel-splitter');
 		icon.setAttribute('class', 'fa '+logo);
-		if(alt == undefined){	
-			if(settings.collapsed[name]){
-				collapser.setAttribute('class', 'fa fa-caret-down');
-			}else{
-				collapser.setAttribute('class', 'fa fa-caret-up');
-			}
+		
+		if(vod){
+			collapser.setAttribute('class', 'fa fa-exchange fa-rotate-90');
+		}else if(!up){
+			collapser.setAttribute('class', 'fa fa-caret-up');
+		}else{
+			collapser.setAttribute('class', 'fa fa-caret-down');
 		}
 
 		$(collapser).click(function(){
-			if(settings.collapsed[name]){
-				settings.collapsed[name] = false;
+			if(vod){
+				if(vod == 'past'){
+					fullstream.getVods(currentChannel.id, 0);
+				}else{
+					fullstream.getVods(currentChannel.id, 0, true);
+				}
 			}else{
-				settings.collapsed[name] = true;
+				if(settings.collapsed[name]){
+					settings.collapsed[name] = false;
+				}else{
+					settings.collapsed[name] = true;
+				}
+				fullstream.save();
+				fullstream.populateChannels();
 			}
-			fullstream.save();
-			fullstream.populateChannels();
 		});
 
 		$(h4).append(icon);
-		if(alt == undefined){
-			$(h4).append(name);
-		}else if(alt != 0){
-			$(h4).append(name);
-		}else if(alt == 0){
-			$(h4).append(name+' hightlights');
-		}
+		$(h4).append(name);
 		$(h4).append(collapser);
 		$(li).append(h4);
 
@@ -964,7 +977,7 @@ function channelSplitter(name, logo, alt){
 	}
 }
 // VoD constructor
-function aVod(title, id, description, game, length, img, date, views, channel){
+function aVod(title, id, description, game, length, img, date, views, channel, broadcast){
 	this.asListItem = function(){
 		if(!img){
 			img = 'images/offline.png';
@@ -974,13 +987,20 @@ function aVod(title, id, description, game, length, img, date, views, channel){
 		var screenshot = $('<img src="'+img+'"/>')
 		var details = $('<ul class="vod-details"></ul>');
 		var vodTitle = $('<span class="vod-title">'+title+'</div>');
-		var vodDescription = $('<p>'+description+'</p>')
-		var videoEmbed = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='+channel+'&chapter_id='+id.substring(1, id.lenght);
+		var vodDescription = $('<p>'+description+'</p>');
+		var videoEmbed = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='+channel;
+		if(broadcast){
+			videoEmbed = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='+channel+'&videoId='+id;
+		}else{
+			videoEmbed = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='+channel+'&chapter_id='+id.substring(1, id.lenght);
+		}
 		
 
 		details.append(vodTitle);
 		details.append(' ('+formatTime(length)+')<br><br>');
-		details.append(vodDescription);
+		if(description){
+			details.append(vodDescription);
+		}
 
 		li.append(screenshot);
 		li.append(details);

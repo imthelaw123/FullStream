@@ -19,6 +19,7 @@ var pipTarget = $('#pip-video');
 var chatTarget = $('#chat-embed');
 var channelList = $('#channel-list');
 var gameList = $('#game-list');
+var onLoadChan = location.search.split('c=')[1];
 
 /* Load defaults and settings*/
 // Populating settings
@@ -72,7 +73,7 @@ for(setting in settings.general){
 			}
 			break;
 		case 'default-channel':
-			if(settings.general[setting]){
+			if(settings.general[setting] || onLoadChan){
 				if(settings.general['chat-enabled']){
 					toggleMenuItem('#opt-0',false);
 				}
@@ -390,21 +391,19 @@ $(window).keydown(function(e){
 
 // Get initial data
 fullstream.getChannels(0);
-setTimeout(function(){
-	var onLoadChan = location.search.split('c=')[1];
-	if(!onLoadChan){
-		onLoadChan = settings.general['default-channel'];
-	}
-	if(channelData.twitch[onLoadChan] && onLoadChan){
+if(!onLoadChan){
+	onLoadChan = settings.general['default-channel'];
+}
+if(channelData.twitch[onLoadChan] && onLoadChan){
+	setTimeout(function(){
 		var chan = channelData.twitch[onLoadChan];
 		fullstream.changeChannel(chan.videoEmbed, chan.chatEmbed, onLoadChan, 'twitch');
-	}else if(onLoadChan){
-		var video = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='+onLoadChan;
-		var chat = 'http://twitch.tv/chat/embed?channel='+onLoadChan+'&amp;popout_chat=true';
-		fullstream.changeChannel(video, chat, onLoadChan, 'twitch');
-	}
-	loading = false;
-},2000);
+	},2000);
+}else if(onLoadChan){
+	var video = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='+onLoadChan;
+	var chat = 'http://twitch.tv/chat/embed?channel='+onLoadChan+'&amp;popout_chat=true';
+	fullstream.changeChannel(video, chat, onLoadChan, 'twitch');
+}
 // Update data every 60 seconds
 setInterval(function(){
 	fullstream.updateData();
