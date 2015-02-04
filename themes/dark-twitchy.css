@@ -69,11 +69,13 @@ textarea{
 .channel .controls{
 	background-color: #101014;
 }
-.channel{
+.channel,
+.vod-title{
 	color: #ddd;
 }
 .channel .channel-genre,
-.channel .channel-stats{
+.channel .channel-stats,
+.vod{
 	color: #999;
 }
 .selected-channel,

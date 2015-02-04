@@ -232,9 +232,6 @@ h4{
 	min-height: 80px;
 	height: auto;
 }
-.vod .vod-title{
-	font-weight: bold;
-}
 .vod img{
 	position: absolute;
 	width: 100px;
@@ -242,10 +239,11 @@ h4{
 	margin-top: 2px;
 }
 .vod .vod-details{
-	margin: 2px 0px 5px 110px;
+	margin: 7px 0px 5px 110px;
 }
 .vod .vod-details li{
 	float: none;
+	margin-bottom: 3px;
 }
 
 .controls i{

@@ -54,7 +54,7 @@ var settings = fullstream.intel.settings;
 var defaults = JSON.parse(JSON.stringify(settings));
 var loading = true;
 var APIErrorCheck = 0;
-var version = '0.2.23';
+var version = '0.2.24';
 
 // Keeps strings clean from spaces and capitalization
 function cleanString(string){
@@ -550,28 +550,32 @@ fullstream.getVods = function(channel, offset, broadcast){
 	url = 'https://api.twitch.tv/kraken/channels/'+channel+'/videos?limit=100&offset='+offset+'&callback=?&broadcasts='+broadcast;
 	loading = true;
 	$.getJSON(url, function(a){
-		if(offset == 0){
-			if(a.videos.length > 0){
-				toggleMenuItem('#opt-3',false);
-			}else{
-				toggleMenuItem('#opt-3',true);
+		if(a.videos.length > 0){
+			if(offset == 0){
+				if(a.videos.length > 0){
+					toggleMenuItem('#opt-3',false);
+				}else{
+					toggleMenuItem('#opt-3',true);
+				}
+				$('#vod-list').html('');
+				var pastHeader = new channelSplitter(currentChannel.name+' Past Broadcasts', broadcast, 'fa-file-video-o', 'past');
+				var vodHeader = new channelSplitter(currentChannel.name+' Highlights', !broadcast, 'fa-file-video-o', 'highlights');
+				
+				if(broadcast){
+					$('#vod-list').append(pastHeader.listItem);
+				}else{
+					$('#vod-list').append(vodHeader.listItem);
+				}
 			}
-			$('#vod-list').html('');
-			var pastHeader = new channelSplitter(currentChannel.name+' Past Broadcasts', broadcast, 'fa-file-video-o', 'past');
-			var vodHeader = new channelSplitter(currentChannel.name+' Highlights', !broadcast, 'fa-file-video-o', 'highlights');
-			
-			if(broadcast){
-				$('#vod-list').append(pastHeader.listItem);
-			}else{
-				$('#vod-list').append(vodHeader.listItem);
+			for(vod in a.videos){
+				var newVod = new aVod(a.videos[vod].title, a.videos[vod]._id, a.videos[vod].description, a.videos[vod].game, a.videos[vod].length, a.videos[vod].preview, a.videos[vod].recorded_at, a.videos[vod].views, channel, broadcast);
+				$('#vod-list').append(newVod.asListItem());
 			}
-		}
-		for(vod in a.videos){
-			var newVod = new aVod(a.videos[vod].title, a.videos[vod]._id, a.videos[vod].description, a.videos[vod].game, a.videos[vod].length, a.videos[vod].preview, a.videos[vod].recorded_at, a.videos[vod].views, channel, broadcast);
-			$('#vod-list').append(newVod.asListItem());
-		}
-		if(a.videos.length >= 100){
-			fullstream.getVods(channel, offset+100, broadcast);
+			if(a.videos.length >= 100){
+				fullstream.getVods(channel, offset+100, broadcast);
+			}else{
+				loading = false;
+			}
 		}else{
 			loading = false;
 		}
@@ -986,8 +990,15 @@ function aVod(title, id, description, game, length, img, date, views, channel, b
 		var li = $('<li class="channel vod"></li>');
 		var screenshot = $('<img src="'+img+'"/>')
 		var details = $('<ul class="vod-details"></ul>');
-		var vodTitle = $('<span class="vod-title">'+title+'</div>');
-		var vodDescription = $('<p>'+description+'</p>');
+		var vodTitle = $('<li class="vod-title">'+title+'</li>');
+		var vodStats = $('<li></li>');
+		vodStats.append('<i class="fa fa-video-camera"></i> '+formatTime(length));
+		vodStats.append(' <i class="fa fa-eye"></i> '+views);
+		if(game){
+			vodStats.append(' <i class="fa fa-gamepad"></i> '+game);
+		}
+
+		var vodDescription = $('<li>'+description+'</li>');
 		var videoEmbed = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='+channel;
 		if(broadcast){
 			videoEmbed = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='+channel+'&videoId='+id;
@@ -995,9 +1006,9 @@ function aVod(title, id, description, game, length, img, date, views, channel, b
 			videoEmbed = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='+channel+'&chapter_id='+id.substring(1, id.lenght);
 		}
 		
-
 		details.append(vodTitle);
-		details.append(' ('+formatTime(length)+')<br><br>');
+		details.append(vodStats);
+
 		if(description){
 			details.append(vodDescription);
 		}
