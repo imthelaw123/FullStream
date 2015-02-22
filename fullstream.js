@@ -54,7 +54,7 @@ var settings = fullstream.intel.settings;
 var defaults = JSON.parse(JSON.stringify(settings));
 var loading = true;
 var APIErrorCheck = 0;
-var version = '0.2.24';
+var version = '0.2.25';
 
 // Keeps strings clean from spaces and capitalization
 function cleanString(string){
@@ -606,7 +606,7 @@ fullstream.changeChannel = function(videoEmbed, chatEmbed, id, service){
 		toggleMenuItem('#opt-0',false);
 	}
 	if(service == 'twitch'){
-		fullstream.getVods(id, 0);
+		fullstream.getVods(id, 0, false);
 	}
 
 	setTimeout(function(){
@@ -957,7 +957,7 @@ function channelSplitter(name, up, logo, vod){
 		$(collapser).click(function(){
 			if(vod){
 				if(vod == 'past'){
-					fullstream.getVods(currentChannel.id, 0);
+					fullstream.getVods(currentChannel.id, 0, false);
 				}else{
 					fullstream.getVods(currentChannel.id, 0, true);
 				}
@@ -999,12 +999,7 @@ function aVod(title, id, description, game, length, img, date, views, channel, b
 		}
 
 		var vodDescription = $('<li>'+description+'</li>');
-		var videoEmbed = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='+channel;
-		if(broadcast){
-			videoEmbed = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='+channel+'&videoId='+id;
-		}else{
-			videoEmbed = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='+channel+'&chapter_id='+id.substring(1, id.lenght);
-		}
+		var videoEmbed = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='+channel+'&videoId='+id;
 		
 		details.append(vodTitle);
 		details.append(vodStats);
