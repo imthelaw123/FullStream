@@ -52,9 +52,9 @@ var sortedChannels = fullstream.intel.sortedChannels;
 var currentChannel = fullstream.intel.currentChannel;
 var settings = fullstream.intel.settings;
 var defaults = JSON.parse(JSON.stringify(settings));
-var loading = true;
+var loading = false;
 var APIErrorCheck = 0;
-var version = '0.2.25';
+var version = '0.2.26';
 
 // Keeps strings clean from spaces and capitalization
 function cleanString(string){
@@ -69,7 +69,7 @@ function cleanString(string){
 // Clears strings of special characters
 function clearChars(string){
 	if(string){
-		var allowed = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ,.;:-+_|!"#<>%&/()=?@€£$`¬¦^{}[]~*\\\'';
+		var allowed = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅabcdefghijklmnopqrstuvwxyzæøå0123456789 ,.;:-+_|!"#<>%&/()=?@€£$`¬¦^{}[]~*\\\'';
 		var newString = '';
 		for(var i=0; i<string.length; i++){
 			if(allowed.indexOf(string[i]) >= 0){
@@ -547,26 +547,24 @@ fullstream.getGameChannels = function(game, offset){
 }
 // Method to get twitch VODs of current channel being watched
 fullstream.getVods = function(channel, offset, broadcast){
+	$('#vod-list').html('');
 	url = 'https://api.twitch.tv/kraken/channels/'+channel+'/videos?limit=100&offset='+offset+'&callback=?&broadcasts='+broadcast;
 	loading = true;
-	$.getJSON(url, function(a){
-		if(a.videos.length > 0){
-			if(offset == 0){
-				if(a.videos.length > 0){
-					toggleMenuItem('#opt-3',false);
-				}else{
-					toggleMenuItem('#opt-3',true);
-				}
-				$('#vod-list').html('');
-				var pastHeader = new channelSplitter(currentChannel.name+' Past Broadcasts', broadcast, 'fa-file-video-o', 'past');
-				var vodHeader = new channelSplitter(currentChannel.name+' Highlights', !broadcast, 'fa-file-video-o', 'highlights');
-				
-				if(broadcast){
-					$('#vod-list').append(pastHeader.listItem);
-				}else{
-					$('#vod-list').append(vodHeader.listItem);
-				}
+	$.getJSON(url, function(a){	
+		if(offset == 0){
+			if(broadcast){
+				var pastHeader = new channelSplitter(currentChannel.name+' Past Broadcasts', false, 'fa-file-video-o', 'past');
+				var vodHeader = new channelSplitter(currentChannel.name+' Highlights', true, 'fa-file-video-o', 'highlights');
+				$('#vod-list').append(vodHeader.listItem);
+				$('#vod-list').append(pastHeader.listItem);
+			}else{
+				var pastHeader = new channelSplitter(currentChannel.name+' Past Broadcasts', true, 'fa-file-video-o', 'past');
+				var vodHeader = new channelSplitter(currentChannel.name+' Highlights', false, 'fa-file-video-o', 'highlights');
+				$('#vod-list').append(pastHeader.listItem);
+				$('#vod-list').append(vodHeader.listItem);
 			}
+		}
+		if(a.videos.length > 0){
 			for(vod in a.videos){
 				var newVod = new aVod(a.videos[vod].title, a.videos[vod]._id, a.videos[vod].description, a.videos[vod].game, a.videos[vod].length, a.videos[vod].preview, a.videos[vod].recorded_at, a.videos[vod].views, channel, broadcast);
 				$('#vod-list').append(newVod.asListItem());
@@ -576,6 +574,8 @@ fullstream.getVods = function(channel, offset, broadcast){
 			}else{
 				loading = false;
 			}
+		}else if(!broadcast){
+			fullstream.getVods(channel, 0, true);
 		}else{
 			loading = false;
 		}
@@ -605,12 +605,10 @@ fullstream.changeChannel = function(videoEmbed, chatEmbed, id, service){
 	
 		toggleMenuItem('#opt-0',false);
 	}
-	if(service == 'twitch'){
-		fullstream.getVods(id, 0, false);
-	}
 
 	setTimeout(function(){
 		loading = false;
+		toggleMenuItem('#opt-3',false);
 	},1500);
 }
 // Method to change PiP channel embed
@@ -947,19 +945,23 @@ function channelSplitter(name, up, logo, vod){
 		icon.setAttribute('class', 'fa '+logo);
 		
 		if(vod){
-			collapser.setAttribute('class', 'fa fa-exchange fa-rotate-90');
-		}else if(!up){
-			collapser.setAttribute('class', 'fa fa-caret-up');
+			if(up){
+				collapser.setAttribute('class', 'fa fa-exchange fa-rotate-90');
+			}
 		}else{
-			collapser.setAttribute('class', 'fa fa-caret-down');
+			if(!up){
+				collapser.setAttribute('class', 'fa fa-caret-up');
+			}else{
+				collapser.setAttribute('class', 'fa fa-caret-down');
+			}
 		}
 
 		$(collapser).click(function(){
-			if(vod){
+			if(vod && up){
 				if(vod == 'past'){
-					fullstream.getVods(currentChannel.id, 0, false);
-				}else{
 					fullstream.getVods(currentChannel.id, 0, true);
+				}else{
+					fullstream.getVods(currentChannel.id, 0, false);
 				}
 			}else{
 				if(settings.collapsed[name]){

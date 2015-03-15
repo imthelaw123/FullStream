@@ -116,7 +116,9 @@ $('input[type=text]').click(function(){
 // Handle menu clicks
 $('.tabs > li > input').click(function(){
 	var num = $(this)[0].id.substr($(this)[0].id.length - 1);
-	if(num != 2){// hides games tab if another tab is clicked
+	if(num == 3){
+		fullstream.getVods(currentChannel.id, 0, false);
+	}else if(num != 2){// hides games tab if another tab is clicked
 		toggleMenuItem('#opt-2',true);
 	}
 });
