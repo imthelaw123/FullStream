@@ -546,8 +546,10 @@ fullstream.getGameChannels = function(game, offset){
 	});
 }
 // Method to get twitch VODs of current channel being watched
-fullstream.getVods = function(channel, offset, broadcast){
-	$('#vod-list').html('');
+fullstream.getVods = function(channel, offset, broadcast){	
+	if(offset == 0){
+		$('#vod-list').html('');
+	}
 	url = 'https://api.twitch.tv/kraken/channels/'+channel+'/videos?limit=100&offset='+offset+'&callback=?&broadcasts='+broadcast;
 	loading = true;
 	$.getJSON(url, function(a){	
