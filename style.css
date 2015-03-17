@@ -182,7 +182,8 @@ h4{
 }
 .channel-splitter .fa-caret-up, 
 .channel-splitter .fa-caret-down,
-.channel-splitter .fa-exchange{
+.channel-splitter .fa-level-down,
+.channel-splitter .fa-level-up{
 	position: absolute;
 	right: -7px;
 	cursor: pointer;

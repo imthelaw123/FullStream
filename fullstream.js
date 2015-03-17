@@ -7,6 +7,7 @@ fullstream.intel = {
 	"sortedChannels":{
 		"favorites":[],
 		"online":[],
+		"hosted":[],
 		"offline":[]
 	},
 	"currentChannel":{
@@ -41,6 +42,7 @@ fullstream.intel = {
 		"collapsed":{
 			"favorites":false,
 			"online":false,
+			"hosted":false,
 			"offline":false
 		},
 		"favorites":[],
@@ -54,7 +56,7 @@ var settings = fullstream.intel.settings;
 var defaults = JSON.parse(JSON.stringify(settings));
 var loading = false;
 var APIErrorCheck = 0;
-var version = '0.2.26';
+var version = '0.2.27';
 
 // Keeps strings clean from spaces and capitalization
 function cleanString(string){
@@ -341,7 +343,7 @@ fullstream.populateStatusBar = function(){
 }
 // Updates information about the current channel
 fullstream.updateCurrentChannel = function(){
-	if(currentChannel.service == 'twitch' || currentChannel.service == 'vod'){
+	if(currentChannel.service == 'twitch' || currentChannel.service == 'vod' || currentChannel.service == 'hosted'){
 		var url = 'https://api.twitch.tv/kraken/channels/'+currentChannel.id+'?callback=?';
 		var viewers = 0;
 		
@@ -353,10 +355,10 @@ fullstream.updateCurrentChannel = function(){
 			if(a){
 				currentChannel.logo = a.logo;
 				currentChannel.partner = a.partner;
-				currentChannel.url = ' <a href="http://twitch.tv/'+a.name+'" target="_blank">'+a.display_name+'</a>';
+				currentChannel.url = ' <a href="http://twitch.tv/'+a.name+'/profile" target="_blank">'+a.display_name+'</a>';
 				currentChannel.followers = a.followers;
 				currentChannel.name = a.display_name;
-				if(currentChannel.service == 'twitch'){
+				if(currentChannel.service == 'twitch' || currentChannel.service == 'hosted'){
 					currentChannel.genreUrl = ' <a href="http://twitch.tv/directory/game/'+a.game+'" target="_blank">'+a.game+'</a>';
 					currentChannel.viewers = viewers
 					currentChannel.status = a.status;
@@ -487,26 +489,32 @@ fullstream.getChannels = function(offset){
 			if(a.follows.length >= 100){
 				fullstream.getChannels(offset+100);
 			}else{
-				fullstream.updateData();
-				fullstream.log('Fetched '+fullstream.channelCount(channelData.twitch)+' channels from Twitch.tv with username: '+settings.general['twitch-user']);
+				fullstream.getHostedChannels(0);
+				fullstream.log('Fetched '+fullstream.channelCount(channelData.twitch)+' channel(s) from Twitch.tv with username: '+settings.general['twitch-user']);
 			}
-		}		
+		}else{
+			fullstream.getHostedChannels(0);
+		}	
 	});
 }
 // Generates an alphabetical array of all channels
 fullstream.sortChannels = function(){
 	sortedChannels.favorites = [];
 	sortedChannels.online = [];
+	sortedChannels.hosted = [];
 	sortedChannels.offline = [];
 	for(service in channelData){
-		sortedChannels[service] = [];
 		for(channel in channelData[service]){
-			if(channelData[service][channel].favorite){
-				sortedChannels.favorites[sortedChannels.favorites.length] = channel;
-			}else if(channelData[service][channel].live){
-				sortedChannels.online[sortedChannels.online.length] = channel;
+			if(service == 'twitch'){
+				if(channelData[service][channel].favorite){
+					sortedChannels.favorites[sortedChannels.favorites.length] = channel;
+				}else if(channelData[service][channel].live){
+					sortedChannels.online[sortedChannels.online.length] = channel;
+				}else{
+					sortedChannels.offline[sortedChannels.offline.length] = channel;
+				}
 			}else{
-				sortedChannels.offline[sortedChannels.offline.length] = channel;
+				sortedChannels.hosted[sortedChannels.hosted.length] = channel;
 			}
 		}
 	}
@@ -514,35 +522,91 @@ fullstream.sortChannels = function(){
 		sortedChannels[tab].sort();
 	}
 }
-// Method to get channels via specific game
-fullstream.getGameChannels = function(game, offset){
-	$(gameList).html('');
-	loading = true;
-	url = 'https://api.twitch.tv/kraken/search/streams?limit=100&offset='+offset+'&q='+game+'&callback=?';
+// Generates array of hosted channels
+fullstream.getHostedChannels = function(offset){
+	var url = 'https://api.twitch.tv/api/users/'+settings.general['twitch-user']+'/followed/hosting?limit=100&offset='+offset+'&callback=?';
 	$.getJSON(url, function(a){
-		if(a && a.streams){
+		if(a && a.hosts){
 			if(offset == 0){
-				var gameHeader = new channelSplitter(game, 'fa-gamepad', 'herp');
-				$(gameList).append(gameHeader.listItem);
+				channelData.hosted = [];
 			}
-			for(chan in a.streams){
-				if(a.streams[chan].game == game && a.streams[chan].game != 'null'){
-					var video = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='+a.streams[chan].channel.name;
-					var chat = 'http://twitch.tv/chat/embed?channel='+a.streams[chan].channel.name+'&amp;popout_chat=true';
-					var li = new aChannel('twitch', a.streams[chan].channel.name, true, video, chat, a.streams[chan].channel.name, false, a.streams[chan].channel.status, game, a.streams[chan].viewers, a.streams[chan].channel.logo);
-					$(gameList).append(li.asListItem());
+			for(x in a.hosts){
+				if(!channelData.twitch[a.hosts[x].target.id]){
+					var video = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='+a.hosts[x].target.id;
+					var chat = 'http://twitch.tv/chat/embed?channel='+a.hosts[x].target.id+'&amp;popout_chat=true';
+					var arr = {
+						id:a.hosts[x].target.id,
+						name:a.hosts[x].target.channel.display_name+' ('+a.hosts[x].display_name+')', 
+						live:false,
+						logo:a.hosts[x].target.channel.logo,
+						service:'hosted', 
+						videoEmbed:video, 
+						chatEmbed:chat, 
+						status:a.hosts[x].target.title,
+						viewers:a.hosts[x].target.viewers,
+						genre:a.hosts[x].target.meta_game,
+						favorite:false
+					}
+					channelData.hosted[a.hosts[x].target.id] = arr;
 				}
 			}
-			if(a.streams.length >= 100){
-				fullstream.getGameChannels(game, offset+100);
+			if(a.hosts.length >= 100){
+				fullstream.getHostedChannels(offset+100);
+			}else{
+				fullstream.updateData();
+				fullstream.log('Fetched '+fullstream.channelCount(channelData.hosted)+' hosted channel(s) from Twitch.tv with username: '+settings.general['twitch-user']);
 			}
+		}else{
+			fullstream.updateData();
 		}
-		else{
-			notify('Error loading channels, please try again later.');
-			hideMenuItem('#opt-2');
-			$('#tab-1')[0].checked = true;
+	});
+}
+// Method to get channels via specific game
+fullstream.getGameChannels = function(game){
+	$(gameList).html('');
+	loading = true;
+	var url = 'http://api.twitch.tv/api/users/'+settings.general['twitch-user']+'/follows/games?limit=100&offset=0&callback=?';
+	$.getJSON(url, function(a){
+		if(game){
+			for(g in a.follows){
+				if(game == a.follows[g].name){
+					var split = new channelSplitter(a.follows[g].name, false, 'fa-gamepad', 'game');
+					$(gameList).append(split.listItem());
+					var url = 'https://api.twitch.tv/kraken/search/streams?limit=100&offset=0&q='+game+'&callback=?'
+					var ferengi = a.follows;
+					$.getJSON(url, function(a){
+						if(a && a.streams){
+							for(chan in a.streams){
+								if(a.streams[chan].game == game && a.streams[chan].game != 'null'){
+									var video = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='+a.streams[chan].channel.name;
+									var chat = 'http://twitch.tv/chat/embed?channel='+a.streams[chan].channel.name+'&amp;popout_chat=true';
+									var li = new aChannel('twitch', a.streams[chan].channel.name, true, video, chat, a.streams[chan].channel.display_name, false, a.streams[chan].channel.status, game, a.streams[chan].viewers, a.streams[chan].channel.logo);
+									$(gameList).append(li.asListItem());
+								}
+							}
+						}
+						else{
+							notify('Error loading channels, please try again later.');
+						}
+						for(g in ferengi){
+							if(game != ferengi[g].name){
+								var split = new channelSplitter(ferengi[g].name, true, 'fa-gamepad', 'game');
+								$(gameList).append(split.listItem());
+							}	
+						}
+						loading = false;
+					});
+				}
+			}
+		}else{
+			for(g in a.follows){
+				if(game != a.follows[g].name){
+					var split = new channelSplitter(a.follows[g].name, true, 'fa-gamepad', 'game');
+					$(gameList).append(split.listItem());
+				}
+			}
+			loading = false;
 		}
-		loading = false;
 	});
 }
 // Method to get twitch VODs of current channel being watched
@@ -629,11 +693,21 @@ fullstream.populateChannels = function(){
 			var split = new channelSplitter(tab, settings.collapsed[tab]);
 			$(channelList).append(split.listItem());
 		}
-		if(!settings.collapsed[tab]){
+		if(!settings.collapsed[tab] && tab != 'hosted'){
 			for(var x=0; x<2; x++){
 				for(channel in sortedChannels[tab]){
 					if( (x==0 && channelData.twitch[sortedChannels[tab][channel]].live) || (x==1 && !channelData.twitch[sortedChannels[tab][channel]].live) && !(tab == 'offline' && settings.general['offline-channels']) ){
 						var chan = channelData.twitch[sortedChannels[tab][channel]];
+						var li = new aChannel(chan.service, chan.id, chan.live, chan.videoEmbed, chan.chatEmbed, chan.name, false, chan.status, chan.genre, chan.viewers, chan.logo);
+						$(channelList).append(li.asListItem());
+					}
+				}
+			}
+		}else if(!settings.collapsed[tab]){
+			for(var x=0; x<2; x++){
+				for(channel in sortedChannels[tab]){
+					if( (x==0 && channelData.hosted[sortedChannels[tab][channel]].live) || (x==1 && !channelData.hosted[sortedChannels[tab][channel]].live) ){
+						var chan = channelData.hosted[sortedChannels[tab][channel]];
 						var li = new aChannel(chan.service, chan.id, chan.live, chan.videoEmbed, chan.chatEmbed, chan.name, false, chan.status, chan.genre, chan.viewers, chan.logo);
 						$(channelList).append(li.asListItem());
 					}
@@ -653,55 +727,64 @@ fullstream.populateChannels = function(){
 };
 // Update the channels in data array from various APIs
 fullstream.updateData = function(){
-	if(fullstream.channelCount(channelData.twitch)){
-		var channelsString = '';
-		for(x in channelData.twitch){
-			channelsString += x+',';
+	var channelsString = '';
+	for(x in channelData){
+		for(y in channelData[x]){
+			channelsString += y+',';
 		}
-		var url = 'https://api.twitch.tv/kraken/streams?callback=?&jsonp=?&channel='+channelsString;
-		$.getJSON(url, function(a){
-			if(a.streams && a){
-				if(!a.streams.length && APIErrorCheck < 3){
-					APIErrorCheck += 1;
-				}
-				if(a.streams.length){
-					APIErrorCheck = 0;
-				}
+	}
+	var url = 'https://api.twitch.tv/kraken/streams?callback=?&jsonp=?&channel='+channelsString;
+	$.getJSON(url, function(a){
+		if(a.streams && a){
+			if(!a.streams.length && APIErrorCheck < 3){
+				APIErrorCheck += 1;
+			}
+			if(a.streams.length){
+				APIErrorCheck = 0;
+			}
+			for(service in channelData){
+				var matched = false;
 				for(account in a.streams){
 					var string = a.streams[account].channel.name;
-					if(channelData.twitch[string]){
-						channelData.twitch[string].live = true;
-						channelData.twitch[string].name = a.streams[account].channel.display_name;
-						channelData.twitch[string].status = a.streams[account].channel.status;
-						if(a.streams[account].channel.game){
-							channelData.twitch[string].genre = a.streams[account].channel.game;
+					for(chan in channelData[service]){
+						if(chan == string){
+							matched = true;	
+							channelData[service][chan].live = true;
+							if(service == 'twitch' || !channelData[service][chan].name){
+								channelData[service][chan].name = a.streams[account].channel.display_name;
+							}
+							channelData[service][chan].status = a.streams[account].channel.status;
+							if(a.streams[account].channel.game){
+								channelData[service][chan].genre = a.streams[account].channel.game;
+							}
+							channelData[service][chan].viewers = a.streams[account].viewers;
 						}
-						channelData.twitch[string].viewers = a.streams[account].viewers;
-					}else{
-						channelData.twitch[string].live = false;
-						channelData.twitch[string].name = "";
-						channelData.twitch[string].status = "";
-						channelData.twitch[string].genre = ""; 
-						channelData.twitch[string].viewers = "";
 					}
 				}
+				if(!matched){
+					channelData[service][chan].live = false;
+					channelData[service][chan].name = "";
+					channelData[service][chan].status = "";
+					channelData[service][chan].genre = ""; 
+					channelData[service][chan].viewers = "";
+				}
 			}
-			if(APIErrorCheck > 0 && APIErrorCheck < 3){
-				fullstream.log('API request failed, retrying '+APIErrorCheck+' time(s)');
-				fullstream.updateData();
-			}
-		})
-		.success(function() {
-			fullstream.log('Updated '+fullstream.channelsOnline(channelData.twitch)+'/'+fullstream.channelCount(channelData.twitch)+' channels from Twitch.tv');
-			fullstream.sortChannels();
-			fullstream.channelOptions();
-			fullstream.populateChannels();
-			if(settings.general['switcher-setting']){
-				fullstream.switcher();
-			}
-			loading = false;
-		});
-	}
+		}
+		if(APIErrorCheck > 0 && APIErrorCheck < 3){
+			fullstream.log('API request failed, retrying '+APIErrorCheck+' time(s)');
+			fullstream.updateData();
+		}
+	})
+	.success(function() {
+		fullstream.log('Updated '+fullstream.channelsOnline(channelData.twitch)+'/'+fullstream.channelCount(channelData.twitch)+' channels from Twitch.tv');
+		fullstream.sortChannels();
+		fullstream.channelOptions();
+		fullstream.populateChannels();
+		if(settings.general['switcher-setting']){
+			fullstream.switcher();
+		}
+		loading = false;
+	});
 }
 // Detect and switch to top channel in switcher array that is online
 fullstream.switcher = function(){
@@ -789,16 +872,7 @@ function aChannel(service, id, live, videoEmbed, chatEmbed, name, favorite, stat
 				fav = $('<i class="fa fa-heart is-favorite"></i>');
 			}
 		}
-
 		var pip = $('<i class="fa fa-external-link-square"></i>');
-		if(service == "twitch"){
-			var game = $('<i class="fa fa-gamepad"></i>');
-			$(game).click(function(){
-				fullstream.getGameChannels(genre, 0);
-				toggleMenuItem('#opt-2',false);
-				$('#tab-2')[0].checked = true;
-			});
-		}
 		var addToSwitcher = $('<i class="not-switcher fa fa-th-list"></i>');
 		for(chanl in settings.switcherChannels){
 			if(settings.switcherChannels[chanl] == id){
@@ -859,9 +933,6 @@ function aChannel(service, id, live, videoEmbed, chatEmbed, name, favorite, stat
 		$(controls).append(pip);
 		if(service == "twitch"){
 			$(controls).append(fav);
-			if(live && !$('#tab-2')[0].checked){
-				$(controls).append(game);
-			}
 			$(controls).append(addToSwitcher);
 		}
 		$(controls).attr('class', 'controls');
@@ -928,7 +999,7 @@ function aSwitcherChannel(num, name){
 	}
 }
 // channelSplitter constructor
-function channelSplitter(name, up, logo, vod){
+function channelSplitter(name, up, logo, type){
 	this.listItem = function(){		
 		var li = document.createElement('li');
 		var h4 = document.createElement('h4');
@@ -946,9 +1017,11 @@ function channelSplitter(name, up, logo, vod){
 		}
 		icon.setAttribute('class', 'fa '+logo);
 		
-		if(vod){
-			if(up){
-				collapser.setAttribute('class', 'fa fa-exchange fa-rotate-90');
+		if(type){
+			if(!up){
+				collapser.setAttribute('class', 'fa fa-level-up');
+			}else{
+				collapser.setAttribute('class', 'fa fa-level-down');
 			}
 		}else{
 			if(!up){
@@ -959,8 +1032,14 @@ function channelSplitter(name, up, logo, vod){
 		}
 
 		$(collapser).click(function(){
-			if(vod && up){
-				if(vod == 'past'){
+			if(type == 'game'){
+				if(up){
+					fullstream.getGameChannels(name);
+				}else{
+					fullstream.getGameChannels();
+				}
+			}else if(type && up && !loading){
+				if(type == 'past'){
 					fullstream.getVods(currentChannel.id, 0, true);
 				}else{
 					fullstream.getVods(currentChannel.id, 0, false);

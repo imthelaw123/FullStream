@@ -86,6 +86,7 @@ for(setting in settings.general){
 			if(settings.general[setting]){
 				$('#twitch-user').val(settings.general[setting]);
 				toggleMenuItem('#opt-1',false);
+				toggleMenuItem('#opt-2',false);
 			}
 			break;
 		case 'color-theme':
@@ -118,8 +119,8 @@ $('.tabs > li > input').click(function(){
 	var num = $(this)[0].id.substr($(this)[0].id.length - 1);
 	if(num == 3){
 		fullstream.getVods(currentChannel.id, 0, false);
-	}else if(num != 2){// hides games tab if another tab is clicked
-		toggleMenuItem('#opt-2',true);
+	}else if(num == 2){
+		fullstream.getGameChannels(0);
 	}
 });
 // Show or hide sidebar
@@ -231,6 +232,7 @@ $('#save-twitch-user').click(function(){
 	}
 	else{
 		toggleMenuItem('#opt-1',false);
+		toggleMenuItem('#opt-2',false);
 		$.getJSON('https://api.twitch.tv/kraken/channels/'+chan+'?callback=?', function(a){
 			if(a.status != 422 && a.status != 404){
 				settings.general['twitch-user'] = chan;
@@ -393,6 +395,7 @@ $(window).keydown(function(e){
 
 // Get initial data
 fullstream.getChannels(0);
+fullstream.getHostedChannels(0);
 if(!onLoadChan){
 	onLoadChan = settings.general['default-channel'];
 }
@@ -413,4 +416,5 @@ setInterval(function(){
 // Update twitch follower list every 5 min
 setInterval(function(){
 	fullstream.getChannels(0);
+	fullstream.getHostedChannels(0);
 },330000);
