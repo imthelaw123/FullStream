@@ -120,7 +120,7 @@ $('.tabs > li > input').click(function(){
 	if(num == 3){
 		fullstream.getVods(currentChannel.id, 0, false);
 	}else if(num == 2){
-		fullstream.getGameChannels(0);
+		fullstream.getGames();
 	}
 });
 // Show or hide sidebar
@@ -336,7 +336,7 @@ $(window).keydown(function(e){
 					}
 					for(chan in tempArray){
 						var _this = channelData.twitch[tempArray[chan]];
-						if(!switched){
+						if(!switched && _this){
 							if(!next && currentChannel.id == _this.id && currentChannel.service == _this.service){
 								next = true;
 							}else if(next && _this.live && (e.keyCode == 66 || e.keyCode == 78)){
@@ -351,7 +351,7 @@ $(window).keydown(function(e){
 					if(!switched){
 						var hit = false;
 						for(x in tempArray){
-							if(channelData.twitch[tempArray[x]].live && !hit){
+							if(channelData.twitch[tempArray[x]] && channelData.twitch[tempArray[x]].live && !hit){
 								var _this = channelData.twitch[tempArray[x]];
 								fullstream.changeChannel(channelData[_this.service][_this.id].videoEmbed, channelData[_this.service][_this.id].chatEmbed, _this.id, _this.service);
 								hit = true
@@ -379,7 +379,7 @@ $(window).keydown(function(e){
 						if($('#'+tabArray[tab])[0].checked){
 							next = true;
 						}else if(next && $($('#'+tabArray[tab])[0].parentElement).css('display') != 'none'){
-							$('#'+tabArray[tab])[0].checked = true;
+							$('#'+tabArray[tab]).click();
 							switched = true;
 						}
 					}

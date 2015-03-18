@@ -56,7 +56,7 @@ var settings = fullstream.intel.settings;
 var defaults = JSON.parse(JSON.stringify(settings));
 var loading = false;
 var APIErrorCheck = 0;
-var version = '0.2.27';
+var version = '0.2.28';
 
 // Keeps strings clean from spaces and capitalization
 function cleanString(string){
@@ -561,52 +561,41 @@ fullstream.getHostedChannels = function(offset){
 		}
 	});
 }
-// Method to get channels via specific game
-fullstream.getGameChannels = function(game){
-	$(gameList).html('');
+// Get list of games and genres
+fullstream.getGames = function(){
 	loading = true;
+	$(gameList).html('');
 	var url = 'http://api.twitch.tv/api/users/'+settings.general['twitch-user']+'/follows/games?limit=100&offset=0&callback=?';
 	$.getJSON(url, function(a){
-		if(game){
-			for(g in a.follows){
-				if(game == a.follows[g].name){
-					var split = new channelSplitter(a.follows[g].name, false, 'fa-gamepad', 'game');
-					$(gameList).append(split.listItem());
-					var url = 'https://api.twitch.tv/kraken/search/streams?limit=100&offset=0&q='+game+'&callback=?'
-					var ferengi = a.follows;
-					$.getJSON(url, function(a){
-						if(a && a.streams){
-							for(chan in a.streams){
-								if(a.streams[chan].game == game && a.streams[chan].game != 'null'){
-									var video = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='+a.streams[chan].channel.name;
-									var chat = 'http://twitch.tv/chat/embed?channel='+a.streams[chan].channel.name+'&amp;popout_chat=true';
-									var li = new aChannel('twitch', a.streams[chan].channel.name, true, video, chat, a.streams[chan].channel.display_name, false, a.streams[chan].channel.status, game, a.streams[chan].viewers, a.streams[chan].channel.logo);
-									$(gameList).append(li.asListItem());
-								}
-							}
-						}
-						else{
-							notify('Error loading channels, please try again later.');
-						}
-						for(g in ferengi){
-							if(game != ferengi[g].name){
-								var split = new channelSplitter(ferengi[g].name, true, 'fa-gamepad', 'game');
-								$(gameList).append(split.listItem());
-							}	
-						}
-						loading = false;
-					});
-				}
-			}
-		}else{
-			for(g in a.follows){
-				if(game != a.follows[g].name){
-					var split = new channelSplitter(a.follows[g].name, true, 'fa-gamepad', 'game');
-					$(gameList).append(split.listItem());
-				}
-			}
-			loading = false;
+		for(g in a.follows){
+			var game = new aGame(a.follows[g].name, a.follows[g].box.small);
+			$(gameList).append(game.asListItem());
 		}
+			loading = false;
+	});
+}
+// Method to get channels via specific game
+fullstream.getGameChannels = function(game, logo){
+	$(gameList).html('');
+	loading = true;
+	var url = 'https://api.twitch.tv/kraken/search/streams?limit=100&offset=0&q='+game+'&callback=?'
+	$.getJSON(url, function(a){
+		if(a && a.streams){
+			var header = new aGame(game, logo, a._total, true);
+			$(gameList).append(header.asListItem());
+			for(chan in a.streams){
+				if(a.streams[chan].game == game && a.streams[chan].game != 'null'){
+					var video = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='+a.streams[chan].channel.name;
+					var chat = 'http://twitch.tv/chat/embed?channel='+a.streams[chan].channel.name+'&amp;popout_chat=true';
+					var li = new aChannel('twitch', a.streams[chan].channel.name, true, video, chat, a.streams[chan].channel.display_name, false, a.streams[chan].channel.status, game, a.streams[chan].viewers, a.streams[chan].channel.logo);
+					$(gameList).append(li.asListItem());
+				}
+			}
+		}
+		else{
+			notify('Error loading channels, please try again later.');
+		}
+		loading = false;
 	});
 }
 // Method to get twitch VODs of current channel being watched
@@ -761,7 +750,7 @@ fullstream.updateData = function(){
 						}
 					}
 				}
-				if(!matched){
+				if(chan && !matched && channelData[service][chan]){
 					channelData[service][chan].live = false;
 					channelData[service][chan].name = "";
 					channelData[service][chan].status = "";
@@ -943,6 +932,40 @@ function aChannel(service, id, live, videoEmbed, chatEmbed, name, favorite, stat
 		
 		return li;
 	};
+}
+// Game Object Constructor
+function aGame(game, logo, num, single){
+	this.asListItem = function(){
+		var li = $('<li class="channel game"></li>');
+		var ul = $('<ul></ul>');
+		var img = $('<li><img src="'+logo+'" /></li>');
+		var nametag = $('<li class="game-name"><span>'+game+'</span></li>');
+		if(single){
+			if(num == 1){
+				$(nametag).html(num+' Channel streaming<br>'+game);
+			}else{
+				$(nametag).html(num+' Channels streaming<br>'+game);
+			}
+		}
+		var back = $('<li class="back"><i class="fa fa-level-up"></i></li>');
+
+		ul.append(img)
+		ul.append(nametag)
+		if(single){
+			ul.append(back);
+		}
+		li.append(ul);
+
+		$(li).click(function(){
+			if(single){
+				fullstream.getGames();
+			}else{
+				fullstream.getGameChannels(game, logo);
+			}
+		});
+
+		return li;
+	}
 }
 // Switcher channel object constructor
 function aSwitcherChannel(num, name){

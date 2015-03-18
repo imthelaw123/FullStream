@@ -158,6 +158,19 @@ h4{
 	overflow: hidden;
 	position: relative;
 }
+.game{
+	height: 76px;
+}
+.game .game-name{
+	font-weight: bold;
+	margin-left: 70px;
+	padding-top: 20px;
+}
+.game .back{
+	position: absolute;
+	top: 5px;
+	right: 5px;
+}
 .switcher-channel{
 	margin-left: -6px;
 }
@@ -276,6 +289,10 @@ h4{
 	top: 1px;
 	left: 4px;
 	border: 1px solid #111;
+}
+.game img{
+	width: 52px;
+	height: 72px;
 }
 .switcher-channel i{
 	float: right;
