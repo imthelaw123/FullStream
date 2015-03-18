@@ -56,7 +56,7 @@ var settings = fullstream.intel.settings;
 var defaults = JSON.parse(JSON.stringify(settings));
 var loading = false;
 var APIErrorCheck = 0;
-var version = '0.2.28';
+var version = '0.2.29';
 
 // Keeps strings clean from spaces and capitalization
 function cleanString(string){
@@ -942,9 +942,11 @@ function aGame(game, logo, num, single){
 		var nametag = $('<li class="game-name"><span>'+game+'</span></li>');
 		if(single){
 			if(num == 1){
-				$(nametag).html(num+' Channel streaming<br>'+game);
+				$(nametag).html(num+' channel streaming<br>'+game);
+			}else if(num >= 100){
+				$(nametag).html('Top 100 channels streaming<br>'+game);
 			}else{
-				$(nametag).html(num+' Channels streaming<br>'+game);
+				$(nametag).html(num+' channels streaming<br>'+game);
 			}
 		}
 		var back = $('<li class="back"><i class="fa fa-level-up"></i></li>');
