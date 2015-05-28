@@ -43,7 +43,7 @@
 					<a href="https://twitter.com/kniffen" target="_blank"><i class="fa fa-twitter"></i></a>
 					<a href="https://github.com/knifftech" target="_blank"><i class="fa fa-github"></i></a>
 					<a href="https://chrome.google.com/webstore/detail/fullstream/jkchcbdilffpbpkknniliidiflhbagkl" target="_blank"><i class="fa fa-google"></i></a>
-					<a href="http://knifftech.net/" target="_blank"><i class="fa fa-question"></i></a>
+					<a href="https://github.com/knifftech/FullStream/wiki" target="_blank"><i class="fa fa-question"></i></a>
 				</div>
 			<?php else: ?>
 				<object id="stream" 
@@ -117,7 +117,7 @@
 			<br>
 			<p>Before you get started, would you like some additional information about the various features and how to use them?</p>
 			<br>
-			<a href="http://knifftech.net" target="_blank" onClick="start()" class="welcome-button">Show me how</a>
+			<a href="https://github.com/knifftech/FullStream/wiki" target="_blank" onClick="start()" class="welcome-button">Show me how</a>
 			<button class="welcome-button" onClick="start()">I know how it works</button>
 		</div>
 	</div>
