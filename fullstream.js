@@ -298,7 +298,10 @@ fullstream.sortChannels = function(){
 			that.offline.push(chan);
 		}
 	}
-	that.favorites = that.favorites.concat(offlineFavs);
+	for(cat in that){
+		that[cat].sort();
+	}
+	that.favorites = that.favorites.concat(offlineFavs.sort());
 	
 	fullstream.log('Sorted channel(s)');
 }
