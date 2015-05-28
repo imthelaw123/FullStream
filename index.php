@@ -11,7 +11,7 @@
 	<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
 	<meta http-equiv="pragma" content="no-cache" />
 	<link rel="icon" type="image/png" href="images/favico.png" />
-	<link rel="stylesheet" type="text/css" href="style.css?version=<?php echo $intel['version']; ?>" />
+	<link rel="stylesheet" type="text/css" href="styles.css?version=<?php echo $intel['version']; ?>" />
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
