@@ -1,0 +1,76 @@
+intel={	
+	"version": "0.3.0",
+	"booleans": {
+		"check-switcher": {
+			"value": false,
+			"title": "Switcher"
+		},
+		"check-chat": {
+			"value": true,
+			"title": "Chat"
+		},
+		"check-hotkeys": {
+			"value": true,
+			"title": "Hotkeys"
+		},
+		"check-showHosted": {
+			"value": true,
+			"title": "Hosted channels"
+		}
+	},
+	"options" : {
+		"colorTheme": {
+			"value": "default",
+			"alternatives": {
+				"default" : "Default",
+				"twitchy" : "Twitchy",
+				"dark-twitchy" : "Dark-Twitchy",
+				"tube" : "Tube",
+				"terminal" : "Terminal"
+			},
+			"title": "Theme"
+		},
+		"pipPosition": {
+			"value": "pip-top-right",
+			"alternatives": {
+				"pip-top-right" : "Top Right",
+				"pip-bottom-right" : "Bottom Right",
+				"pip-bottom-left" : "Bottom Left",
+				"pip-top-left" : "Top Left"
+			},
+			"title": "PiP Position"
+		},
+		"sidebarPosition": {
+			"value": "right",
+			"alternatives": {
+				"left" : "Left",
+				"right" : "Right"
+			},
+			"title": "Sidebar Position"
+		}
+	},
+	"strings":{
+		"twitchUsername": {
+			"value": "",
+			"title": "Twitch username"
+		}
+	},
+	"states":{
+		"lastTab": "tab-settings",
+		"sidebar": true,
+		"topbar": true,
+		"first": true,
+		"game": "",
+		"vod": "",
+		"collapsed":{
+			"favorites": false,
+			"online": false,
+			"hosted": false,
+			"offline": false
+		}
+	},
+	"lists":{
+		"favorite":[],
+		"switcher":[]
+	}
+}
