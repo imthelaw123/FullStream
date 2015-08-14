@@ -13,7 +13,6 @@
 	<link rel="icon" type="image/png" href="assets/icons/favico.png" />
 	<link rel="stylesheet" type="text/css" href="style.css?v=<?php echo $intel['version']; ?>" />
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,600italic,400italic' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700' rel='stylesheet' type='text/css'>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
@@ -95,7 +94,7 @@
 		</div>
 		<div class="search-box notify-box">
 			<h1>Switch to a desired channel</h1>
-			<p>Enter inn the handle for the desired channel you want to watch</p>
+			<p>Enter the username for the desired channel you want to watch</p>
 			<form>
 				<input type="text" id="search-id" name="search-id"></input>
 				<input type="submit" value="Switch" id="search-for-id"></input>

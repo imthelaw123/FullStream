@@ -27,3 +27,8 @@
 		text-align: center;
 	}
 }
+@media screen and (max-height: 700px){
+	#media #social-links{
+		bottom: 0px;
+	}
+}

@@ -1,11 +1,13 @@
 body.theme-tube{
 	background-color: #eee;
 	color: #000;
-	::-webkit-scrollbar,
 	#media,
 	#topbar-controls,
 	.list-item:nth-child(even),
 	.notify-box{
+		background-color: #eee;
+	}
+	::-webkit-scrollbar{
 		background-color: #eee;
 	}
 	.list-item:nth-child(odd){
@@ -32,7 +34,6 @@ body.theme-tube{
 			color: #e00000;
 		}
 	}
-	::-webkit-scrollbar-thumb,
 	.notify-box a,
 	button,
 	input[type="submit"],
@@ -42,6 +43,9 @@ body.theme-tube{
 	.setting-check input:checked + label{
 		background-color: #e00000;
 		color: #fff;
+	}
+	::-webkit-scrollbar-thumb{
+		background-color: #e00000;
 	}
 	.notify-box a,
 	button,

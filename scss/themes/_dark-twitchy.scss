@@ -1,9 +1,11 @@
 body.theme-dark-twitchy{
 	background-color: #19191F;
-	::-webkit-scrollbar,
 	#media,
 	#topbar-controls,
 	.list-item:nth-child(even){
+		background-color: #19191F;
+	}
+	::-webkit-scrollbar{
 		background-color: #19191F;
 	}
 	.list-item:nth-child(odd){
