@@ -1,0 +1,13 @@
+#stream{
+	position: absolute; 
+	right: 0px; 
+	bottom: 0px;
+	left: 0px;
+	width: 100%;
+	height: calc(100% - 51px);
+}
+.topbar-small{
+	#stream{
+		height: calc(100% - 31px);
+	}
+}

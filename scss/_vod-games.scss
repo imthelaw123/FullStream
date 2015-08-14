@@ -1,0 +1,47 @@
+.list-item-listlink{
+	text-align: center;
+	padding: 30px 0px;
+	i{
+		font-size: 50px;
+	}
+	h2{
+		padding: 10px 0px;
+		text-transform: uppercase;
+	}
+}
+.list-item-vod{
+	padding-bottom: 10px;
+	border-bottom: 1px solid $border-color1;
+	h1,
+	.description{
+		padding: 2px 10px;
+	}
+	h1{
+		font-size: 14px;
+	}
+	.description{
+		display: block;
+		font-size: 12px
+	}
+	img{
+		margin-bottom: 5px;
+	}
+}
+.list-item-game{
+	position: relative;
+	img{
+		vertical-align: bottom;
+	}
+	.game-title,
+	.game-viewers{
+		position: absolute;
+		left: 60px;
+	}
+	.game-title{
+		top: 5px;
+	}
+	.game-viewers{
+		bottom: 5px;
+		color: $text-color4;
+	}
+}

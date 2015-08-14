@@ -1,0 +1,78 @@
+html,
+body{
+	height: 100vh;
+  width: 100vw;
+}
+body{
+	background-color: $background-color1;
+	color: $text-color1;
+  overflow: hidden;
+  font-family: $font-stack1;
+  min-height: 700px;
+}
+a{
+	color: $text-color6;
+	text-decoration: none;
+	transition: .3s;
+	&:hover{
+		color: #fff;
+		text-decoration: underline;
+	}
+}
+li{
+	list-style: none;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p{
+	margin: 0px;
+	padding: 0px;
+}
+::-webkit-scrollbar {
+  background-color: $background-color1;
+  border-left: 1px solid $border-color1;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color:  $background-color2;
+  border-left: 1px solid $border-color1;
+}
+
+input,
+button,
+textarea,
+select{
+	border: 1px solid $border-color1;
+}
+.notify-box a,
+button,
+input[type="submit"]{
+	background-color: $button-color1;
+	color: $text-color2;
+	text-transform: uppercase;
+	font-size: 12px;
+	padding: 5px 5px 4px;
+	transition: .3s;
+	&:hover{
+		background-color: $background-color3;
+		color: $text-color3;
+	}
+}
+input[type="text"],
+textarea,
+select{
+	background-color: $background-color4;
+	color: $text-color3;
+	padding: 0px 4px;
+}
+select,
+input[type="text"]{
+	height: 22px;
+}
+select{
+	width: 120px;
+}

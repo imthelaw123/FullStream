@@ -80,7 +80,7 @@ function get_tab_content($tab){
 				<form class="setting">
 					<div class="setting-name"><?php echo $setting['title']; ?></div>
 					<input id="<?php print($string); ?>" type="text" name="<?php print($string); ?>"/>
-					<input type="submit" id="<?php print('save-'.$string); ?>" />
+					<input type="submit" value="Save" id="<?php print('save-'.$string); ?>" />
 				</form>
 				<?php endforeach;
 			}

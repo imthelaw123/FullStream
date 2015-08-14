@@ -1,5 +1,5 @@
 intel={	
-	"version": "0.3.1",
+	"version": "0.3.6",
 	"booleans": {
 		"check-switcher": {
 			"value": false,
@@ -16,6 +16,10 @@ intel={
 		"check-showHosted": {
 			"value": true,
 			"title": "Hosted channels"
+		},
+		"check-html5": {
+			"value": false,
+			"title": "HTML5 Player (beta)"
 		}
 	},
 	"options" : {
@@ -24,7 +28,7 @@ intel={
 			"alternatives": {
 				"default" : "Default",
 				"twitchy" : "Twitchy",
-				"dark-twitchy" : "Dark-Twitchy",
+				"dark-twitchy" : "Dark and Twitchy",
 				"tube" : "Tube",
 				"terminal" : "Terminal"
 			},

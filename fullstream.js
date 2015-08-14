@@ -1,6 +1,5 @@
 /*
 	FullStream - A Better Way to Watch Twitch.tv
-	Version: 0.3
 	By: Kniffen Technologies - http://knifftech.net
 */
 // Variables and arrays
@@ -18,26 +17,27 @@ fullstream.sortedChannels = {
 	offline:[]
 }
 fullstream.gameIcons = {
-	'fa-music'			: ['music'],
-	'fa-code'			: ['programming', 'game development'],
-	'fa-paint-brush'	: ['creative'],
-	'fa-microphone'	 	: ['gaming talk shows'],
-	'fa-truck'			: ['euro truck Simulator', 'euro truck simulator 2', 'american truck simulator', 'farming simulator 2015'],
-	'fa-cube'			: ['minecraft', 'terraria', 'minecraft: xbox one edition'],
+	'fa-money'					: ['poker'],
+	'fa-music'					: ['music'],
+	'fa-code'						: ['programming', 'game development'],
+	'fa-paint-brush'		: ['creative'],
+	'fa-microphone'	 		: ['gaming talk shows'],
+	'fa-truck'					: ['euro truck Simulator', 'euro truck simulator 2', 'american truck simulator', 'farming simulator 2015'],
+	'fa-cube'						: ['minecraft', 'terraria', 'minecraft: xbox one edition'],
 	'fa-space-shuttle'	: ['elite: dangerous', 'eve online', 'star citizen'],
-	'fa-rocket'			: ['kerbal space program'],
-	'fa-fighter-jet'	: ['arma', 'arma ii', 'arma iii', 'battlefield 4', 'battlefield 3','war thunder'],
-	'fa-plane'			: ['microsoft flight simulator x'],
-	'fa-ship'			: ['world of warships'],
-	'fa-car'			: ['gran turismo 5', 'gran turismo 6', 'assetto corsa', 'project cars', 'the crew', 'forza motorsport 5', 'forza horizon 2', 'iracing.com'],
-	'fa-wrench'			: ['factorio', 'automation - the car company tycoon game', 'truck mechanic simulator 2015', 'car mechanic simulator 2015', 'car mechanic simulator 2014'],
-	'fa-train'			: ['train simulator 2015', 'train simulator 2014'],
-	'fa-building'		: ['cities: skylines'],
-	'fa-bus'			: ['omsi', 'omsi 2'],
-	'fa-map-marker'		: ['geoguessr'],
-	'fa-stethoscope'	: ['surgeon simulator 2013'],
+	'fa-rocket'					: ['kerbal space program'],
+	'fa-fighter-jet'		: ['arma', 'arma ii', 'arma iii', 'battlefield 4', 'battlefield 3','war thunder'],
+	'fa-plane'					: ['microsoft flight simulator x'],
+	'fa-ship'						: ['world of warships'],
+	'fa-car'						: ['rocket league', 'gran turismo 5', 'gran turismo 6', 'assetto corsa', 'project cars', 'the crew', 'forza motorsport 5', 'forza horizon 2', 'iracing.com'],
+	'fa-wrench'					: ['factorio', 'automation - the car company tycoon game', 'truck mechanic simulator 2015', 'car mechanic simulator 2015', 'car mechanic simulator 2014'],
+	'fa-train'					: ['train simulator 2015', 'train simulator 2014'],
+	'fa-building'				: ['cities: skylines'],
+	'fa-bus'						: ['omsi', 'omsi 2'],
+	'fa-map-marker'			: ['geoguessr'],
+	'fa-stethoscope'		: ['surgeon simulator 2013'],
 	'fa-birthday-cake'	: ['portal', 'portal 2'],
-	'fa-rebel'			: ['star wars: the old republic', 'star wars battlefront', 'star wars: battlefront 2', 'star wars: battlefront']
+	'fa-rebel'					: ['star wars: the old republic', 'star wars battlefront', 'star wars: battlefront 2', 'star wars: battlefront']
 }
 // Formats large numbers into readable strings
 Number.prototype.formatNum = function(){
@@ -76,12 +76,6 @@ function getParameter(paramName) {
 		}
 	}
 	return null;
-}
-// For initial users
-function start(){
-	fullstream.settings.states.first = false;
-	fullstream.saveSettings();
-	$('#welcome').hide();
 }
 // Custom console.log string
 fullstream.log = function(string){
@@ -219,7 +213,7 @@ fullstream.updateChannels = function(){
 					}
 				}
 				if(!that.logo){
-					that.logo = 'images/offline.png';
+					that.logo = 'assets/images/offline.png';
 				}
 				that.live = true;
 			}
@@ -525,8 +519,10 @@ fullstream.getGames = function(game){
 		var url = 'https://api.twitch.tv/kraken/games/top?offset=0&limit=100&callback=?';
 		$.getJSON(url, function(a){
 			for(x in a.top){
-				var game = new gameItem(a.top[x].game.name, a.top[x].game.box.small, a.top[x].viewers);
-				$('.list-games').append(game);
+				if(a.top[x] && a.top[x].game && a.top[x].game.box){
+					var game = new gameItem(a.top[x].game.name, a.top[x].game.box.small, a.top[x].viewers);
+					$('.list-games').append(game);
+				}
 			}
 			$('#loading').hide();
 		});
@@ -553,7 +549,7 @@ fullstream.getGames = function(game){
 		var url = 'https://api.twitch.tv/kraken/search/streams?limit=100&offset=0&q='+game+'&callback=?'
 		$.getJSON(url, function(a){
 			for(x in a.streams){
-				if(a.streams[x].game == fullstream.settings.states.game){
+				if(a.streams[x].game.toLowerCase() == fullstream.settings.states.game.toLowerCase()){
 					var data = new channelObj();
 					for(y in data){
 						if(y in a.streams[x] && a.streams[x][y]){
@@ -600,6 +596,11 @@ fullstream.toggleSetting = function(cat, setting, onload){
 			case 'check-showHosted':
 				if(!onload && fullstream.settings.strings.twitchUsername.value){
 					fullstream.getFollows();
+				}
+				break;
+			case 'check-html5':
+				if(!onload && fullstream.currentStream.name){
+					fullstream.changeChannel(fullstream.currentStream.name);
 				}
 				break;
 		}
@@ -695,7 +696,21 @@ fullstream.switcher = function(){
 		if(!hit && fullstream.channelData[list[x]] && fullstream.channelData[list[x]].live){
 			hit = true;
 			if(list[x] != fullstream.currentStream.name){
-				fullstream.changeChannel(list[x]);
+				var counter = 4;
+				var switchTarget = list[x];
+				$('.overlap').show();
+				$('.switcher-box').animate({ 'top': '0px' });
+
+				var timer = setInterval(function(){
+					$('.switcher-box p b').html(counter);
+					counter--;
+					if(counter < 0){
+						clearInterval(timer);
+						if(fullstream.settings.booleans['check-switcher'].value){
+							fullstream.changeChannel(switchTarget);
+						}
+					}
+				}, 1000);
 			}
 		}
 	}
@@ -717,6 +732,9 @@ fullstream.changeChannel = function(channel, vod){
 	if(vod){
 		path += '&v='+vod;
 	}
+	if(fullstream.settings.booleans['check-html5'].value){
+		path += '&html5=true';
+	}
 	document.location.href = path;
 }
 // JSON object for channels
@@ -725,7 +743,7 @@ function channelObj(){
 		name: '',
 		display_name: '', 
 		live: false,
-		logo: 'images/offline.png',
+		logo: 'assets/images/offline.png',
 		status: '',
 		favorite: false,
 		switcher: false,
@@ -746,7 +764,7 @@ function channelItem(id, data){
 		var data = fullstream.channelData[id];
 	}
 	if(!data.logo){
-		data.logo = 'images/offline.png';
+		data.logo = 'assets/images/offline.png';
 	}
 	var channelItem = $('<div class="list-item list-item-channel"></div>');
 	var logo = $('<img class="list-item-logo" src="'+data.logo+'" />');
@@ -764,13 +782,13 @@ function channelItem(id, data){
 	}
 
 	if(fullstream.settings.lists.favorite.indexOf(data.name) >= 0){
-		channelItem.addClass('favorited');
+		channelItem.addClass('is-favorite');
 	}
 	if(fullstream.settings.lists.switcher.indexOf(data.name) >= 0){
-		channelItem.addClass('on-switcher');
+		channelItem.addClass('is-switcher');
 	}
 	if(fullstream.currentStream.pip == data.name){
-		channelItem.addClass('pipped');
+		channelItem.addClass('is-pip');
 	}
 
 	if(data && !data.hosted){
@@ -826,7 +844,7 @@ function channelItem(id, data){
 				}
 			}
 		}
-		if(!switcherActive){
+		if(!switcherActive && !$(this).hasClass('list-item-switcher')){
 			fullstream.settings.states.vod = '';
 			fullstream.saveSettings();
 			fullstream.changeChannel(e.data.id);
@@ -922,7 +940,7 @@ function vodItem(name, title, id, game, description, img){
 		fullstream.changeChannel(e.data.name, e.data.id);
 	});
 	
-	vodItem.append(_title, _info, _img);
+	vodItem.append(_img, _title, _info);
 
 	return vodItem;
 }
@@ -999,6 +1017,14 @@ $(document).ready(function(){
 	fullstream.loadSettings();
 
 	if(fullstream.currentStream.name){
+		if( (fullstream.settings.booleans['check-html5'].value && !getParameter('html5')) || 
+		(!fullstream.settings.booleans['check-html5'].value && getParameter('html5')) ){
+			if(fullstream.currentStream.vod){
+				fullstream.changeChannel(fullstream.currentStream.name, fullstream.currentStream.vod);
+			}else{
+				fullstream.changeChannel(fullstream.currentStream.name);
+			}
+		}
 		$('#topbar .title').html('FullStream');
 		$('#topbar .stats').html('Loading '+fullstream.currentStream.name+'...');
 		if(!fullstream.settings.strings.twitchUsername.value){
@@ -1054,6 +1080,7 @@ $(document).ready(function(){
 		}
 		fullstream.saveSettings();
 	});
+
 	// Handle sidebar menu clicks
 	$('.tabs > li > input').click(function(){
 		fullstream.settings.states.lastTab = this.id;
@@ -1066,7 +1093,66 @@ $(document).ready(function(){
 			fullstream.getVods(fullstream.settings.states.vod);
 		}
 	});
-	$('#'+fullstream.settings.states.lastTab).click();
+
+	// Handle initial user click
+	$('#welcome-button').click(function(){
+		fullstream.settings.states.first = false;
+		fullstream.saveSettings();
+		$('.welcome-box').animate({
+			'top': '-500px'
+		},500,function(){
+			$('.overlap').hide();
+		});
+	});
+
+	// Handle channel search toggle
+	$('#toggle-search').click(function(){
+		$('.overlap').show();
+		$('.search-box').animate({
+			'top': '0px'
+		},500,function(){
+			$('#search-id').focus();
+		});
+	});
+
+	// Toggle channel search box
+	$('#toggle-search-box').click(function(){
+		$('.search-box').animate({
+			'top': '-500px'
+		},500,function(){
+			$('.overlap').hide();
+		});
+	});
+
+	// Handle channel search
+	$('#search-for-id').click(function(){
+		if( $('#search-id').val() ){
+			fullstream.changeChannel($('#search-id').val());
+			$('#toggle-search-box').click();
+		}else{
+			alert('Invalid channel name!');
+		}
+	});
+
+	// Cancel swithcer
+	$('#cancel-switch').click(function(){
+		$('#check-switcher').click();
+
+		$('.switcher-box').animate({
+			'top': '-500px'
+		},500,function(){
+			$('.overlap').hide();
+		});
+	})
+
+	// Handle tab on load
+	if(!fullstream.settings.strings.twitchUsername.value){
+		$('#tab-settings').click();
+	}else if(!fullstream.currentStream.name){
+		$('#tab-channels').click();
+	}else{
+		$('#'+fullstream.settings.states.lastTab).click();
+	}
 	// Handle settings boolean changes
 	$('.setting-check input[type="checkbox"]').click(function(){
 		fullstream.settings.booleans[this.id].value = $(this)[0].checked;
@@ -1114,12 +1200,15 @@ $(document).ready(function(){
 		liveChannels = liveChannels.concat(fullstream.sortedChannels.favorites, fullstream.sortedChannels.online, fullstream.sortedChannels.hosted);
 		if(fullstream.settings.booleans['check-hotkeys'].value && $("input[type=text]").is(':focus') == false){
 			switch(e.keyCode){
+				// Keyup event for S
 				case 83:
 					$('#toggle-sidebar').click();
 					break;
+				// Keyup event for T
 				case 84:
 					$('#toggle-topbar').click();
 					break;
+				// Keyup event for B and N
 				case 66:
 				case 78:
 					if(liveChannels.length){
@@ -1154,6 +1243,18 @@ $(document).ready(function(){
 						}
 					}
 					break;
+				// Keyup event for F
+				 case 70:
+				 	$('#toggle-search').click();
+				 	break;
+				// keyup event for H
+				case 72:
+					$('#toggle-home').click();
+				break;
+				// keyup event for A
+				case 65:
+					$('#check-switcher').click();
+				break;
 			}
 		}
 	});
@@ -1173,6 +1274,9 @@ $(document).ready(function(){
 	},60000);
 
 	if(fullstream.settings.states.first){
-		$('#welcome').show();
+		$('.overlap').show();
+		$('.welcome-box').animate({
+			'top': '0px'
+		},500);
 	}
 });

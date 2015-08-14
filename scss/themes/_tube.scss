@@ -1,0 +1,58 @@
+body.theme-tube{
+	background-color: #eee;
+	color: #000;
+	::-webkit-scrollbar,
+	#media,
+	#topbar-controls,
+	.list-item:nth-child(even),
+	.notify-box{
+		background-color: #eee;
+	}
+	.list-item:nth-child(odd){
+		background-color: #eee - 5;
+	}
+	.list-item:hover{
+		background-color: #eee - 15;
+	}
+	#media #social-links{
+		background-color: #ddd;
+	}
+	#loading i,
+	.chan-stat-genre,
+	.chan-stat-viewers,
+	.list-item-game .game-viewers,
+	.notify-box{
+		color: #000;
+	}
+	a,
+	#topbar-controls i,
+	.tabs > li > label{
+		color: #000;
+		&:hover{
+			color: #e00000;
+		}
+	}
+	::-webkit-scrollbar-thumb,
+	.notify-box a,
+	button,
+	input[type="submit"],
+	.tabs > li > input:checked ~ label,
+	.tabs > li > label:hover,
+	.list-splitter,
+	.setting-check input:checked + label{
+		background-color: #e00000;
+		color: #fff;
+	}
+	.notify-box a,
+	button,
+	input[type="submit"]{
+		&:hover{
+			background-color: $background-color3;
+		}
+	}
+	img[src*="assets/images/offline.png"],
+	img[src*="assets/images/fullstream-logo.png"]{
+		filter: invert(100%);
+		-webkit-filter: invert(100%);
+	}
+}

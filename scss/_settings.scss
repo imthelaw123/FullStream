@@ -1,0 +1,33 @@
+#settings{
+	padding: 10px;
+}
+.setting{
+	padding-bottom: 10px;
+}
+.setting-check{
+	input{
+		display: none;
+		&:checked + label{
+			background-color: $button-color1;
+			color: $text-color2;
+		}
+		&:checked + label:before{
+			content: "ON";
+		}
+	}
+	label{
+		display: inline-block;
+		width: 30px;
+		background-color: $button-color2;
+		cursor: pointer;
+  	border: 1px solid $border-color1;
+  	color: $text-color3;
+  	font-weight: bold;
+  	font-size: 10px;
+  	padding: 2px 5px;
+  	transition: .3s;
+		&:before{
+			content: "OFF";
+		}
+	}
+}

@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>FullStream</title>
+	<title>FullStream - A better way to watch Twitch</title>
 	<meta charset="utf-8">
 	<meta http-equiv="cache-control" content="max-age=0" />
 	<meta http-equiv="cache-control" content="no-cache" />
@@ -10,85 +10,61 @@
 	<meta http-equiv="expires" content="-1" />
 	<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
 	<meta http-equiv="pragma" content="no-cache" />
-	<link rel="icon" type="image/png" href="images/favico.png" />
-	<link rel="stylesheet" type="text/css" href="styles.css?version=<?php echo $intel['version']; ?>" />
+	<link rel="icon" type="image/png" href="assets/icons/favico.png" />
+	<link rel="stylesheet" type="text/css" href="style.css?v=<?php echo $intel['version']; ?>" />
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,600italic,400italic' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700' rel='stylesheet' type='text/css'>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
-	<script type="text/javascript" src="intel.json?version=<?php echo $intel['version']; ?>"></script>
-	<script type="text/javascript" src="fullstream.js?version=<?php echo $intel['version']; ?>"></script>
+	<script type="text/javascript" src="intel.json?v=<?php echo $intel['version']; ?>"></script>
+	<script type="text/javascript" src="fullstream.js?v=<?php echo $intel['version']; ?>"></script>
 </head>
 <body class="theme-default">
 	<div id="fullstream-wrapper">
 		<div id="media" class="topbar-normal">
 			<div id="topbar">
-				<img class="channel-logo" src="images/offline.png" />
+				<img class="channel-logo" src="assets/images/offline.png" />
 				<ul class="info-box">
 					<li class="title">Welcome to FullStream</li>
 					<li class="stats">A better way to watch Twitch</li>
 				</ul>
 				<div id="topbar-controls">
-					<i id="toggle-home" class="toggle fa fa-home" title="Home"></i>
+					<i id="toggle-home" class="toggle fa fa-home" title="Home (H)"></i>
+					<i id="toggle-search" class="toggle fa fa-search" title="Manual switch (F)"></i>
 					<i id="toggle-pip" class="toggle" title="Toggle Picture-in-Picture"><b>PiP</b></i>
 					<i id="toggle-pipswitch" class="toggle fa fa-retweet fa-rotate-90" title="Swap stream and PiP"></i>
-					<i id="toggle-switcher" class="toggle toggle fa fa-list-ol" title="Toggle Switcher"></i>
-					<i id="toggle-topbar" class="toggle fa fa-angle-up" title="Toggle Topbar"></i>
-					<i id="toggle-sidebar" class="toggle fa fa-angle-right" title="Toggle Sidebar"></i>
+					<i id="toggle-switcher" class="toggle toggle fa fa-list-ol" title="Toggle Automatic Switcher (A)"></i>
+					<i id="toggle-topbar" class="toggle fa fa-angle-up" title="Toggle Topbar (T)"></i>
+					<i id="toggle-sidebar" class="toggle fa fa-angle-right" title="Toggle Sidebar (S)"></i>
 				</div>
 			</div>
-			<div id="video-container">
 			<?php if( !isset($_GET['c']) ): ?>
-				<img id="logo" src="images/fullstream-logo.png" />
+				<img id="logo" src="assets/images/fullstream-logo.png" />
 				<div id="social-links">
 					<a href="https://twitter.com/kniffen" target="_blank"><i class="fa fa-twitter"></i></a>
 					<a href="https://github.com/knifftech" target="_blank"><i class="fa fa-github"></i></a>
 					<a href="https://chrome.google.com/webstore/detail/fullstream/jkchcbdilffpbpkknniliidiflhbagkl" target="_blank"><i class="fa fa-google"></i></a>
 					<a href="https://github.com/knifftech/FullStream/wiki" target="_blank"><i class="fa fa-question"></i></a>
 				</div>
-			<?php else: ?>
-				<object id="stream" 
-						bgcolor="#000000" 
-						data="//www-cdn.jtvnw.net/swflibs/TwitchPlayer.swf" 
-						height="100%" 
-						type="application/x-shockwave-flash" 
-						width="100%"> 
-				  <param name="allowFullScreen" 
-				        value="true" />
-				  <param name="allowNetworking" 
-				        value="all" />
-				  <param name="allowScriptAccess" 
-				        value="always" />
-				  <param name="movie" 
-				        value="//www-cdn.jtvnw.net/swflibs/TwitchPlayer.swf" />
-				  <param name="flashvars" 
-				  	<?php if( isset($_GET['v']) ): ?>
-				    	value="videoId=<?php echo $_GET['v']; ?>&auto_play=true" />
-				    <?php else: ?>
-				        value="channel=<?php echo $_GET['c']; ?>&auto_play=true" />
-				    <?php endif; ?>
-				</object>
+			<?php else:
+				$url = 'http://www.twitch.tv/'.$_GET['c'].'/embed';
+				if( isset($_GET['v']) && isset($_GET['html5']) ){
+					$url = 'http://player.twitch.tv/?videoId='.$_GET['v'].'&showInfo=false';
+				}else if( isset($_GET['html5']) ){
+					$url = 'http://player.twitch.tv/?channel='.$_GET['c'].'&showInfo=false';
+				}else if( isset($_GET['v']) ){
+					$url = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='.$_GET['c'].'&videoId='.$_GET['v'];
+				} ?>
+				<iframe id="stream" src="<?php echo $url; ?>" frameborder="0"></iframe>
 			<?php endif; ?>
-			<?php if( isset($_GET['p']) ): ?>
-				<object id="pip-stream" 
-						class="pip-top-right"
-						bgcolor="#000000" 
-						data="//www-cdn.jtvnw.net/swflibs/TwitchPlayer.swf" 
-						height="100%" 
-						type="application/x-shockwave-flash" 
-						width="100%"> 
-				  <param name="allowFullScreen" 
-				          value="true" />
-				  <param name="allowNetworking" 
-				          value="all" />
-				  <param name="allowScriptAccess" 
-				          value="always" />
-				  <param name="movie" 
-				          value="//www-cdn.jtvnw.net/swflibs/TwitchPlayer.swf" />
-				  <param name="flashvars" 
-				          value="channel=<?php echo $_GET['p']; ?>&auto_play=true&start_volume=0" />
-				</object>
+			<?php if( isset($_GET['p']) ):
+				$pipurl = 'http://www.twitch.tv/'.$_GET['p'].'/embed';
+				if( isset($_GET['html5']) ){
+					$pipurl = 'http://player.twitch.tv/?channel='.$_GET['p'].'&volume=0&showInfo=false';
+				} ?>
+				<iframe id="pip-stream" src="<?php echo $pipurl; ?>" frameborder="0"></iframe>
 			<?php endif; ?>
-			</div>
 		</div>
 		<div id="sidebar" class="sidebar-right">
 			<ul class="tabs">
@@ -108,17 +84,28 @@
 			</div>
 		</div>
 	</div>
-	<div id="welcome">
-		<div id="welcome-box">
+	<div class="overlap">
+		<div class="welcome-box notify-box">
 			<h1>Welcome to FullStream</h1>
 			<p>FullStream is an alternative way to watch twitch.tv.</p>
-			<br>
 			<p>In addition to let you watch streams and chat, FullStream also has some aditional features like being able to view hightlights and past broadcasts, see who is streaming your favorite games, automatic channel switching, Picture-in-Picture and more.</p>
-			<br>
 			<p>Before you get started, would you like some additional information about the various features and how to use them?</p>
-			<br>
-			<a href="https://github.com/knifftech/FullStream/wiki" target="_blank" onClick="start()" class="welcome-button">Show me how</a>
-			<button class="welcome-button" onClick="start()">I know how it works</button>
+			<a href="https://github.com/knifftech/FullStream/wiki" target="_blank" class="welcome-button">Show me how</a>
+			<button id="welcome-button">I know how it works</button>
+		</div>
+		<div class="search-box notify-box">
+			<h1>Switch to a desired channel</h1>
+			<p>Enter inn the handle for the desired channel you want to watch</p>
+			<form>
+				<input type="text" id="search-id" name="search-id"></input>
+				<input type="submit" value="Switch" id="search-for-id"></input>
+				<button id="toggle-search-box">Cancel</button>
+			</form>
+		</div>
+		<div class="switcher-box notify-box">
+			<h1>Automatic switcher</h1>
+			<p>Switching channel in <b>5</b>...</p>
+			<button id="cancel-switch">Cancel</button>
 		</div>
 	</div>
 </body>

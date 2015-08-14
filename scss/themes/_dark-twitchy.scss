@@ -1,0 +1,30 @@
+body.theme-dark-twitchy{
+	background-color: #19191F;
+	::-webkit-scrollbar,
+	#media,
+	#topbar-controls,
+	.list-item:nth-child(even){
+		background-color: #19191F;
+	}
+	.list-item:nth-child(odd){
+		background-color: #19191F - 5;
+	}
+	.list-item:hover{
+		background-color: #19191F - 15;
+	}
+	a,
+	#topbar-controls i{
+		&:hover{
+			color: #6441a5 + 50;
+		}
+	}
+	.notify-box a,
+	button,
+	input[type="submit"],
+	.tabs > li > input:checked ~ label,
+	.tabs > li > label:hover,
+	.list-splitter,
+	.setting-check input:checked + label{
+		background-color: #6441a5;
+	}
+}
