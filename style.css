@@ -399,8 +399,8 @@ th {
 
 html,
 body {
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
 }
 
 body {
@@ -563,6 +563,9 @@ select {
 .channel-logo[src*="assets/images/offline.png"] {
   border: 0px;
 }
+.channel-logo:not([src*="assets/images/offline.png"]) {
+  background-color: #fff;
+}
 
 .info-box {
   margin: 0px 0px 0px 55px;
@@ -641,7 +644,7 @@ select {
 
 #pip-stream {
   position: absolute;
-  top: 55px;
+  top: 56px;
   right: 5px;
   z-index: 1000;
   border: 1px solid black;
@@ -668,6 +671,17 @@ select {
 
 .topbar-small #pip-stream {
   top: 35px;
+}
+
+#chan-preview {
+  position: absolute;
+  display: none;
+  z-index: 1000;
+  top: 56px;
+  right: 5px;
+  width: 370px;
+  height: auto;
+  border: 1px solid black;
 }
 
 .tabs {
@@ -807,6 +821,13 @@ select {
   top: 81px;
 }
 
+.version {
+  position: absolute;
+  bottom: 2px;
+  right: 5px;
+  font-size: 10px;
+}
+
 .list-splitter {
   position: relative;
   background-color: #237196;
@@ -853,6 +874,9 @@ select {
 }
 .list-item-logo[src*="assets/images/offline.png"] {
   border: 0px;
+}
+.list-item-logo:not([src*="assets/images/offline.png"]) {
+  background-color: #fff;
 }
 
 .chan-stat {
@@ -943,52 +967,93 @@ select {
 
 .list-item-listlink {
   text-align: center;
-  padding: 30px 0px;
+  padding: 20px 0px;
 }
-.list-item-listlink i {
+.list-item-listlink > i {
   font-size: 50px;
 }
 .list-item-listlink h2 {
-  padding: 10px 0px;
+  padding: 8px 0px 6px;
   text-transform: uppercase;
+  font-size: 20px;
 }
 
 .list-item-vod {
-  padding-bottom: 10px;
   border-bottom: 1px solid black;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  height: 111px;
+  overflow: hidden;
 }
-.list-item-vod h1,
-.list-item-vod .description {
-  padding: 2px 10px;
+.list-item-vod:hover {
+  height: auto;
 }
-.list-item-vod h1 {
-  font-size: 14px;
-}
-.list-item-vod .description {
-  display: block;
-  font-size: 12px;
+.list-item-vod .vod-thumb,
+.list-item-vod .vod-info {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
 }
 .list-item-vod img {
-  margin-bottom: 5px;
+  display: block;
+  width: 100%;
+  height: auto;
+  vertical-align: middle;
+  margin: auto;
+}
+.list-item-vod .vod-info {
+  padding: 10px 2px 5px 7px;
+  font-size: 12px;
+  text-align: left;
+}
+.list-item-vod .vod-info p {
+  padding: 3px 0px;
+}
+
+.games-container {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+      -ms-flex-wrap: wrap;
+          flex-wrap: wrap;
+  overflow: hidden;
 }
 
 .list-item-game {
   position: relative;
+  text-align: center;
+  width: calc(33.3% - 3px);
+  height: auto;
+  border-right: 1px solid #000;
+  border-bottom: 1px solid #000;
+  overflow: hidden;
+}
+.list-item-game:hover .game-title {
+  opacity: 1;
 }
 .list-item-game img {
+  width: 100%;
+  height: auto;
   vertical-align: bottom;
 }
-.list-item-game .game-title,
-.list-item-game .game-viewers {
-  position: absolute;
-  left: 60px;
-}
 .list-item-game .game-title {
-  top: 5px;
-}
-.list-item-game .game-viewers {
-  bottom: 5px;
-  color: #aaaaaa;
+  position: absolute;
+  font-size: 14px;
+  opacity: 0;
+  -webkit-transition: .3s;
+          transition: .3s;
+  background-color: rgba(0, 0, 0, 0.8);
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  padding-top: 20px;
+  word-wrap: break-word;
 }
 
 .list-item-switcher {
@@ -1045,6 +1110,13 @@ select {
 }
 .setting-check label:before {
   content: "OFF";
+}
+
+.feedback {
+  margin-top: 10px;
+}
+.feedback a {
+  text-decoration: underline;
 }
 
 .overlap {
@@ -1108,9 +1180,11 @@ body.theme-twitchy #media #social-links {
 body.theme-twitchy #loading i,
 body.theme-twitchy .chan-stat-genre,
 body.theme-twitchy .chan-stat-viewers,
-body.theme-twitchy .list-item-game .game-viewers,
 body.theme-twitchy .notify-box {
   color: #000;
+}
+body.theme-twitchy .list-item-game {
+  color: #fff;
 }
 body.theme-twitchy a,
 body.theme-twitchy #topbar-controls i,
@@ -1139,6 +1213,7 @@ body.theme-twitchy .notify-box a:hover,
 body.theme-twitchy button:hover,
 body.theme-twitchy input[type="submit"]:hover {
   background-color: #aaaaaa;
+  color: black;
 }
 body.theme-twitchy img[src*="assets/images/offline.png"],
 body.theme-twitchy img[src*="assets/images/fullstream-logo.png"] {
@@ -1176,6 +1251,12 @@ body.theme-dark-twitchy .list-splitter,
 body.theme-dark-twitchy .setting-check input:checked + label {
   background-color: #6441a5;
 }
+body.theme-dark-twitchy .notify-box a:hover,
+body.theme-dark-twitchy button:hover,
+body.theme-dark-twitchy input[type="submit"]:hover {
+  background-color: #aaaaaa;
+  color: black;
+}
 
 body.theme-tube {
   background-color: #eee;
@@ -1202,9 +1283,11 @@ body.theme-tube #media #social-links {
 body.theme-tube #loading i,
 body.theme-tube .chan-stat-genre,
 body.theme-tube .chan-stat-viewers,
-body.theme-tube .list-item-game .game-viewers,
 body.theme-tube .notify-box {
   color: #000;
+}
+body.theme-tube .list-item-game {
+  color: #fff;
 }
 body.theme-tube a,
 body.theme-tube #topbar-controls i,
@@ -1233,6 +1316,7 @@ body.theme-tube .notify-box a:hover,
 body.theme-tube button:hover,
 body.theme-tube input[type="submit"]:hover {
   background-color: #aaaaaa;
+  color: black;
 }
 body.theme-tube img[src*="assets/images/offline.png"],
 body.theme-tube img[src*="assets/images/fullstream-logo.png"] {
@@ -1252,6 +1336,12 @@ body.theme-terminal .list-splitter,
 body.theme-terminal .setting-check input:checked + label {
   background-color: #3BC600;
   color: #000;
+}
+body.theme-terminal .notify-box a:hover,
+body.theme-terminal button:hover,
+body.theme-terminal input[type="submit"]:hover {
+  background-color: #aaaaaa;
+  color: black;
 }
 body.theme-terminal a,
 body.theme-terminal .chan-stat-genre,

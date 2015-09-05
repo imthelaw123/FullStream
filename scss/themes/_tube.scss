@@ -22,9 +22,11 @@ body.theme-tube{
 	#loading i,
 	.chan-stat-genre,
 	.chan-stat-viewers,
-	.list-item-game .game-viewers,
 	.notify-box{
 		color: #000;
+	}
+	.list-item-game{
+		color: #fff;
 	}
 	a,
 	#topbar-controls i,
@@ -52,6 +54,7 @@ body.theme-tube{
 	input[type="submit"]{
 		&:hover{
 			background-color: $background-color3;
+			color: $text-color3;
 		}
 	}
 	img[src*="assets/images/offline.png"],

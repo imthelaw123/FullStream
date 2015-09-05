@@ -56,6 +56,23 @@ Number.prototype.formatNum = function(){
 		return string.split("").reverse().join("");
 	}
 }
+// formats single digits into double digits by adding a 0
+Number.prototype.doubleDigit = function(){
+	if(this < 10){
+		return '0'+this;
+	}else{
+		return this;
+	}
+}
+// Get formated date from datetime string
+String.prototype.getTheDate = function(){
+	var x = new Date(this);
+	var year  = x.getFullYear();
+	var month = x.getMonth()+1;
+	var day  = x.getDate();
+
+	return year+'.'+month.doubleDigit()+'.'+day.doubleDigit(); //2011.03.27
+}
 // Fetches special icons for games from gameIcons array
 String.prototype.getIcon = function(){
 	var gIcon = "fa-gamepad";
@@ -65,6 +82,14 @@ String.prototype.getIcon = function(){
 		}
 	}
 	return gIcon;
+}
+// Contract strings
+String.prototype.contract = function(){
+	if(this[this.length-1] == 's'){
+		return this+'\'';
+	}else{
+		return this+'\'s';
+	}
 }
 // Gets URL parameters
 function getParameter(paramName) {
@@ -147,9 +172,7 @@ fullstream.getFollows = function(offset){
 				if(fullstream.settings.lists.switcher.indexOf(chan.name) >= 0){
 					chan.switcher = true;
 				}
-				if(fullstream.channelData[fullstream.currentStream.name]){
-					chan.single = false;
-				}
+				chan.single = false;
 				fullstream.channelData[chan.name] = chan;
 			}
 			if(a.follows.length >= 100){
@@ -157,6 +180,30 @@ fullstream.getFollows = function(offset){
 			}else{
 				var amount = offset+a.follows.length
 				fullstream.log('Fetched '+amount+' following channel(s) with username '+fullstream.settings.strings.twitchUsername.value);
+
+				if(!fullstream.channelData[fullstream.settings.strings.twitchUsername.value]){
+					var chan = new channelObj();
+					chan.name = fullstream.settings.strings.twitchUsername.value;
+					chan.display_name = fullstream.settings.strings.twitchUsername.value;
+					chan.single = false;
+					
+					if(fullstream.settings.lists.favorite.indexOf(chan.name) >= 0){
+						chan.favorite = true;
+					}
+					if(fullstream.settings.lists.switcher.indexOf(chan.name) >= 0){
+						chan.switcher = true;
+					}
+					
+					fullstream.channelData[fullstream.settings.strings.twitchUsername.value] = chan;
+				}
+
+				if(!fullstream.channelData[fullstream.currentStream.name]){
+					var chan = new channelObj();
+					chan.name = fullstream.currentStream.name;
+					chan.display_name = fullstream.currentStream.name;
+					fullstream.channelData[fullstream.currentStream.name] = chan;
+				}
+				
 				if(fullstream.settings.booleans['check-showHosted'].value){
 					fullstream.getHosted();
 				}else{
@@ -183,6 +230,7 @@ fullstream.getHosted = function(){
 							}
 						}
 						chan.display_name = chan.display_name+' ('+a.hosts[x].display_name+')';
+						chan.single = false;
 						chan.hosted = true;
 						fullstream.channelData[chan.name] = chan;
 					}
@@ -425,35 +473,45 @@ fullstream.getPanels = function(){
 // Gets various VODs from twitch API
 fullstream.getVods = function(type){
 	$('#loading').show();
+	$('.list-vods').html('');
+	
 	fullstream.settings.states.vod = type;
 	fullstream.saveSettings();
-	$('.list-vods').html('');
-	if(!type){
-		var vodCats = {
-			"highlights" : "Highlights",
-			"past-broadcasts" : "Past Broadcasts",
-			"top" : "Top videos on twitch"
-		};
-		for(cat in vodCats){
-			if(cat == 'top' || fullstream.currentStream.name){
-				var listLink = $('<div class="list-item list-item-listlink"></div>');
-				var listLinkIcon = $('<i class="fa fa-file-video-o"></i>');
-				var listLinkTitle = $('<h2>'+vodCats[cat]+'</h2>');
-				if(cat != 'top'){
-					listLinkTitle = $('<h2>'+fullstream.currentStream.name+'\'s '+vodCats[cat]+'</h2>');
-				}
-
-				listLink.click({cat: cat}, function(e){ fullstream.getVods(e.data.cat) });
-				
-				$(listLink).append(listLinkIcon, listLinkTitle);
-				$('.list-vods').append(listLink);
-			}
+	
+	var vodCats = {
+		"highlights" : "Highlights",
+		"past-broadcasts" : "Past Broadcasts",
+		"top" : "Top videos on twitch"
+	};
+	
+	for(cat in vodCats){
+		var listLink = $('<div class="list-item list-item-listlink list-item-listlink-'+cat+'"></div>');
+		
+		$(listLink).append( $('<i class="fa fa-file-video-o"></i>') );
+		
+		if(cat != 'top'){
+			$(listLink).append( $('<h2>'+fullstream.currentStream.name.contract()+' '+vodCats[cat]+'</h2>') );
+		}else{
+			$(listLink).append( $('<h2>'+vodCats[cat]+'</h2>') );
 		}
-		$('#loading').hide();
-	}else if(type == 'highlights' || type == 'past-broadcasts'){
-		var header = new listSplitter(fullstream.currentStream.name+'\'s '+type, 2);
-		header.click(function(){ fullstream.getVods(); });
-		$('.list-vods').append(header);
+		
+		if(type == cat){
+			$(listLink).append( $('<i class="fa fa-caret-up"></i>') );
+		}else{
+			$(listLink).append( $('<i class="fa fa-caret-down"></i>') );
+		}
+		
+		listLink.click({cat: cat, type: type}, function(e){ 
+			if(e.data.cat == e.data.type){
+				fullstream.getVods()
+			}else{
+				fullstream.getVods(e.data.cat)
+			}
+		});
+		
+		$('.list-vods').append(listLink);
+	}
+	if(type == 'highlights' || type == 'past-broadcasts'){
 		var past = false;
 		if(type == 'past-broadcasts'){
 			past = true;
@@ -461,95 +519,112 @@ fullstream.getVods = function(type){
 		var url = 'https://api.twitch.tv/kraken/channels/'+fullstream.currentStream.name+'/videos?limit=100&offset=0&callback=?&broadcasts='+past;
 		$.getJSON(url, function(a){
 			for(vod in a.videos){
-				var newVod = new vodItem(a.videos[vod].channel.name, a.videos[vod].title, a.videos[vod]._id, a.videos[vod].game, a.videos[vod].description, a.videos[vod].preview);
-				$('.list-vods').append(newVod);
+				var newVod = new vodItem(a.videos[vod].channel.name, a.videos[vod].title, a.videos[vod]._id, a.videos[vod].game, a.videos[vod].description, a.videos[vod].preview, a.videos[vod].recorded_at);
+				$('.list-item-listlink-'+type).append(newVod);
 			}
 			$('#loading').hide();
 		});
-	}else if('top'){
-		var header = new listSplitter('Top videos on twitch', 2);
-		header.click(function(){ fullstream.getVods(); });
-		$('.list-vods').append(header);
+	}else if(type == 'top'){
 		var url = 'https://api.twitch.tv/kraken/videos/top/?offset=0&limit=100&callback=?';
 		$.getJSON(url, function(a){
 			for(vod in a.videos){
-				var newVod = new vodItem(a.videos[vod].channel.name, a.videos[vod].title, a.videos[vod]._id, a.videos[vod].game, a.videos[vod].description, a.videos[vod].preview);
-				$('.list-vods').append(newVod);
+				var newVod = new vodItem(a.videos[vod].channel.name, a.videos[vod].title, a.videos[vod]._id, a.videos[vod].game, a.videos[vod].description, a.videos[vod].preview, a.videos[vod].recorded_at);
+				$('.list-item-listlink-'+type).append(newVod);
 			}
 			$('#loading').hide();
 		});
+	}else{
+		$('#loading').hide();
 	}
 }
 // Gets various Games and channels streaming particular games from twitch API
 fullstream.getGames = function(game){
 	$('#loading').show();
 	$('.list-games').html('');
-	if(!game){
-		fullstream.settings.states.game = '';
-	}else{
-		fullstream.settings.states.game = game;
-	}
-	fullstream.saveSettings();
-	if(!game){
-		var gamingCats = {
-			"___following" : "Games you follow",
-			"___top100" : "Top 100 Games on Twitch",
-			"Gaming Talk Shows" : "Gaming Talk Shows",
-			"Music" : "Music",
-			"Game Development" : "Game Development",
-			"Creative" : "Creative"
-		};
-		for(cat in gamingCats){
-			if(cat != '___following' || fullstream.settings.strings.twitchUsername.value){
-				var listLink = $('<div class="list-item list-item-listlink"></div>');
-				var listLinkIcon = $('<i class="fa '+cat.getIcon()+'"></i>');
-				var listLinkTitle = $('<h2>'+gamingCats[cat]+'</h2>');
 
-				listLink.click({cat: cat}, function(e){ fullstream.getGames(e.data.cat) });
-			
-				$(listLink).append(listLinkIcon, listLinkTitle);
-				$('.list-games').append(listLink);
+	var gamingCats = {
+		"___following" : "Games you follow",
+		"___top100" : "Top 100 Games on Twitch",
+		"Gaming Talk Shows" : "Gaming Talk Shows",
+		"Music" : "Music",
+		"Game Development" : "Game Development",
+		"Creative" : "Creative"
+	};
+
+	if(!game || game.substring(0,3) == '___'){
+		for(cat in gamingCats){
+			var listLink = $('<div class="list-item list-item-listlink"></div>');
+			listLink.append( $('<i class="fa '+cat.getIcon()+'"></i>') );
+			listLink.append( $('<h2>'+gamingCats[cat]+'</h2>') );
+
+			listLink.click({cat: cat, game: game}, function(e){ 
+				if(e.data.cat == e.data.game){
+					fullstream.getGames();
+				}else{
+					fullstream.getGames(e.data.cat);
+				}
+			});
+
+			if(cat.substring(0,3) == '___'){
+				if(game == cat){
+					$(listLink).append( $('<i class="fa fa-caret-up"></i>') );
+				}else{
+					$(listLink).append( $('<i class="fa fa-caret-down"></i>') );
+				}
+
+				$(listLink).append( $('<div class="games-container games-container-'+cat+'"></div>') );
 			}
+
+			$('.list-games').append(listLink);
 		}
-		$('#loading').hide();
-	}else if(game == '___top100'){ // Top 100
-		var header = new listSplitter('Top 100 games on Twitch', 2);
-		header.click(function(){ fullstream.getGames(); });
-		$('.list-games').append(header);
+	}
+	if(game == '___following'){
+		var url = 'http://api.twitch.tv/api/users/'+fullstream.settings.strings.twitchUsername.value+'/follows/games?limit=100&offset=0&callback=?';
+		$.getJSON(url, function(a){
+			for(x in a.follows){
+				var aGame = new gameItem(a.follows[x].name, a.follows[x].box.medium);
+				$('.games-container-'+game).append(aGame);
+			}
+			$('#loading').hide();
+		});
+	}else if(game == '___top100'){
 		var url = 'https://api.twitch.tv/kraken/games/top?offset=0&limit=100&callback=?';
 		$.getJSON(url, function(a){
 			for(x in a.top){
 				if(a.top[x] && a.top[x].game && a.top[x].game.box){
-					var game = new gameItem(a.top[x].game.name, a.top[x].game.box.small, a.top[x].viewers);
-					$('.list-games').append(game);
+					var aGame = new gameItem(a.top[x].game.name, a.top[x].game.box.medium, a.top[x].viewers);
+					$('.games-container-'+game).append(aGame);
 				}
 			}
 			$('#loading').hide();
 		});
-	}else if(game == '___following'){
-		var header = new listSplitter(fullstream.settings.strings.twitchUsername.value+'\'s Followed games', 2);
-		header.click(function(){ fullstream.getGames() });
-		$('.list-games').append(header);
-		var url = 'http://api.twitch.tv/api/users/'+fullstream.settings.strings.twitchUsername.value+'/follows/games?limit=100&offset=0&callback=?';
-		$.getJSON(url, function(a){
-			for(x in a.follows){
-				var game = new gameItem(a.follows[x].name, a.follows[x].box.small);
-				$('.list-games').append(game);
-			}
-			$('#loading').hide();
-		});
 	}else if(game){
-		var header = new listSplitter(game, 2);
-		header.click(function(){
-			fullstream.settings.states.game = "";
-			fullstream.saveSettings();
-			fullstream.getGames();
+		fullstream.settings.states.game = game;
+		fullstream.saveSettings();
+		var listLink = $('<div class="list-item list-item-listlink list-item-listlink-'+game+'"></div>');
+		
+		listLink.append( $('<i class="fa '+game.getIcon()+'"></i>'), $('<h2>'+game+'</h2>') );
+
+		listLink.mouseover(function(){
+			listLink.find('.fa').attr('class', 'fa fa-reply');
+			listLink.find('h2').html('return');
+		}).mouseout(function(){
+			listLink.find('.fa').attr('class', 'fa '+game.getIcon());
+			listLink.find('h2').html(game);
 		});
-		$('.list-games').append(header);
+
+		listLink.click(function(){
+			fullstream.settings.states.game = '';
+			fullstream.saveSettings();
+			fullstream.getGames(); 
+		});
+		
+		$('.list-games').append(listLink);
+		
 		var url = 'https://api.twitch.tv/kraken/search/streams?limit=100&offset=0&q='+game+'&callback=?'
 		$.getJSON(url, function(a){
 			for(x in a.streams){
-				if(a.streams[x].game.toLowerCase() == fullstream.settings.states.game.toLowerCase()){
+				if(a.streams[x].game && a.streams[x].game.toLowerCase() == fullstream.settings.states.game.toLowerCase()){
 					var data = new channelObj();
 					for(y in data){
 						if(y in a.streams[x] && a.streams[x][y]){
@@ -560,12 +635,14 @@ fullstream.getGames = function(game){
 					}
 					data.live = true;
 					data.hosted = true;
-					var chan = new channelItem(data.name, data);
+					var chan = new channelItem(data.name, data, true);
 					$('.list-games').append(chan);
 				}
 			}
 			$('#loading').hide();
 		});
+	}else{
+		$('#loading').hide();
 	}
 }
 // Handles setting changes
@@ -587,7 +664,7 @@ fullstream.toggleSetting = function(cat, setting, onload){
 				if(fullstream.settings[cat][setting].value){
 					$('#toggle-switcher').css('color', '#237196');
 				}
-				if(fullstream.settings.lists.switcher.length){
+				if(fullstream.settings[cat][setting].value || fullstream.settings.lists.switcher.length){
 					$('#opt-switcher').show();
 				}else{
 					$('#opt-switcher').hide();
@@ -596,11 +673,6 @@ fullstream.toggleSetting = function(cat, setting, onload){
 			case 'check-showHosted':
 				if(!onload && fullstream.settings.strings.twitchUsername.value){
 					fullstream.getFollows();
-				}
-				break;
-			case 'check-html5':
-				if(!onload && fullstream.currentStream.name){
-					fullstream.changeChannel(fullstream.currentStream.name);
 				}
 				break;
 		}
@@ -732,9 +804,7 @@ fullstream.changeChannel = function(channel, vod){
 	if(vod){
 		path += '&v='+vod;
 	}
-	if(fullstream.settings.booleans['check-html5'].value){
-		path += '&html5=true';
-	}
+
 	document.location.href = path;
 }
 // JSON object for channels
@@ -748,24 +818,27 @@ function channelObj(){
 		favorite: false,
 		switcher: false,
 		hosted: false,
-		single: false,
+		single: true,
 		game: '',
 		views: '',
 		followers: '',
 		viewers: 0,
 		partner: false,
 		video_height: 0,
-		average_fps: 0
+		average_fps: 0,
+		preview: {}
 	}
 }
 // Element object for channels
-function channelItem(id, data){
+function channelItem(id, data, isGenre){
 	if(!data){
 		var data = fullstream.channelData[id];
 	}
+
 	if(!data.logo){
 		data.logo = 'assets/images/offline.png';
 	}
+
 	var channelItem = $('<div class="list-item list-item-channel"></div>');
 	var logo = $('<img class="list-item-logo" src="'+data.logo+'" />');
 	var title = $('<span class="chan-stat chan-stat-title">'+data.display_name+'</span>');
@@ -775,6 +848,8 @@ function channelItem(id, data){
 
 	if(data.live && !data.game){
 		genre.append('<i class="fa fa-play"></i> Online');
+	}else if(isGenre){
+		genre.append(data.status);
 	}else if(data.live){
 		genre.append('<i class="fa '+data.game.getIcon()+'"></i> '+data.game);
 	}else{
@@ -784,9 +859,11 @@ function channelItem(id, data){
 	if(fullstream.settings.lists.favorite.indexOf(data.name) >= 0){
 		channelItem.addClass('is-favorite');
 	}
+	
 	if(fullstream.settings.lists.switcher.indexOf(data.name) >= 0){
 		channelItem.addClass('is-switcher');
 	}
+	
 	if(fullstream.currentStream.pip == data.name){
 		channelItem.addClass('is-pip');
 	}
@@ -794,17 +871,21 @@ function channelItem(id, data){
 	if(data && !data.hosted){
 		var favicon = $('<i class="fav-toggle fa fa-heart"></i>');
 		var switchicon = $('<i class="switch-toggle fa fa-list-ol"></i>');
+		
 		icons.append(favicon, switchicon);
 	}
+	
 	var pipicon = $('<i class="pip-toggle"><b>PiP</b></i>');
 	icons.append(pipicon);
 
 	icons.find('> i').click(function(){
 		if( $(this).hasClass('fav-toggle') || $(this).hasClass('switch-toggle') ){
 			var cat = 'favorite';
+			
 			if($(this).hasClass('switch-toggle')){
 				cat = 'switcher';
 			}
+			
 			if(fullstream.settings.lists[cat].indexOf(data.name) >= 0){
 				fullstream.settings.lists[cat].splice(fullstream.settings.lists[cat].indexOf(data.name), 1);
 				data[cat] = false;
@@ -812,6 +893,7 @@ function channelItem(id, data){
 				fullstream.settings.lists[cat][fullstream.settings.lists[cat].length] = data.name;
 				data[cat] = true;
 			}
+			
 			fullstream.saveSettings();
 			fullstream.sortChannels();
 			fullstream.populateChannels();
@@ -822,10 +904,13 @@ function channelItem(id, data){
 		}
 		return false;
 	});
-	channelItem.mouseover({statustext: data.status},function(e){
-		$(this).find('.chan-stat-genre').html(e.data.statustext);
+	
+	channelItem.mouseover({statustext: data.status, image: data.preview.medium},function(e){
+		if(!isGenre){ $(this).find('.chan-stat-genre').html(e.data.statustext); }
+		if(fullstream.settings.booleans['check-preview'].value && e.data.image){ $('#chan-preview').attr('src', e.data.image).show(); }
 	}).mouseout({gametext: genre.html()},function(e){
-		$(this).find('.chan-stat-genre').html(e.data.gametext);
+		if(!isGenre){ $(this).find('.chan-stat-genre').html(e.data.gametext); }
+		$('#chan-preview').hide();
 	});
 
 	channelItem.click({id: id},function(e){
@@ -865,8 +950,9 @@ function switcherItem(id, data){
 	switcherItem.addClass('list-item-switcher');
 
 	var movers = $('<div class="switcher-movers"></div>');
-	var moveUp = $('<i class="switch-move-up fa fa-chevron-up"></i>');
-	var moveDown = $('<i class="switch-move-down fa fa-chevron-down"></i>');
+	var moveUp = $('<i class="switcher-mover switch-move-up fa fa-chevron-up"></i>');
+	var moveDown = $('<i class="switcher-mover switch-move-down fa fa-chevron-down"></i>');
+	var remover = $('<i class="fa fa-trash"></i>');
 
 	if(index > 0){
 		movers.append(moveUp);
@@ -874,24 +960,35 @@ function switcherItem(id, data){
 	if(index < fullstream.settings.lists.switcher.length-1){
 		movers.append(moveDown);
 	}
+	movers.append(remover);
 	switcherItem.append(movers);
 
-	movers.find('i').click({index: index}, function(e){
+	movers.find('.switcher-mover').click({index: index}, function(e){
 		var stop = e.data.index + 1;
+		
 		if( $(this).hasClass('switch-move-up') ){
 			stop = e.data.index - 1;
 		}
+		
+		if(e.data.index >= fullstream.settings.lists.switcher.length){
+      var k = stop - fullstream.settings.lists.switcher.length;
+      while ((k--) + 1) {
+         fullstream.settings.lists.switcher.push(undefined);
+     	}
+   	}
 
-        if(e.data.index >= fullstream.settings.lists.switcher.length){
-        	var k = stop - fullstream.settings.lists.switcher.length;
-        	while ((k--) + 1) {
-        	    fullstream.settings.lists.switcher.push(undefined);
-        	}
-    	}
 		fullstream.settings.lists.switcher.splice(stop, 0, fullstream.settings.lists.switcher.splice(e.data.index, 1)[0]);
 		fullstream.saveSettings();
 		fullstream.populateChannels();
+	});
 
+	remover.click({name: id}, function(e){
+		if(fullstream.settings.lists.switcher.indexOf(e.data.name) >= 0){
+			fullstream.settings.lists.switcher.splice(fullstream.settings.lists.switcher.indexOf(e.data.name), 1);
+		}
+
+		fullstream.saveSettings();
+		fullstream.populateChannels();
 	});
 
 	return switcherItem;
@@ -902,7 +999,7 @@ function panelItem(title, link, img, description){
 	
 	if(link){
 		panelItem.click({link: link},function(e){
-			window.location.href = e.data.link;
+			window.open(e.data.link, '_blank');
 		});
 	}
 	if(title){
@@ -921,26 +1018,21 @@ function panelItem(title, link, img, description){
 	return panelItem;
 }
 // Element object for VODs
-function vodItem(name, title, id, game, description, img){
+function vodItem(name, title, id, game, description, img, dateTime){
 	var vodItem = $('<div class="list-item list-item-vod"></div>');
-	var _title = $('<h1>'+title+'</h1>');
-	var _img = $('<img src="'+img+'"/>');
-	var _info = $('<span class="description"></span>');
+	var _img = $('<div class="vod-thumb"><img src="'+img+'" /></div>');
+	var _info = $('<div class="vod-info"></div>');
 	
-	if(game){
-		var _game = $('<p><i class="fa '+game.getIcon()+'"></i> '+game+'</p>');
-		_info.append(_game);
-	}
-	if(description){
-		var _description = $('<p>'+description+'</p>');
-		_info.append(_description);
-	}
+	_info.append( $('<b>'+title+'</b>') );
+	if(game){ _info.append( $('<p><i class="fa '+game.getIcon()+'"></i> '+game+'</p>')); }
+	_info.append( $('<p>Recorded: '+dateTime.getTheDate()+'</p>') );
+	if(description){ _info.append($('<p>'+description+'</p>') ); }
 	
 	vodItem.click({name: name, id: id},function(e){
 		fullstream.changeChannel(e.data.name, e.data.id);
 	});
-	
-	vodItem.append(_img, _title, _info);
+
+	vodItem.append(_img, _info);
 
 	return vodItem;
 }
@@ -953,7 +1045,7 @@ function gameItem(title, img, viewers){
 	gameItem.append(logo, titleSpan);
 
 	if(viewers){
-		gameItem.append( $('<span class="game-viewers"><i class="fa fa-user"></i> '+viewers.formatNum()+'</span>') );
+		titleSpan.append( $('<br><br>'), $('<i class="fa fa-user"></i>'), ' '+viewers.formatNum() );
 	}
 
 	gameItem.click({game: title},function(e){
@@ -1017,14 +1109,6 @@ $(document).ready(function(){
 	fullstream.loadSettings();
 
 	if(fullstream.currentStream.name){
-		if( (fullstream.settings.booleans['check-html5'].value && !getParameter('html5')) || 
-		(!fullstream.settings.booleans['check-html5'].value && getParameter('html5')) ){
-			if(fullstream.currentStream.vod){
-				fullstream.changeChannel(fullstream.currentStream.name, fullstream.currentStream.vod);
-			}else{
-				fullstream.changeChannel(fullstream.currentStream.name);
-			}
-		}
 		$('#topbar .title').html('FullStream');
 		$('#topbar .stats').html('Loading '+fullstream.currentStream.name+'...');
 		if(!fullstream.settings.strings.twitchUsername.value){
@@ -1278,5 +1362,8 @@ $(document).ready(function(){
 		$('.welcome-box').animate({
 			'top': '0px'
 		},500);
+		if( !(/Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor)) ){
+			alert('FullStream is not optimized for this browser, please consider using Google Chrome');
+		}
 	}
 });

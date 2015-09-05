@@ -1,5 +1,5 @@
 intel={	
-	"version": "0.3.7",
+	"version": "0.3.9",
 	"booleans": {
 		"check-switcher": {
 			"value": false,
@@ -17,9 +17,9 @@ intel={
 			"value": true,
 			"title": "Hosted channels"
 		},
-		"check-html5": {
-			"value": false,
-			"title": "HTML5 Player (beta)"
+		"check-preview": {
+			"value": true,
+			"title": "Channel preview"
 		}
 	},
 	"options" : {

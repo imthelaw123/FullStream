@@ -10,6 +10,14 @@ body.theme-terminal{
 		background-color: #3BC600;
 		color: #000;
 	}
+	.notify-box a,
+	button,
+	input[type="submit"]{
+		&:hover{
+			background-color: $background-color3;
+			color: $text-color3;
+		}
+	}
 	a,
 	.chan-stat-genre,
 	.chan-stat-viewers,

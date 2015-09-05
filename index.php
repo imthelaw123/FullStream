@@ -4,12 +4,8 @@
 <head>
 	<title>FullStream - A better way to watch Twitch</title>
 	<meta charset="utf-8">
-	<meta http-equiv="cache-control" content="max-age=0" />
-	<meta http-equiv="cache-control" content="no-cache" />
-	<meta http-equiv="cache-control" content="no-store" />
+	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="expires" content="-1" />
-	<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
-	<meta http-equiv="pragma" content="no-cache" />
 	<link rel="icon" type="image/png" href="assets/icons/favico.png" />
 	<link rel="stylesheet" type="text/css" href="style.css?v=<?php echo $intel['version']; ?>" />
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
@@ -38,32 +34,31 @@
 					<i id="toggle-sidebar" class="toggle fa fa-angle-right" title="Toggle Sidebar (S)"></i>
 				</div>
 			</div>
-			<?php if( !isset($_GET['c']) ): ?>
-				<img id="logo" src="assets/images/fullstream-logo.png" />
-				<div id="social-links">
-					<a href="https://twitter.com/kniffen" target="_blank"><i class="fa fa-twitter"></i></a>
-					<a href="https://github.com/knifftech" target="_blank"><i class="fa fa-github"></i></a>
-					<a href="https://chrome.google.com/webstore/detail/fullstream/jkchcbdilffpbpkknniliidiflhbagkl" target="_blank"><i class="fa fa-google"></i></a>
-					<a href="https://github.com/knifftech/FullStream/wiki" target="_blank"><i class="fa fa-question"></i></a>
-				</div>
-			<?php else:
-				$url = 'http://www.twitch.tv/'.$_GET['c'].'/embed';
-				if( isset($_GET['v']) && isset($_GET['html5']) ){
-					$url = 'http://player.twitch.tv/?videoId='.$_GET['v'].'&showInfo=false';
-				}else if( isset($_GET['html5']) ){
-					$url = 'http://player.twitch.tv/?channel='.$_GET['c'].'&showInfo=false';
-				}else if( isset($_GET['v']) ){
-					$url = 'http://www.twitch.tv/widgets/live_embed_player.swf?channel='.$_GET['c'].'&videoId='.$_GET['v'];
-				} ?>
-				<iframe id="stream" src="<?php echo $url; ?>" frameborder="0"></iframe>
-			<?php endif; ?>
-			<?php if( isset($_GET['p']) ):
-				$pipurl = 'http://www.twitch.tv/'.$_GET['p'].'/embed';
-				if( isset($_GET['html5']) ){
-					$pipurl = 'http://player.twitch.tv/?channel='.$_GET['p'].'&volume=0&showInfo=false';
-				} ?>
-				<iframe id="pip-stream" src="<?php echo $pipurl; ?>" frameborder="0"></iframe>
-			<?php endif; ?>
+		<?php if( !isset($_GET['c']) ): ?>
+			<img id="logo" src="assets/images/fullstream-logo.png" />
+			<div id="social-links">
+				<a href="https://twitter.com/kniffen" target="_blank"><i class="fa fa-twitter"></i></a>
+				<a href="https://github.com/knifftech" target="_blank"><i class="fa fa-github"></i></a>
+				<a href="https://chrome.google.com/webstore/detail/fullstream/jkchcbdilffpbpkknniliidiflhbagkl" target="_blank"><i class="fa fa-google"></i></a>
+				<a href="https://github.com/knifftech/FullStream/wiki" target="_blank"><i class="fa fa-question"></i></a>
+			</div>
+		<?php else:
+			if( isset($_GET['v']) ): ?>
+			<object id="stream" bgcolor="#000000" data="//www-cdn.jtvnw.net/swflibs/TwitchPlayer.swf" height="100%" type="application/x-shockwave-flash" width="100%"> 
+				<param name="allowFullScreen" value="true" />
+				<param name="allowNetworking" value="all" />
+				<param name="allowScriptAccess" value="always" />
+				<param name="movie" value="//www-cdn.jtvnw.net/swflibs/TwitchPlayer.swf" />
+				<param name="flashvars" value="videoId=<?php echo $_GET['v']; ?>&auto_play=true" />
+			</object>
+			<?php else: ?>
+				<iframe id="stream" src="http://www.twitch.tv/<?php echo $_GET['c']; ?>/embed" frameborder="0"></iframe>
+			<?php endif;
+		endif;
+		if( isset($_GET['p']) ): ?>
+			<iframe id="pip-stream" src="http://www.twitch.tv/<?php echo $_GET['p']; ?>/embed" frameborder="0"></iframe>
+		<?php endif; ?>
+		<img src="" id="chan-preview" />
 		</div>
 		<div id="sidebar" class="sidebar-right">
 			<ul class="tabs">

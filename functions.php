@@ -86,6 +86,10 @@ function get_tab_content($tab){
 			}
 		} ?>
 			<div class="setting"><button id="reset">Restore defaults</button></div>
+			<p class="feedback">Are you having any issues?<br>
+			Feel free to contact <a href="http://twitter.com/kniffen" target="_blank">Kniffen on Twitter</a><br>
+			or <a href="https://github.com/knifftech/FullStream/issues" target="_blank">report it on github</a>.</p>
+			<span class="version">v<?php echo $intel['version']; ?></span>
 		</div>
 	<?php endif;
 }

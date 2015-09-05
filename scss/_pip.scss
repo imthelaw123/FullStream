@@ -1,6 +1,6 @@
 #pip-stream{
 	position: absolute;
-	top: 55px;
+	top: 56px;
 	right: 5px;
 	z-index: 1000;
 	border: 1px solid $border-color1;
@@ -25,4 +25,14 @@
 	#pip-stream{
 		top: 35px;
 	}
+}
+#chan-preview{
+	position: absolute;
+	display: none;
+	z-index: 1000;
+	top: 56px;
+	right: 5px;
+	width: 370px;
+  height: auto;
+  border: 1px solid $border-color1;
 }

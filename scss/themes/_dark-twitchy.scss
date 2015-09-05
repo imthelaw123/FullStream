@@ -29,4 +29,12 @@ body.theme-dark-twitchy{
 	.setting-check input:checked + label{
 		background-color: #6441a5;
 	}
+	.notify-box a,
+	button,
+	input[type="submit"]{
+		&:hover{
+			background-color: $background-color3;
+			color: $text-color3;
+		}
+	}
 }
