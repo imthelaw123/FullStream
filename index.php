@@ -8,7 +8,7 @@
 	<meta http-equiv="expires" content="-1" />
 	<link rel="icon" type="image/png" href="assets/icons/favico.png" />
 	<link rel="stylesheet" type="text/css" href="style.css?v=<?php echo $intel['version']; ?>" />
-	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
 	<link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700' rel='stylesheet' type='text/css'>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
@@ -27,7 +27,7 @@
 				<div id="topbar-controls">
 					<i id="toggle-home" class="toggle fa fa-home" title="Home (H)"></i>
 					<i id="toggle-search" class="toggle fa fa-search" title="Manual switch (F)"></i>
-					<i id="toggle-pip" class="toggle" title="Toggle Picture-in-Picture"><b>PiP</b></i>
+					<i id="toggle-pip" class="toggle fa fa-clone" title="Toggle Picture-in-Picture"></i>
 					<i id="toggle-pipswitch" class="toggle fa fa-retweet fa-rotate-90" title="Swap stream and PiP"></i>
 					<i id="toggle-switcher" class="toggle toggle fa fa-list-ol" title="Toggle Automatic Switcher (A)"></i>
 					<i id="toggle-topbar" class="toggle fa fa-angle-up" title="Toggle Topbar (T)"></i>

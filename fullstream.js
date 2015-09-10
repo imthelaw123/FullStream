@@ -30,14 +30,18 @@ fullstream.gameIcons = {
 	'fa-plane'					: ['microsoft flight simulator x'],
 	'fa-ship'						: ['world of warships'],
 	'fa-car'						: ['rocket league', 'gran turismo 5', 'gran turismo 6', 'assetto corsa', 'project cars', 'the crew', 'forza motorsport 5', 'forza horizon 2', 'iracing.com'],
-	'fa-wrench'					: ['factorio', 'automation - the car company tycoon game', 'truck mechanic simulator 2015', 'car mechanic simulator 2015', 'car mechanic simulator 2014'],
+	'fa-wrench'					: ['automation - the car company tycoon game', 'truck mechanic simulator 2015', 'car mechanic simulator 2015', 'car mechanic simulator 2014'],
 	'fa-train'					: ['train simulator 2015', 'train simulator 2014'],
 	'fa-building'				: ['cities: skylines'],
 	'fa-bus'						: ['omsi', 'omsi 2'],
 	'fa-map-marker'			: ['geoguessr'],
 	'fa-stethoscope'		: ['surgeon simulator 2013'],
 	'fa-birthday-cake'	: ['portal', 'portal 2'],
-	'fa-rebel'					: ['star wars: the old republic', 'star wars battlefront', 'star wars: battlefront 2', 'star wars: battlefront']
+	'fa-rebel'					: ['star wars: the old republic', 'star wars battlefront', 'star wars: battlefront 2', 'star wars: battlefront'],
+	'fa-hand-spock-o'		: ['star trek online'],
+	'fa-factory'				: ['factorio'],
+	'fa-futbol-o'				: ['fifa 15', 'fifa 14'],
+	'fa-circle'					: ['agar.io']
 }
 // Formats large numbers into readable strings
 Number.prototype.formatNum = function(){
@@ -369,11 +373,17 @@ fullstream.populateChannels = function(){
 	var split = new listSplitter('Switcher channels');
 	$('.list-switcher').append(split);
 	if(fullstream.settings.lists.switcher.length){
-		$('#opt-switcher').show();
-		var list = fullstream.settings.lists.switcher;
+		$('#opt-switcher').show();	
+		var list = fullstream.settings.lists.switcher;	
 		for(chan in list){
-			var item = new switcherItem(list[chan]);
-			$('.list-switcher').append(item);
+			if(fullstream.channelData[list[chan]] && !fullstream.channelData[list[chan]].single){
+				var item = new switcherItem(list[chan]);
+				$('.list-switcher').append(item);
+			}else if( !fullstream.channelData[list[chan]] ){
+				fullstream.settings.lists.switcher.splice(fullstream.settings.lists.switcher.indexOf(list[chan]), 1);
+				fullstream.saveSettings();
+				fullstream.populateChannels();
+			}
 		}
 	}else{
 		$('#opt-switcher').hide();
@@ -875,7 +885,7 @@ function channelItem(id, data, isGenre){
 		icons.append(favicon, switchicon);
 	}
 	
-	var pipicon = $('<i class="pip-toggle"><b>PiP</b></i>');
+	var pipicon = $('<i class="pip-toggle fa fa-clone"></i>');
 	icons.append(pipicon);
 
 	icons.find('> i').click(function(){

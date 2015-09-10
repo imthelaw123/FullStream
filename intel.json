@@ -1,5 +1,5 @@
 intel={	
-	"version": "0.3.9",
+	"version": "0.3.10",
 	"booleans": {
 		"check-switcher": {
 			"value": false,
