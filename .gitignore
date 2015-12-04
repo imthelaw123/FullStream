@@ -1,0 +1,11 @@
+# Fonts and Icons
+assets/fonts/
+
+# CSS
+assets/scss/includes/
+
+# JavaScript
+assets/js/jquery-1.11.3.min.js
+assets/js/jquery-ui.min.js
+assets/js/jquery.tmpl.min.js
+assets/js/twitch.min.js
