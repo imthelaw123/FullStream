@@ -72,7 +72,7 @@
 .switcher-hover-add{ background-color: rgba($green, .3); }
 
 .switcher-channels .switcher-channel:hover{
-	cursor: -webkit-grab;
+	cursor: grab;
 	.switcher-hover-move{ display: block; }
 }
 .availible-switcher-channels .switcher-channel:hover .switcher-hover-add{ display: block; }

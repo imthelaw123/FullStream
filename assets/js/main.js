@@ -4,7 +4,7 @@
 		currentContentChannel: null,
 		channels: {},
 		current: {},
-		clientID: 'niqsd0ikewa12v1yupm4f5b5jvbv8rk',
+		clientID: '',
 		scopes: [
 			'user_read'
 		],
@@ -65,7 +65,7 @@
 			this.$loading = this.$document.find('#loading');
 			this.$settings = this.$document.find('#settings');
 			this.$account = this.$document.find('#user-account');
-			this.$chatChannelToggle = this.$document.find('#cta-channels-chat');
+			this.$chatChannelToggle = this.$document.find('.cta-channels-chat');
 
 			$.template( 'status-bar', this.$document.find('#status-bar-template').html() );
 			$.template( 'content-title', this.$document.find('#content-title-template').html() );
@@ -490,7 +490,6 @@
 									if(args.account){
 										this.account = Channel.create(data);
 										if(!this.currentContentChannel){
-											//this.currentContentChannel = this.account;
 										}
 									}else if(data.streams[0].viewers){
 										this.current = Channel.create(data.streams[0]);
