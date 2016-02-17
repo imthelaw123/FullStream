@@ -1,7 +1,7 @@
 #header-menu{
 	display: flex;
 	line-height: 50px;
-	font-size: 1.5em;
+	font-size: 1.5rem;
 	li{
 		position: relative;
 		text-align: center;
@@ -14,7 +14,7 @@
 	.cta-menu i{ display: block; }
 }
 .cta-sidebar i{ 
-	font-size: 1.6em; 
+	font-size: 1.6rem; 
 	&:last-child{ display: none; }
 }
 .show-chat{

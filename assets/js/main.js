@@ -23,9 +23,9 @@
 			this.getSettings();
 			
 			Twitch.init({clientId: this.clientID}, function(error, status) {
-    		
-    		if( this.getParameter('access_token') ){
-    			location.replace(location.origin+location.pathname);
+
+				if( this.getParameter('access_token') ){
+					location.replace(location.origin+location.pathname);
     		}else if( status.authenticated ){
     			if( !this.settings.authenticated ){
     				this.settings.authenticated = true;
@@ -100,6 +100,8 @@
 			});
 		},
 		update: function(){
+			if( this.getParameter('access_token') ){ location.reload(); }
+
 			this.getData('follows');
 		},
 		sortChannels: function(){
@@ -304,10 +306,12 @@
 
 			if(typeof args != 'object'){ args = {type: args} }
 			if(!args.params){ args.params = {}; }
-				
+			
 			switch(args.type){
 				case 'follows':
 				case 'streams':
+				case 'highlights':
+				case 'broadcasts':
 				case 'top-games':
 				case 'search':
 					if(!args.params.offset){ args.params.offset = 0; }
@@ -390,8 +394,20 @@
 					break;
 				default:
 					Twitch.api({ method: this.getEndpoint(args), params: args.params }, function(error, data){
-						
 						if(error){
+							switch(args.type){
+								case 'highlights':
+								case 'broadcasts':
+								case 'top-games':
+								case 'search':
+									this.notify({
+										cta: 'error',
+										title: 'An error occured',
+										message: 'There was an issue with your request, please try again later',
+										buttonText: 'OK'
+									});
+									break;
+							}
 
 						}else{
 							switch(args.type){
@@ -644,6 +660,8 @@
 				}else if( $target.hasClass('cta-switcher') ){
 					this.settings.switcher = false;
 					this.saveSettings();
+				}else{
+					this.$loading.hide();
 				}
 				this.$notification.hide();
 			}
@@ -659,7 +677,7 @@
 					if(this.settings.switcherChannels[count]){
 						var id = this.settings.switcherChannels[count];
 					
-						if(this.channels[id].name == this.current.name){
+						if(this.channels[id].name == this.current.name && this.channels[id].live){
 							hit = true;
 						}else if(this.channels[id].live){
 							this.current = this.channels[id];

@@ -1,3 +1,6 @@
+:root{
+	font-size: 14px;
+}
 *{
 	margin: 0;
 	padding: 0px;
@@ -11,7 +14,7 @@ body{
 body{
 	background-color: $darkGray;
 	color: $lightGray;
-	font-size: 14px;
+	font-size: 1rem;
 	user-select:none;
 }
 li{ list-style: none; }
@@ -79,7 +82,7 @@ button,
 		border: none;
 	}
 	i{
-		font-size: 100px;
+		font-size: 7rem;
 		color: white;
 	}
 }

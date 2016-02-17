@@ -9,13 +9,11 @@
 			}
 		}
 		&:hover{
-			> label,
-			.content-icon{
+			> label{
 				i{ background-color: black; }
 			}
 		}
-		> label,
-		.content-icon{
+		> label{
 			display: flex;
 			width: 120px;
 			height: 46px;
@@ -25,7 +23,7 @@
 			i{
 				width: 46px;
 				text-align: center;
-				font-size: 1.5em;
+				font-size: 1.5rem;
 				line-height: 46px;
 				&:hover ~ span{ display: block; }
 			}
@@ -57,7 +55,7 @@
 	h1{
 		text-transform: uppercase;
 		margin-right: 10px;
-		font-size: 1.5em;
+		font-size: 1.5rem;
 	}
 	h2{
 		text-transform: capitalize;
@@ -96,7 +94,7 @@
 		background-color: rgba(black, .5);
 		width: 100%;
 		height: 100%;
-		font-size: 2em;
+		font-size: 2rem;
 		top: 0px;
 		text-align: center;
   	justify-content: center;
