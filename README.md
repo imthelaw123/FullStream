@@ -16,7 +16,7 @@ clientID: 'CLIENT ID HERE',
 ```
 
 
-# Licences
+# Licenses
 normalize.css v3.0.3<br>
 License: MIT<br>
 Source: http://git.io/normalize
