@@ -1,15 +1,18 @@
-# FullStream
-Web application for watching Twitch.tv streams<br>
-**Development is currently halted due to time restraints**
+# NOTE THAT
+**Development of FullStream has stopped**<br>
+**All source code is availible as is under the MIT license**
 
-Live link http://knifftech.net/fullstream/
+# FullStream
+Alternative interface for watching and browsing Twitch.tv streams<br>
+
+![screenshot](http://i.imgur.com/5dSwTsL.png)
 
 # Setup
 Download and install the missing APIs and SDKs (as shown in the .gitignore file)<br>
 Links provided in the licence section below
 
 You'll need to register a twitch app http://www.twitch.tv/kraken/oauth2/clients/new<br>
-In main.js, change the following property to your registered application's client ID
+In main.js, change the following property to your registered application's **client ID**
 
 ```javascript
 clientID: 'CLIENT ID HERE',
