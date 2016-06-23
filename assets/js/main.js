@@ -1,5 +1,5 @@
 (function($){	
-	var twitchBox = {
+	var fullstream = {
 		username: null,
 		currentContentChannel: null,
 		channels: {},
@@ -8,6 +8,7 @@
 		scopes: [
 			'user_read'
 		],
+
 		settings: {
 			authenticated: false,
 			offline: true,
@@ -17,6 +18,7 @@
 			switcher: false,
 			switcherChannels: []
 		},
+
 		init: function(){
 			this.cacheDom();
 			this.bindEvents();
@@ -26,23 +28,26 @@
 
 				if( this.getParameter('access_token') ){
 					location.replace(location.origin+location.pathname);
-    		}else if( status.authenticated ){
-    			if( !this.settings.authenticated ){
-    				this.settings.authenticated = true;
-    				this.saveSettings();
-    			}
+				
+				}else if( status.authenticated ){
+					if( !this.settings.authenticated ){
+						this.settings.authenticated = true;
+						this.saveSettings();
+					}
 
-    			this.getData('user');
-    		}else if( !this.settings.authenticated ){
-    			this.notify({
+					this.getData('user');
+				
+				}else if( !this.settings.authenticated ){
+					this.notify({
 						cta: 'token',
 						title: 'Connect with your Twitch account to access FullStream',
 						message: 'FullStream requires limited access to your Twitch account, please press the button below to connect.',
 						buttonText: 'Connect with Twitch'
 					});
-    		}else{
-    			Twitch.login({ scope: this.scopes });
-    		}
+				
+				}else{
+					Twitch.login({ scope: this.scopes });
+				}
 
  			}.bind(this));
 
@@ -78,20 +83,22 @@
 			$.template( 'switcher-channel', this.$document.find('#switcher-channel-template').html() );
 			$.template( 'notification', this.$document.find('#notification-template').html() );
 		},
+		
 		bindEvents: function(){
-			this.$body.on('click', '.media-trigger', this.changeChannel.bind(this));
-			this.$body.on('click', '.content-trigger', this.changeContent.bind(this));
-			this.$body.on('click', '.cta', this.ctaHandler.bind(this));
-			this.$body.on('click', '.switcher-channel', this.switcherHandler.bind(this));
-			this.$body.on('click', '.switcher-channel i', this.switcherHandler.bind(this));
+			this.$body.on( 'click', '.media-trigger', this.changeChannel.bind(this) );
+			this.$body.on( 'click', '.content-trigger', this.changeContent.bind(this) );
+			this.$body.on( 'click', '.cta', this.ctaHandler.bind(this) );
+			this.$body.on( 'click', '.switcher-channel', this.switcherHandler.bind(this) );
+			this.$body.on( 'click', '.switcher-channel i', this.switcherHandler.bind(this) );
 			
-			this.$searchField.on('keyup', this.searchContent.bind(this));
-			this.$searchForm.on('submit', this.searchContent.bind(this));
+			this.$searchField.on( 'keyup', this.searchContent.bind(this) );
+			this.$searchForm.on( 'submit', this.searchContent.bind(this) );
 			
-			this.$searchOptions.on('change', this.searchContent.bind(this));
-			this.$body.on('change', '.setting', this.settingChangeHandler.bind(this));
+			this.$searchOptions.on( 'change', this.searchContent.bind(this) );
+			this.$body.on( 'change', '.setting', this.settingChangeHandler.bind(this) );
 			
-			this.$pip.draggable({ containment: 'parent' });
+			this.$pip.draggable( {containment: 'parent'} );
+			
 			this.$switcherChannels.sortable({
 				containment: 'parent',
 				tolerance: 'pointer',
@@ -99,13 +106,16 @@
 				update: this.sortSwitcher.bind(this)
 			});
 		},
+		
 		update: function(){
 			if( this.getParameter('access_token') ){ location.reload(); }
 
 			this.getData('follows');
 		},
+		
 		sortChannels: function(){
 			var sorted = [];
+			
 			for(x in arguments){
 				if(arguments[x] == 'alphabetical'){
 					for(y in this.channels){
@@ -114,6 +124,7 @@
 						}
 					}
 					sorted.sort();
+				
 				}else if(this.settings[arguments[x]] || arguments[x] == 'online'){
 					var arr = [];
 					for(y in this.channels){
@@ -124,27 +135,28 @@
 					sorted = sorted.concat(arr);
 				}
 			}
+			
 			return sorted;
 		},
+		
 		render: function(args){
 			if(args){
 				var $target = this.$document.find(args.targetElement),
 						$title = $target.parent().find('.content-title h1');
 				
-				if(!args.keepContent){
-					$target.empty();
-				}
+				if(!args.keepContent){ $target.empty(); }
 				
 				switch(args.type){
 					case 'live-channels':
 						var types = ['online', 'playlist', 'hosted'];
 						for(x in types){
 							if(this.settings[types[x]] || types[x] == 'online'){
-								$target.append( $.tmpl('content-title', {title: types[x]}) );
-								$target.append( $.tmpl('content-channel', this.sortChannels(types[x])) );
+								$target.append( $.tmpl( 'content-title', {title: types[x]} ) );
+								$target.append( $.tmpl( 'content-channel', this.sortChannels(types[x]) ) );
 							}
 						}
 						break;
+					
 					case 'games':
 					case 'top-games':
 						if(args.data.length > 0){
@@ -152,9 +164,11 @@
 							$target.append( $.tmpl('game', args.data) );
 						}
 						break;
+					
 					case 'search':
 						$target.html( $.tmpl('content-channel', args.data) );
 						break;
+					
 					case 'settings':
 						for(var x=0; x < $target.length; x++){
 							var id = $target[x].id.substring(8);
@@ -166,11 +180,13 @@
 							this.saveSettings();
 						}
 						break;
+					
 					default:
 						$title.html(args.title);
 						$target.append( $.tmpl(args.type, args.data) );
 						break;
 				}
+			
 			}else{
 				this.$channelList.empty();
 				$.tmpl('channel', this.sortChannels('online', 'playlist', 'hosted', 'offline')).appendTo(this.$channelList);
@@ -209,6 +225,7 @@
 
 			if(args && args.type != 'settings'){ this.$loading.hide(); }
 		},
+		
 		getSettings: function(){
 			if(localStorage.settings){
 				var storedSettings = JSON.parse(localStorage.settings);
@@ -225,9 +242,11 @@
 				targetElement: '.setting'
 			});
 		},
+		
 		saveSettings: function(){
 			localStorage.settings = JSON.stringify(this.settings);
 		},
+		
 		settingChangeHandler: function(e){
 			var $setting = $(e.target),
 					id = $setting[0].id.substring(8),
@@ -247,33 +266,42 @@
 
 			this.render();
 		},
+		
 		getEndpoint: function(args){
 			switch(args.type){
 				case 'user':
 					return '/'+args.type;
 					break;
+				
 				case 'follows':
 					return '/users/'+this.username+'/follows/channels';
 					break;
+				
 				case 'streams':
 					return '/streams/followed';
 					break;
+				
 				case 'hosted':
 					return '/users/'+this.username+'/followed/hosting';
 					break;
+				
 				case 'panels':
 					return '/channels/'+args.targetChannel+'/panels';
 					break;
+				
 				case 'highlights':
 				case 'broadcasts':
 					return '/channels/'+args.targetChannel+'/videos';
 					break;
+				
 				case 'games': 
 					return '/users/'+this.username+'/follows/games';
 					break;
+				
 				case 'top-games':
 					return '/games/top';
 					break;
+				
 				case 'search':
 					if(args.searchType == 'games'){
 						return '/streams';
@@ -281,9 +309,11 @@
 						return '/search/streams';
 					}
 					break;
+				
 				case 'vod':
 					return '/videos/'+args.videoId;
 					break;
+				
 				case 'channel':
 					if(args.offline || args.account){
 						return '/channels/'+args.targetChannel;
@@ -293,6 +323,7 @@
 					break;
 			}
 		},
+		
 		getData: function(args){
 			switch(args.type){
 				case 'panels':
@@ -305,6 +336,7 @@
 			}
 
 			if(typeof args != 'object'){ args = {type: args} }
+			
 			if(!args.params){ args.params = {}; }
 			
 			switch(args.type){
@@ -324,12 +356,15 @@
 					args.params.sortby = 'login';
 					args.params.direction = 'asc';
 					break;
+				
 				case 'streams':
 					args.params.stream_type = 'all';
 					break;
+				
 				case 'broadcasts':
 					args.params.broadcasts = true;
 					break;
+				
 				case 'search':
 					if(args.searchType == 'games'){
 						args.params.game = args.searchTerm;
@@ -337,6 +372,7 @@
 						args.params.q = args.searchTerm;
 					}
 					break;
+				
 				case 'channel':
 					args.params.channel= args.targetChannel;
 					args.params.stream_type = 'all';
@@ -366,8 +402,10 @@
 										this.channels[id].updateProperty('status', hostedChan.target.title);
 									}
 								}
+
 								this.render();
 								break;
+							
 							case 'panels':
 								this.render({
 									title: this.currentContentChannel+'\'s '+args.type,
@@ -376,22 +414,24 @@
 									data: data
 								});
 								break;
+							
 							case 'games':
 								var games = {
 									targetElement: args.targetElement,
 									type: args.type
 								};
 								
-								games.title  = 'Followed games';
+								games.title	= 'Followed games';
 								games.data = Games.create(data.follows);	
 								args.type = 'top-games';
 
 								this.render(games);
-								this.getData(args);	
+								this.getData(args);
 								break;
 						}
 					}.bind(this))
 					break;
+				
 				default:
 					Twitch.api({ method: this.getEndpoint(args), params: args.params }, function(error, data){
 						if(error){
@@ -417,6 +457,7 @@
 									this.$account.html( $.tmpl('account', data) );
 									this.getData('follows');
 									break;
+								
 								case 'follows':
 									if(args.params.offset <= 0){ this.channels = {} }
 									
@@ -427,10 +468,12 @@
 									if(data.follows.length >= 100){
 										args.params.offset += 100;
 										this.getData(args);
+									
 									}else{
 										this.getData('streams');
 									}
 									break;
+								
 								case 'streams':
 									for(x in data.streams){
 										var liveChan = data.streams[x],
@@ -441,6 +484,7 @@
 										if(this.channels[id].is_playlist){
 											this.channels[id].updateProperty('type', 'playlist');
 											this.channels[id].updateProperty('game', 'playlist');
+										
 										}else{
 											this.channels[id].updateProperty('live', true);
 											this.channels[id].updateProperty('type', 'online');
@@ -449,6 +493,7 @@
 									this.getData('hosted');
 									this.switcher();
 									break;
+								
 								case 'highlights':
 								case 'broadcasts':
 									var vodArr = [];
@@ -464,6 +509,7 @@
 										data: vodArr
 									});
 									break;
+								
 								case 'top-games':
 									var games = {
 										targetElement: args.targetElement,
@@ -476,6 +522,7 @@
 						
 									this.render(games);
 									break;
+								
 								case 'search':
 									if(data.streams.length <= 0 && args.searchType == 'games'){
 										this.getData({
@@ -491,6 +538,7 @@
 										});
 									}
 									break;
+								
 								case 'vod':
 									var vodArr = Vod.create(data);
 									
@@ -502,15 +550,16 @@
 
 									this.render({type: 'status-bar', targetElement: this.$statusBar, data: vodArr});
 									break;
+								
 								case 'channel':
 									if(args.account){
 										this.account = Channel.create(data);
-										if(!this.currentContentChannel){
-										}
+
 									}else if(data.streams[0].viewers){
 										this.current = Channel.create(data.streams[0]);
 										this.currentContentChannel = this.current.name;
 										this.render();
+
 									}else{
 										args.offline = true;
 										this.getData(args);
@@ -522,6 +571,7 @@
 				break;
 			}
 		},
+		
 		getParameter: function(paramName){
 			params = location.hash.substring(1).split("&");
 			
@@ -533,39 +583,49 @@
 			}
 			return null;
 		},
+		
 		changeChannel: function(e){
 			var $target = $(e.currentTarget);
 			
 			if( $target.attr('data-fullstream-channel') ){
 				var id = $target.attr('data-fullstream-channel');
+				
 				if(this.channels[id] && !this.channels[id].hosted){
 					this.current = this.channels[id];
 					this.currentContentChannel = this.current.name;
+					
 					this.changeEmbeds();
 					this.render();
+				
 				}else{
 					this.current.name = id;
 					this.changeEmbeds();
+					
 					this.getData({
 						type: 'channel',
 						targetChannel: id
 					})
 				}
+			
 			}else if( $target.attr('data-fullstream-vod') ){
 				var id = $target.attr('data-fullstream-vod');
+				
 				this.current = {};
 				this.getData({type:'vod', videoId: id});
 				this.changeEmbeds({videoId: id})
 			}
 		},
+		
 		changeEmbeds: function(args){
 			var player = 'http://player.twitch.tv/?showInfo=false',
 					flashPlayer = 'http://www.twitch.tv/widgets/live_embed_player.swf';
+			
 			if(typeof args == 'object'){
 				if(args.pipId){
 					this.$pip.find('iframe').attr('src', player+'&channel='+args.pipId);
 					
 					this.$body.addClass('show-pip')
+				
 				}else if(args.videoId){
 					this.$chat.attr('src', '');
 					
@@ -575,20 +635,25 @@
 
 					if(args.videoId[0] == 'c'){
 						this.$stream.attr('src', flashPlayer+'?videoId='+args.videoId);
+					
 					}else{
 						this.$stream.attr('src', player+'&video='+args.videoId);
 					}
 
 				}
+			
 			}else{
 				if(args != 'chat'){
 					this.$stream.attr('src', player+'&channel='+this.current.name);
 					this.$body.removeClass('show-content');
 				}
+				
 				this.$chat.attr('src', 'http://twitch.tv/chat/embed?channel='+this.current.name);
+				
 				if(this.settings.chat){ this.$chatChannelToggle.show(); }
 			}	
 		},
+		
 		changeContent: function(e){
 			var $target = $(e.currentTarget),
 					type = $target.attr('data-fullstream-content-type'),
@@ -602,9 +667,7 @@
 			
 			this.$body.addClass('show-content');
 
-			if(channel){
-				this.currentContentChannel = this.channels[channel].name;
-			}
+			if(channel){ this.currentContentChannel = this.channels[channel].name; }
 
 			if(game){
 				this.$searchOptions.val('games');
@@ -618,6 +681,7 @@
 				targetChannel: this.currentContentChannel
 			});
 		},
+		
 		searchContent: function(e){
 			if( this.$searchField.val() ){
 				this.getData({
@@ -626,59 +690,75 @@
 					searchType: this.$searchOptions.val()
 				});
 			}
+			
 			e.preventDefault();
+			
 			return false;
 		},
+		
 		ctaHandler: function(e){
 			var $target = $(e.currentTarget),
 					channel = $target.parent().attr('data-fullstream-channel');
 
 			if( $target.hasClass('cta-channels-chat') ){
-				if(this.current.name && this.settings.chat){
-					this.$body.toggleClass('show-chat');
-				}
+				if(this.current.name && this.settings.chat){ this.$body.toggleClass('show-chat'); }
+				
 				this.$body.removeClass('hide-sidebar');
+			
 			}else if( $target.hasClass('cta-sidebar') ){
 				this.$body.toggleClass('hide-sidebar');
+			
 			}else if( $target.hasClass('cta-menu') ){
 				this.$body.toggleClass('show-content');
+			
 			}else if( $target.hasClass('cta-close-pip') ){
 				this.$body.removeClass('show-pip');
 				this.$pip.find('iframe').attr('src', '');
+			
 			}else if( $target.hasClass('cta-disconnect') ){
 				this.settings.authenticated = false;
 				this.saveSettings();
 				Twitch.logout();
 				location.replace('https://secure.twitch.tv/settings/connections');
+			
 			}else if( $target.hasClass('cta-pip') ){
 				this.changeEmbeds({pipId: channel})
+			
 			}else if( $target.hasClass('cta-settings') ){
 				this.$settings.toggle();
+			
 			}else if( $target.hasClass('cta-notification') ){
 				if( $target.hasClass('cta-token') ){
 					Twitch.login({ scope: this.scopes });
+				
 				}else if( $target.hasClass('cta-switcher') ){
 					this.settings.switcher = false;
 					this.saveSettings();
+				
 				}else{
 					this.$loading.hide();
 				}
+				
 				this.$notification.hide();
 			}
 		},
+		
 		notify: function(args){
 			this.$notification.html( $.tmpl('notification', args) ).show();
 		},
+		
 		switcher: function(){
 			if(this.settings.switcher){
 				var hit = false,
 						count = 0;
+				
 				while(!hit){
 					if(this.settings.switcherChannels[count]){
 						var id = this.settings.switcherChannels[count];
 					
 						if(this.channels[id].name == this.current.name && this.channels[id].live){
 							hit = true;
+						
 						}else if(this.channels[id].live){
 							this.current = this.channels[id];
 							this.currentContentChannel = this.current.name;
@@ -687,18 +767,21 @@
 							hit = true;
 						}
 						count ++;
+					
 					}else{
 						hit = true;
 					}
 				}
 			}
 		},
+		
 		switcherHandler: function(e){
 			var $target = $(e.currentTarget);
 					
 			if( $target.parent().hasClass('availible-switcher-channels') ){
 				var channel = $target.attr('data-fullstream-channel');
 				this.settings.switcherChannels[this.settings.switcherChannels.length] = channel;
+			
 			}else if( $target.hasClass('switcher-remove') ){
 				var channel = $target.parent().attr('data-fullstream-channel');
 				this.settings.switcherChannels.splice(this.settings.switcherChannels.indexOf(channel), 1);
@@ -707,6 +790,7 @@
 			this.saveSettings();
 			this.render();
 		},
+		
 		sortSwitcher: function(e){
 			var sorted = this.$switcherChannels.find('.switcher-channel'),
 					arr = [];
@@ -716,6 +800,7 @@
 			})
 			
 			this.settings.switcherChannels = arr;
+			
 			this.saveSettings();
 			this.render();
 		}
@@ -724,9 +809,11 @@
 	var Channels = {
 		create: function(data){
 			var arr = [];
+			
 			for(x in data){
 				arr[arr.length] = Channel.create(data[x]);
 			}
+			
 			return arr;
 		}
 	}
@@ -751,11 +838,15 @@
 		is_playlist: false,
 		live: false,
 		type: 'offline',
+		
 		create: function(data){
 			var instance = Object.create(this);
+			
 			instance.update(data);
+			
 			return instance;
 		},
+		
 		update: function(data){
 			for(x in data){
 				if(data[x] && data[x].medium){
@@ -763,15 +854,19 @@
 							dateString = (d.getMonth()+1)+'.'+d.getDate()+'.'+d.getHours();
 					
 					this.updateProperty(x, data[x].medium+'?v='+dateString);
+				
 				}else{
 					this.updateProperty(x, data[x]);
 				}
 			}
+			
 			for(y in data.channel){
 				this.updateProperty(y, data.channel[y]);
 			}
+			
 			if(data.is_playlist){
 				this.updateProperty('type', 'playlist');
+			
 			}else if('is_playlist' in data){
 				this.updateProperty('type', 'online');
 			}
@@ -779,6 +874,7 @@
 			this.updateProperty('gameIcon', GameIcon.getIcon(this.game) );
 
 		},
+		
 		updateProperty: function(key, value){
 			if( key in this && value){
 				switch(key){
@@ -787,10 +883,12 @@
 					case 'views':
 						this[key] = Number.format(value.toString());
 						break;
+					
 					case 'video_height':
 					case 'average_fps':
 						this[key] = Math.floor(value - (value%5));
 						break;
+					
 					default:
 						this[key] = value;
 						break;
@@ -812,26 +910,32 @@
 		display_name: null,
 		logo: null,
 		url: null,
+		
 		create: function(data){
 			var instance = Object.create(this);
+			
 			Object.keys(data).forEach(function(key){
 				if(key in instance){
 					switch(key){
 						case 'views':
 							instance[key] = Number.format(data[key]);
 							break;
+						
 						case 'length':
 							instance[key] = Number.formatTime(data[key]);
 							break;
+						
 						case 'created_at':
 							instance[key] = Number.getTheDate(data[key]);
 							break;
+						
 						default:
 							instance[key] = data[key];
 							break;
 					}
 				}
 			});
+			
 			return instance;
 		}
 	}
@@ -854,6 +958,7 @@
 
 			return string.split("").reverse().join("");
 		},
+		
 		formatTime: function(num){
 			var hours = Math.floor(num/3600),
 					min = Math.floor( (num%3600)/60 ),
@@ -866,18 +971,21 @@
 
 			return string;
 		},
+		
 		doubleDigit: function(num){
 			if(num < 10){
 				return '0'+num;
+			
 			}else{
 				return num;
 			}
 		},
+		
 		getTheDate: function(string){
 			var x = new Date(string),
-					year  = x.getFullYear(),
+					year	= x.getFullYear(),
 					month = x.getMonth()+1,
-					day  = x.getDate();
+					day	= x.getDate();
 
 			return year+'.'+this.doubleDigit(month)+'.'+this.doubleDigit(day);
 		}
@@ -886,9 +994,11 @@
 	var Games = {
 		create: function(data){
 			var arr = [];
+			
 			for(x in data){
 				arr[arr.length] = Game.create(data[x]);
 			}
+			
 			return arr;
 		}
 	}
@@ -898,16 +1008,21 @@
 		box: null,
 		channels: null,
 		viewers: null,
+		
 		create: function(data){
 			var instance = Object.create(this);
+			
 			if(data.game){
 				instance.update(data);
 				instance.update(data.game);
+			
 			}else{
 				instance.update(data);
 			}
+			
 			return instance;
 		},
+		
 		update: function(data){
 			for(key in this){
 				if(key in data){
@@ -916,6 +1031,7 @@
 						case 'viewers':
 							this[key] = Number.format(data[key]);	
 							break;
+						
 						default:
 						 this[key] = data[key];
 						 break;
@@ -954,8 +1070,10 @@
 			'fa-futbol-o'				: ['fifa 15', 'fifa 14'],
 			'fa-circle'					: ['agar.io']
 		},
+		
 		getIcon: function(game){
 			var gameIcon = 'fa-gamepad';
+			
 			if(game){
 				for(icon in this.icons){
 					if( this.icons[icon].indexOf( game.toString().toLowerCase() ) > -1){
@@ -968,5 +1086,6 @@
 		}
 	}
 
-	$(document).ready( twitchBox.init.bind(twitchBox) );
+	$(document).ready( fullstream.init.bind(fullstream) );
+
 })(jQuery);
