@@ -270,55 +270,55 @@
 		getEndpoint: function(args){
 			switch(args.type){
 				case 'user':
-					return '/'+args.type;
+					return args.type;
 					break;
 				
 				case 'follows':
-					return '/users/'+this.username+'/follows/channels';
+					return 'users/'+this.username+'/follows/channels';
 					break;
 				
 				case 'streams':
-					return '/streams/followed';
+					return 'streams/followed';
 					break;
 				
 				case 'hosted':
-					return '/users/'+this.username+'/followed/hosting';
+					return 'users/'+this.username+'/followed/hosting';
 					break;
 				
 				case 'panels':
-					return '/channels/'+args.targetChannel+'/panels';
+					return 'channels/'+args.targetChannel+'/panels';
 					break;
 				
 				case 'highlights':
 				case 'broadcasts':
-					return '/channels/'+args.targetChannel+'/videos';
+					return 'channels/'+args.targetChannel+'/videos';
 					break;
 				
 				case 'games': 
-					return '/users/'+this.username+'/follows/games';
+					return 'users/'+this.username+'/follows/games';
 					break;
 				
 				case 'top-games':
-					return '/games/top';
+					return 'games/top';
 					break;
 				
 				case 'search':
 					if(args.searchType == 'games'){
-						return '/streams';
+						return 'streams';
 					}else{
-						return '/search/streams';
+						return 'search/streams';
 					}
 					break;
 				
 				case 'vod':
-					return '/videos/'+args.videoId;
+					return 'videos/'+args.videoId;
 					break;
 				
 				case 'channel':
 					if(args.offline || args.account){
-						return '/channels/'+args.targetChannel;
+						return 'channels/'+args.targetChannel;
 					}else{
-						return '/streams';
+						return 'streams';
 					}
 					break;
 			}
@@ -622,7 +622,7 @@
 			
 			if(typeof args == 'object'){
 				if(args.pipId){
-					this.$pip.find('iframe').attr('src', player+'&channel='+args.pipId);
+					this.$pip.find('iframe').attr('src', player+'&channel='+args.pipId+'&html5');
 					
 					this.$body.addClass('show-pip')
 				
@@ -634,17 +634,17 @@
 					this.$chatChannelToggle.hide();
 
 					if(args.videoId[0] == 'c'){
-						this.$stream.attr('src', flashPlayer+'?videoId='+args.videoId);
+						this.$stream.attr('src', flashPlayer+'?videoId='+args.videoId+'&html5');
 					
 					}else{
-						this.$stream.attr('src', player+'&video='+args.videoId);
+						this.$stream.attr('src', player+'&video='+args.videoId+'&html5');
 					}
 
 				}
 			
 			}else{
 				if(args != 'chat'){
-					this.$stream.attr('src', player+'&channel='+this.current.name);
+					this.$stream.attr('src', player+'&channel='+this.current.name+'&html5');
 					this.$body.removeClass('show-content');
 				}
 				
@@ -851,7 +851,7 @@
 			for(x in data){
 				if(data[x] && data[x].medium){
 					var d = new Date(),
-							dateString = (d.getMonth()+1)+'.'+d.getDate()+'.'+d.getHours();
+							dateString = (d.getMonth()+1)+'.'+d.getDate()+'.'+d.getHours()+'.'+d.getMinutes();
 					
 					this.updateProperty(x, data[x].medium+'?v='+dateString);
 				
@@ -1043,32 +1043,32 @@
 	
 	var GameIcon = {
 		icons: {
-			'fa-file-video-o'		: ['playlist'],
-			'fa-money'					: ['poker', 'blackjack'],
-			'fa-music'					: ['music'],
-			'fa-code'						: ['programming', 'game development'],
-			'fa-paint-brush'		: ['creative'],
-			'fa-microphone'	 		: ['gaming talk shows'],
-			'fa-truck'					: ['euro truck Simulator', 'euro truck simulator 2', 'american truck simulator', 'farming simulator 2015'],
-			'fa-cubes'					: ['minecraft', 'terraria', 'minecraft: xbox one edition'],
-			'fa-space-shuttle'	: ['elite: dangerous', 'eve online', 'star citizen'],
-			'fa-rocket'					: ['kerbal space program'],
-			'fa-fighter-jet'		: ['arma', 'arma ii', 'arma iii', 'battlefield 4', 'battlefield 3','war thunder'],
-			'fa-plane'					: ['microsoft flight simulator x'],
-			'fa-ship'						: ['world of warships'],
-			'fa-car'						: ['rocket league', 'gran turismo 5', 'gran turismo 6', 'assetto corsa', 'project cars', 'the crew', 'forza motorsport 5', 'forza horizon 2', 'iracing.com'],
-			'fa-wrench'					: ['automation - the car company tycoon game', 'truck mechanic simulator 2015', 'car mechanic simulator 2015', 'car mechanic simulator 2014'],
-			'fa-train'					: ['train simulator 2015', 'train simulator 2014'],
-			'fa-building'				: ['cities: skylines'],
-			'fa-bus'						: ['omsi', 'omsi 2'],
-			'fa-map-marker'			: ['geoguessr'],
-			'fa-stethoscope'		: ['surgeon simulator 2013'],
-			'fa-birthday-cake'	: ['portal', 'portal 2'],
-			'fa-rebel'					: ['star wars: the old republic', 'star wars battlefront', 'star wars: battlefront 2', 'star wars: battlefront'],
-			'fa-hand-spock-o'		: ['star trek online'],
-			'fa-factory'				: ['factorio'],
-			'fa-futbol-o'				: ['fifa 15', 'fifa 14'],
-			'fa-circle'					: ['agar.io']
+			'fa-file-video-o' 	: ['playlist'],
+			'fa-money' 					: ['poker', 'blackjack'],
+			'fa-music' 					: ['music'],
+			'fa-code' 					: ['programming', 'game development'],
+			'fa-paint-brush' 		: ['creative'],
+			'fa-microphone' 		: ['gaming talk shows'],
+			'fa-truck' 					: ['euro truck Simulator', 'euro truck simulator 2', 'american truck simulator', 'farming simulator 2015'],
+			'fa-cubes' 					: ['minecraft', 'terraria', 'minecraft: xbox one edition'],
+			'fa-space-shuttle' 	: ['elite: dangerous', 'eve online', 'star citizen'],
+			'fa-rocket' 				: ['kerbal space program'],
+			'fa-fighter-jet' 		: ['arma', 'arma ii', 'arma iii', 'battlefield 4', 'battlefield 3','war thunder'],
+			'fa-plane' 					: ['microsoft flight simulator x'],
+			'fa-ship' 					: ['world of warships'],
+			'fa-car' 						: ['rocket league', 'gran turismo 5', 'gran turismo 6', 'assetto corsa', 'project cars', 'the crew', 'forza motorsport 5', 'forza horizon 2', 'iracing.com'],
+			'fa-wrench' 				: ['automation - the car company tycoon game', 'truck mechanic simulator 2015', 'car mechanic simulator 2015', 'car mechanic simulator 2014'],
+			'fa-train' 					: ['train simulator 2015', 'train simulator 2014'],
+			'fa-building' 			: ['cities: skylines'],
+			'fa-bus' 						: ['omsi', 'omsi 2'],
+			'fa-map-marker' 		: ['geoguessr'],
+			'fa-stethoscope' 		: ['surgeon simulator 2013'],
+			'fa-birthday-cake' 	: ['portal', 'portal 2'],
+			'fa-rebel' 					: ['star wars: the old republic', 'star wars battlefront', 'star wars: battlefront 2', 'star wars: battlefront'],
+			'fa-hand-spock-o' 	: ['star trek online'],
+			'fa-factory' 				: ['factorio'],
+			'fa-futbol-o' 			: ['fifa 15', 'fifa 14'],
+			'fa-circle' 				: ['agar.io']
 		},
 		
 		getIcon: function(game){
