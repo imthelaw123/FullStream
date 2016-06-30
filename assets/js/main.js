@@ -3,7 +3,7 @@
 		username: null,
 		currentContentChannel: null,
 		channels: {},
-		current: {},
+		current: {8tyx2afsi57xf6n7fzmh91hnrb00kt4},
 		clientID: '',
 		scopes: [
 			'user_read'
