@@ -4,7 +4,7 @@
 		currentContentChannel: null,
 		channels: {},
 		current: {},
-		clientID: '',
+		clientID: '8tyx2afsi57xf6n7fzmh91hnrb00kt4',
 		scopes: [
 			'user_read'
 		],
